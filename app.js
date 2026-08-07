@@ -4,16 +4,13 @@ import {
   recordQuizAttempt,
   isLessonUnlocked,
   getModuleProgress,
-  resetAllProgress,
 } from "./progress.js";
 
 const root = document.getElementById("app");
 
 const ICONS = {
-  milk: "🥛",
   check: "✓",
   lock: "🔒",
-  play: "▶",
 };
 
 function escapeHtml(str) {
@@ -96,7 +93,7 @@ function renderDashboard() {
     <div class="page">
       <div class="dash-header">
         <h1>Shreeja Learning Academy</h1>
-        <p>Self-paced training for Sahayaks and field staff. Complete each lesson's quiz to unlock the next.</p>
+        <p>Learn step by step, on your own. Every topic is taught first, then checked — no instructor needed.</p>
       </div>
       <div class="overall-progress">
         <div class="ring" style="--pct:${overallPct}" data-label="${overallPct}%"></div>
@@ -140,12 +137,13 @@ function renderModulePage(moduleId) {
         iconHtml = ICONS.lock;
         rowClass = "locked";
       }
+      const topicCount = lesson.topics ? lesson.topics.length : 0;
       return `
         <div class="lesson-row ${rowClass}" ${unlocked ? `data-nav="#/module/${mod.id}/lesson/${lesson.id}"` : ""}>
           <div class="lesson-status-icon ${iconClass}">${iconHtml}</div>
           <div class="lesson-info">
             <h4>${escapeHtml(lesson.title)}</h4>
-            <div class="meta">${lesson.estMinutes} min${state.completed ? ` · Best score ${state.bestScore}%` : ""}${!unlocked ? " · Complete the previous lesson to unlock" : ""}</div>
+            <div class="meta">${lesson.estMinutes} min · ${topicCount} topics${state.completed ? ` · Best score ${state.bestScore}%` : ""}${!unlocked ? " · Complete the previous lesson to unlock" : ""}</div>
           </div>
           ${unlocked ? `<div class="chev">›</div>` : ""}
         </div>
@@ -170,7 +168,7 @@ function renderModulePage(moduleId) {
 }
 
 // ============================================================================
-// Content block renderers
+// Content block renderers (used for both "hook" blocks and topic "teach" blocks)
 // ============================================================================
 function renderBlockHtml(block) {
   switch (block.type) {
@@ -185,6 +183,21 @@ function renderBlockHtml(block) {
 
     case "example":
       return `<div class="block example-box"><h4>${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
+
+    case "glossary":
+      return `<div class="block glossary-box"><span class="gloss-icon">📖</span><div><span class="gloss-term">${escapeHtml(block.term)}</span> — <span class="gloss-meaning">${escapeHtml(block.meaning)}</span></div></div>`;
+
+    case "ledger": {
+      const rows = block.rows
+        .map((r) => `<div class="ledger-row"><span>${escapeHtml(r.label)}</span><span>${escapeHtml(r.amount)}</span></div>`)
+        .join("");
+      return `
+        <div class="block ledger-box">
+          <h3>${escapeHtml(block.heading)}</h3>
+          ${rows}
+          <div class="ledger-row ledger-total"><span>${escapeHtml(block.total.label)}</span><span>${escapeHtml(block.total.amount)}</span></div>
+        </div>`;
+    }
 
     case "stat-grid":
       return `<div class="block stat-grid">${block.items
@@ -231,53 +244,17 @@ function renderBlockHtml(block) {
         </div>`;
     }
 
-    case "poll": {
-      const qs = block.questions
-        .map(
-          (q, qi) => `
-        <div class="poll-q" data-poll-q="${qi}">
-          <div class="q-text">${escapeHtml(q.q)}</div>
-          <div class="opt-list">
-            ${q.options
-              .map((opt, oi) => `<button class="opt-btn" data-poll-opt="${oi}">${escapeHtml(opt)}</button>`)
-              .join("")}
-          </div>
-          <div class="poll-reveal" style="display:none;"></div>
-        </div>`
-        )
-        .join("");
-      return `<div class="block poll-box"><h3>${escapeHtml(block.heading)}</h3>${qs}</div>`;
-    }
-
     default:
       return "";
   }
 }
 
-function wirePollHandlers(container, block, blockEl) {
-  const questionEls = blockEl.querySelectorAll("[data-poll-q]");
-  questionEls.forEach((qEl) => {
-    const qi = Number(qEl.getAttribute("data-poll-q"));
-    const qData = block.questions[qi];
-    const optBtns = qEl.querySelectorAll("[data-poll-opt]");
-    const revealEl = qEl.querySelector(".poll-reveal");
-    optBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const oi = Number(btn.getAttribute("data-poll-opt"));
-        optBtns.forEach((b, i) => {
-          b.disabled = true;
-          if (i === qData.answer) b.classList.add("correct");
-          else if (i === oi) b.classList.add("incorrect");
-        });
-        revealEl.style.display = "block";
-        revealEl.textContent = qData.reveal || "";
-      });
-    });
-  });
+function renderBlocks(blocks) {
+  return blocks.map((b) => renderBlockHtml(b)).join("");
 }
 
-function animateBars(blockEl) {
-  const fills = blockEl.querySelectorAll(".bar-fill");
+function animateBarsIn(container) {
+  const fills = container.querySelectorAll(".bar-fill");
   requestAnimationFrame(() => {
     fills.forEach((f) => {
       f.style.width = f.getAttribute("data-target") + "%";
@@ -286,26 +263,20 @@ function animateBars(blockEl) {
 }
 
 // ============================================================================
-// Quiz
+// Question set component — renders a group of questions with select+submit,
+// then reports per-question results. Used for both quick-checks and the
+// lesson's final quiz.
 // ============================================================================
-function renderQuizShell(lesson) {
-  const quiz = lesson.quiz;
-  return `
-    <div class="quiz-section" id="quiz-section">
-      <h2>${quiz.isFinal ? "Final Assessment" : "Lesson Quiz"}</h2>
-      <div class="sub">Score ${quiz.passScore}% or higher to ${quiz.isFinal ? "complete this module" : "unlock the next lesson"}.</div>
-      <div id="quiz-body"></div>
-    </div>
-  `;
-}
+function renderQuestionSet(container, questions, opts) {
+  const answers = new Array(questions.length).fill(null);
+  const label = opts.submitLabel || "Check My Answers";
 
-function renderQuizQuestions(quiz) {
-  return quiz.questions
+  const qsHtml = questions
     .map((q, qi) => {
       const options = q.type === "truefalse" ? ["True", "False"] : q.options;
       return `
       <div class="quiz-q" data-quiz-q="${qi}">
-        <div class="q-num">Question ${qi + 1} of ${quiz.questions.length}</div>
+        ${questions.length > 1 ? `<div class="q-num">Question ${qi + 1} of ${questions.length}</div>` : ""}
         <div class="q-text">${escapeHtml(q.q)}</div>
         <div class="opt-list">
           ${options
@@ -315,110 +286,261 @@ function renderQuizQuestions(quiz) {
       </div>`;
     })
     .join("");
-}
 
-function wireQuiz(moduleId, lesson) {
-  const quiz = lesson.quiz;
-  const body = document.getElementById("quiz-body");
-  const answers = new Array(quiz.questions.length).fill(null);
+  container.innerHTML = `${qsHtml}<div class="btn-row"><button class="btn btn-primary" id="qs-submit" disabled>${label}</button></div>`;
 
-  function renderQuestions() {
-    body.innerHTML =
-      renderQuizQuestions(quiz) +
-      `<div class="btn-row"><button class="btn btn-primary" id="submit-quiz" disabled>Submit Answers</button></div>`;
-
-    const qBlocks = body.querySelectorAll("[data-quiz-q]");
-    qBlocks.forEach((qEl) => {
-      const qi = Number(qEl.getAttribute("data-quiz-q"));
-      const optBtns = qEl.querySelectorAll("[data-quiz-opt]");
-      optBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const oi = Number(btn.getAttribute("data-quiz-opt"));
-          answers[qi] = oi;
-          optBtns.forEach((b) => b.classList.remove("selected-opt"));
-          btn.classList.add("selected-opt");
-          btn.style.borderColor = "var(--blue-600)";
-          btn.style.background = "var(--blue-50)";
-          optBtns.forEach((b, i) => {
-            if (i !== oi) {
-              b.style.borderColor = "";
-              b.style.background = "";
-            }
-          });
-          submitBtn.disabled = answers.some((a) => a === null);
+  const qBlocks = container.querySelectorAll("[data-quiz-q]");
+  qBlocks.forEach((qEl) => {
+    const qi = Number(qEl.getAttribute("data-quiz-q"));
+    const optBtns = qEl.querySelectorAll("[data-quiz-opt]");
+    optBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const oi = Number(btn.getAttribute("data-quiz-opt"));
+        answers[qi] = oi;
+        optBtns.forEach((b) => {
+          b.style.borderColor = "";
+          b.style.background = "";
         });
+        btn.style.borderColor = "var(--blue-600)";
+        btn.style.background = "var(--blue-50)";
+        submitBtn.disabled = answers.some((a) => a === null);
       });
     });
+  });
 
-    const submitBtn = document.getElementById("submit-quiz");
-    submitBtn.addEventListener("click", () => {
-      let correctCount = 0;
-      const results = quiz.questions.map((q, qi) => {
-        const correctIdx = q.type === "truefalse" ? (q.answer ? 0 : 1) : q.answer;
-        const isCorrect = answers[qi] === correctIdx;
-        if (isCorrect) correctCount++;
-        return { q, isCorrect };
-      });
-      const scorePercent = Math.round((correctCount / quiz.questions.length) * 100);
-      const passed = scorePercent >= quiz.passScore;
-      recordQuizAttempt(moduleId, lesson.id, scorePercent, passed);
-      renderResult(scorePercent, passed, results);
+  const submitBtn = container.querySelector("#qs-submit");
+  submitBtn.addEventListener("click", () => {
+    const results = questions.map((q, qi) => {
+      const correctIdx = q.type === "truefalse" ? (q.answer ? 0 : 1) : q.answer;
+      return { q, isCorrect: answers[qi] === correctIdx, selected: answers[qi] };
+    });
+    opts.onSubmit(results);
+  });
+}
+
+function renderQuestionReview(results) {
+  return results
+    .map(
+      (r) => `
+      <div class="review-item ${r.isCorrect ? "correct" : "incorrect"}">
+        <div class="mark">${r.isCorrect ? "✓" : "✕"}</div>
+        <div>
+          <div>${escapeHtml(r.q.q)}</div>
+          <div class="exp">${escapeHtml(r.q.explain || "")}</div>
+        </div>
+      </div>`
+    )
+    .join("");
+}
+
+// ============================================================================
+// Lesson flow controller — teaches one topic at a time, checks understanding,
+// and sends learners back to re-learn any topic they get wrong.
+// ============================================================================
+function runLessonFlow(moduleId, lesson) {
+  const flowEl = document.getElementById("flow");
+  const dotsEl = document.getElementById("topic-dots");
+  const topics = lesson.topics;
+
+  function setDots(activeIdx, clearedIdxs) {
+    if (!dotsEl) return;
+    dotsEl.innerHTML = topics
+      .map((t, i) => {
+        let cls = "dot";
+        if (clearedIdxs.has(i)) cls += " dot-done";
+        else if (i === activeIdx) cls += " dot-active";
+        return `<div class="${cls}" title="${escapeHtml(t.title)}"></div>`;
+      })
+      .join("");
+  }
+
+  const clearedTopics = new Set();
+
+  function showTopic(idx) {
+    setDots(idx, clearedTopics);
+    const topic = topics[idx];
+    flowEl.innerHTML = `
+      <div class="topic-kicker">Topic ${idx + 1} of ${topics.length}</div>
+      <h2 class="topic-title">${escapeHtml(topic.title)}</h2>
+      <div id="topic-teach">${renderBlocks(topic.teach)}</div>
+      <div class="check-box">
+        <h3>Quick Check</h3>
+        <div class="sub">Answer these to make sure it's clear before moving on.</div>
+        <div id="topic-check"></div>
+      </div>
+    `;
+    animateBarsIn(flowEl);
+    showTopicCheck(idx, 1);
+  }
+
+  function showTopicCheck(idx, attempt) {
+    const topic = topics[idx];
+    const checkEl = document.getElementById("topic-check");
+    renderQuestionSet(checkEl, topic.check, {
+      submitLabel: attempt === 1 ? "Check My Answers" : "Check Again",
+      onSubmit: (results) => {
+        const allCorrect = results.every((r) => r.isCorrect);
+        if (allCorrect) {
+          clearedTopics.add(idx);
+          setDots(idx, clearedTopics);
+          checkEl.innerHTML = `
+            <div class="check-pass">
+              <div class="check-pass-icon">✓</div>
+              <div>
+                <div class="check-pass-title">Nicely done — that's clear!</div>
+                <div class="check-pass-sub">You got ${results.length}/${results.length} right.</div>
+              </div>
+            </div>
+            <div class="btn-row"><button class="btn btn-primary" id="next-topic-btn">${idx + 1 < topics.length ? "Continue to Next Topic →" : "Continue to Lesson Quiz →"}</button></div>
+          `;
+          document.getElementById("next-topic-btn").addEventListener("click", () => {
+            if (idx + 1 < topics.length) showTopic(idx + 1);
+            else showFinalIntro();
+          });
+        } else {
+          const numRight = results.filter((r) => r.isCorrect).length;
+          checkEl.innerHTML = `
+            <div class="check-fail">
+              <div class="check-fail-title">Not quite yet — let's learn this again.</div>
+              <div class="check-fail-sub">You got ${numRight}/${results.length} right. Re-read the topic above, then try again.</div>
+            </div>
+            <div class="btn-row"><button class="btn btn-primary" id="retry-topic-btn">Read It Again & Retry</button></div>
+          `;
+          document.getElementById("retry-topic-btn").addEventListener("click", () => {
+            document.getElementById("topic-teach").scrollIntoView({ behavior: "smooth", block: "start" });
+            showTopicCheck(idx, attempt + 1);
+          });
+        }
+      },
     });
   }
 
-  function renderResult(scorePercent, passed, results) {
+  function showFinalIntro() {
+    setDots(-1, clearedTopics);
+    flowEl.innerHTML = `
+      <div class="quiz-section" id="final-quiz-section">
+        <h2>Lesson Quiz</h2>
+        <div class="sub">You've learned every topic in this lesson. Let's check everything together. If you miss something, you'll get a chance to re-learn just that part.</div>
+        <div id="final-quiz-body"></div>
+      </div>
+    `;
+    showFinalQuiz();
+  }
+
+  function showFinalQuiz() {
+    const body = document.getElementById("final-quiz-body");
+    renderQuestionSet(body, lesson.finalQuiz.questions, {
+      submitLabel: "Submit Lesson Quiz",
+      onSubmit: (results) => {
+        const correctCount = results.filter((r) => r.isCorrect).length;
+        const scorePercent = Math.round((correctCount / results.length) * 100);
+        const wrongTopicIds = [...new Set(results.filter((r) => !r.isCorrect).map((r) => r.q.topicId))];
+        recordQuizAttempt(moduleId, lesson.id, scorePercent, wrongTopicIds.length === 0);
+
+        if (wrongTopicIds.length === 0) {
+          showLessonComplete(scorePercent, results);
+        } else {
+          showReviewQueue(wrongTopicIds, 0, scorePercent);
+        }
+      },
+    });
+  }
+
+  function showReviewQueue(queue, i, originalScore) {
+    if (i >= queue.length) {
+      recordQuizAttempt(moduleId, lesson.id, Math.max(originalScore, 70), true);
+      showLessonComplete(100, null, true);
+      return;
+    }
+    const topic = topics.find((t) => t.id === queue[i]);
+    const topicIdx = topics.indexOf(topic);
+    flowEl.innerHTML = `
+      <div class="review-banner">
+        <div class="review-banner-title">📖 Let's Review: ${escapeHtml(topic.title)}</div>
+        <div class="review-banner-sub">You missed a question about this earlier. Here it is again — take your time.</div>
+      </div>
+      <div id="review-teach">${renderBlocks(topic.teach)}</div>
+      <div class="check-box">
+        <h3>Try Again</h3>
+        <div id="review-check"></div>
+      </div>
+    `;
+    animateBarsIn(flowEl);
+    const reviewCheckEl = document.getElementById("review-check");
+
+    function attemptReview() {
+      renderQuestionSet(reviewCheckEl, topic.check, {
+        submitLabel: "Check My Answers",
+        onSubmit: (results) => {
+          const allCorrect = results.every((r) => r.isCorrect);
+          if (allCorrect) {
+            clearedTopics.add(topicIdx);
+            reviewCheckEl.innerHTML = `
+              <div class="check-pass">
+                <div class="check-pass-icon">✓</div>
+                <div>
+                  <div class="check-pass-title">Got it — that's cleared up now!</div>
+                </div>
+              </div>
+              <div class="btn-row"><button class="btn btn-primary" id="review-next-btn">${
+                i + 1 < queue.length ? "Review Next Topic →" : "Finish Lesson →"
+              }</button></div>
+            `;
+            document.getElementById("review-next-btn").addEventListener("click", () => {
+              showReviewQueue(queue, i + 1, originalScore);
+            });
+          } else {
+            reviewCheckEl.innerHTML = `
+              <div class="check-fail">
+                <div class="check-fail-title">Still not quite — one more look.</div>
+                <div class="check-fail-sub">Scroll up and re-read this topic, then try once more.</div>
+              </div>
+              <div class="btn-row"><button class="btn btn-primary" id="review-retry-btn">Read It Again & Retry</button></div>
+            `;
+            document.getElementById("review-retry-btn").addEventListener("click", () => {
+              document.getElementById("review-teach").scrollIntoView({ behavior: "smooth", block: "start" });
+              attemptReview();
+            });
+          }
+        },
+      });
+    }
+    attemptReview();
+  }
+
+  function showLessonComplete(scorePercent, results, wasReviewed) {
     const mod = getModule(moduleId);
     const lessonIdx = getLessonIndex(moduleId, lesson.id);
     const nextLesson = mod.lessons[lessonIdx + 1];
+    setDots(-1, new Set(topics.map((_, i) => i)));
 
-    const reviewHtml = results
-      .map(
-        (r, i) => `
-        <div class="review-item ${r.isCorrect ? "correct" : "incorrect"}">
-          <div class="mark">${r.isCorrect ? "✓" : "✕"}</div>
-          <div>
-            <div>${escapeHtml(r.q.q)}</div>
-            <div class="exp">${escapeHtml(r.q.explanation || "")}</div>
-          </div>
-        </div>`
-      )
-      .join("");
-
-    let actionsHtml = "";
-    if (passed && quiz.isFinal) {
-      actionsHtml = `<div class="btn-row" style="justify-content:center;"><button class="btn btn-success" data-nav="#/module/${moduleId}/complete">View Certificate</button></div>`;
-    } else if (passed && nextLesson) {
-      actionsHtml = `<div class="btn-row" style="justify-content:center;"><button class="btn btn-primary" data-nav="#/module/${moduleId}/lesson/${nextLesson.id}">Continue to Next Lesson →</button></div>`;
-    } else if (passed) {
-      actionsHtml = `<div class="btn-row" style="justify-content:center;"><button class="btn btn-primary" data-nav="#/module/${moduleId}">Back to Module</button></div>`;
+    let actionsHtml;
+    if (lesson.finalQuiz.isFinal) {
+      actionsHtml = `<button class="btn btn-success" data-nav="#/module/${moduleId}/complete">View Certificate</button>`;
+    } else if (nextLesson) {
+      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}/lesson/${nextLesson.id}">Continue to Next Lesson →</button>`;
     } else {
-      actionsHtml = `<div class="btn-row" style="justify-content:center;"><button class="btn btn-primary" id="retry-quiz">Retry Quiz</button></div>`;
+      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}">Back to Module</button>`;
     }
 
-    body.innerHTML = `
-      <div class="quiz-result ${passed ? "pass" : "fail"}">
-        <div class="score-circle"><div class="pct">${scorePercent}%</div><div class="lbl">${passed ? "Passed" : "Try again"}</div></div>
-        <h3>${passed ? "Great work!" : "Almost there!"}</h3>
-        <p>${
-          passed
-            ? "You've passed this quiz."
-            : `You need ${quiz.passScore}% to pass. Review the explanations below and try again.`
-        }</p>
-        ${actionsHtml}
-        <div class="quiz-review">${reviewHtml}</div>
+    flowEl.innerHTML = `
+      <div class="quiz-section">
+        <div class="quiz-result pass">
+          <div class="score-circle"><div class="pct">${scorePercent}%</div><div class="lbl">Complete</div></div>
+          <h3>${wasReviewed ? "All caught up!" : "Great work!"}</h3>
+          <p>${
+            wasReviewed
+              ? "You reviewed a few things and now know this lesson well."
+              : "You've learned and passed every topic in this lesson."
+          }</p>
+          <div class="btn-row" style="justify-content:center;">${actionsHtml}</div>
+          ${results ? `<div class="quiz-review">${renderQuestionReview(results)}</div>` : ""}
+        </div>
       </div>
     `;
-
-    const retryBtn = document.getElementById("retry-quiz");
-    if (retryBtn) {
-      retryBtn.addEventListener("click", () => {
-        answers.fill(null);
-        renderQuestions();
-      });
-    }
   }
 
-  renderQuestions();
+  showTopic(0);
 }
 
 // ============================================================================
@@ -436,8 +558,7 @@ function renderLessonPage(moduleId, lessonId) {
     return "";
   }
   const lessonIdx = getLessonIndex(moduleId, lessonId);
-
-  const blocksHtml = lesson.blocks.map((b) => renderBlockHtml(b)).join("");
+  const hookHtml = lesson.hook ? renderBlocks(lesson.hook) : "";
 
   return `
     ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: mod.title })}
@@ -446,21 +567,17 @@ function renderLessonPage(moduleId, lessonId) {
         <div class="kicker">Lesson ${lessonIdx + 1} of ${mod.lessons.length}</div>
         <h1>${escapeHtml(lesson.title)}</h1>
       </div>
-      <div id="lesson-blocks">${blocksHtml}</div>
-      ${renderQuizShell(lesson)}
+      ${hookHtml}
+      <div id="topic-dots" class="topic-dots"></div>
+      <div id="flow"></div>
     </div>
   `;
 }
 
 function afterLessonRender(moduleId, lesson) {
-  const blocksContainer = document.getElementById("lesson-blocks");
-  lesson.blocks.forEach((block, i) => {
-    const el = blocksContainer.children[i];
-    if (!el) return;
-    if (block.type === "poll") wirePollHandlers(blocksContainer, block, el);
-    if (block.type === "barchart") animateBars(el);
-  });
-  wireQuiz(moduleId, lesson);
+  const page = document.querySelector(".page-narrow");
+  if (page) animateBarsIn(page);
+  runLessonFlow(moduleId, lesson);
 }
 
 // ============================================================================
@@ -482,7 +599,7 @@ function renderCompletionPage(moduleId) {
         <p>You've finished "${escapeHtml(mod.title)}". Great job working through every lesson and quiz on your own.</p>
         <div class="btn-row" style="justify-content:center;">
           <button class="btn btn-outline" style="background:white;" data-nav="#/">Back to Dashboard</button>
-          ${nextMod ? `<button class="btn btn-success" data-nav="#/module/${moduleId}">Review Module</button>` : ""}
+          <button class="btn btn-success" data-nav="#/module/${moduleId}">Review Module</button>
         </div>
       </div>
       ${nextMod ? `<p style="text-align:center; color:var(--gray-500); margin-top:18px; font-size:14px;">Module ${nextMod.number}: "${escapeHtml(nextMod.title)}" is coming soon.</p>` : ""}
@@ -496,10 +613,6 @@ function renderCompletionPage(moduleId) {
 function parseHash() {
   const hash = location.hash || "#/";
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean);
-  // parts: [] -> dashboard
-  // ['module', ':id'] -> module page
-  // ['module', ':id', 'lesson', ':lid'] -> lesson page
-  // ['module', ':id', 'complete'] -> completion page
   if (parts.length === 0) return { route: "dashboard" };
   if (parts[0] === "module" && parts[1]) {
     if (parts[2] === "lesson" && parts[3]) {

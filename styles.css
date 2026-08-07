@@ -864,6 +864,188 @@ button {
   font-size: 15px;
 }
 
+/* ---------- Glossary & ledger blocks ---------- */
+.glossary-box {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #fff7ed;
+  border: 1.5px dashed var(--amber-600);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+}
+.gloss-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.gloss-term {
+  font-weight: 800;
+  color: #92400e;
+}
+.gloss-meaning {
+  color: var(--gray-700);
+  font-size: 14.5px;
+}
+
+.ledger-box {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.ledger-box h3 {
+  margin: 0 0 12px;
+  font-size: 15.5px;
+  color: var(--blue-900);
+}
+.ledger-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 14.5px;
+  color: var(--gray-700);
+  border-bottom: 1px solid var(--gray-100);
+}
+.ledger-row:last-of-type {
+  border-bottom: none;
+}
+.ledger-row span:last-child {
+  font-weight: 700;
+  color: var(--gray-900);
+  white-space: nowrap;
+}
+.ledger-row.ledger-total {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 2px solid var(--blue-100);
+  border-bottom: none;
+  font-weight: 700;
+}
+.ledger-row.ledger-total span:first-child {
+  color: var(--blue-900);
+}
+.ledger-row.ledger-total span:last-child {
+  color: var(--green-600);
+  font-size: 16px;
+}
+
+/* ---------- Topic flow (guided lesson) ---------- */
+.topic-dots {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gray-200);
+}
+.dot.dot-active {
+  background: var(--blue-600);
+  transform: scale(1.3);
+}
+.dot.dot-done {
+  background: var(--green-600);
+}
+
+.topic-kicker {
+  font-size: 13px;
+  color: var(--blue-600);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.topic-title {
+  margin: 0 0 18px;
+  font-size: 21px;
+  color: var(--gray-900);
+}
+
+.check-box {
+  background: var(--blue-50);
+  border: 1.5px solid var(--blue-100);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-top: 22px;
+}
+.check-box > h3 {
+  margin: 0 0 3px;
+  font-size: 16px;
+  color: var(--blue-900);
+}
+.check-box > .sub {
+  font-size: 13px;
+  color: var(--gray-500);
+  margin-bottom: 14px;
+}
+
+.check-pass {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--green-100);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.check-pass-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.check-pass-title {
+  font-weight: 700;
+  color: #14532d;
+  font-size: 14.5px;
+}
+.check-pass-sub {
+  font-size: 13px;
+  color: #166534;
+}
+
+.check-fail {
+  background: var(--amber-100);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.check-fail-title {
+  font-weight: 700;
+  color: #92400e;
+  font-size: 14.5px;
+}
+.check-fail-sub {
+  font-size: 13px;
+  color: #92400e;
+  margin-top: 2px;
+}
+
+.review-banner {
+  background: linear-gradient(135deg, var(--amber-600), #f59e0b);
+  color: white;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 18px;
+}
+.review-banner-title {
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+.review-banner-sub {
+  font-size: 13.5px;
+  opacity: 0.95;
+}
+
 /* ---------- Footer nav on lesson page ---------- */
 .lesson-nav {
   display: flex;

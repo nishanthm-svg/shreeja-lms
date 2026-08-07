@@ -4,22 +4,33 @@ A self-paced, instructor-free learning management system for Shreeja Sahayaks an
 
 ## Module 1: Introduction to Dairy
 
-The first module is fully built out with 5 lessons, each ending in a quiz that must be passed (70%+) to unlock the next lesson:
+Written for learners with **no formal education and no prior dairy knowledge** — plain, short sentences (about a Class 7 reading level), every technical term explained in a glossary callout, and real numbers instead of abstract jargon.
 
-1. **Welcome to the World of Dairy** — quick poll + why dairy matters
-2. **The Global Milk Scenario** — interactive world milk production chart (FAOSTAT 2025)
-3. **India's Milk Scenario — State by State** — interactive state-wise chart (BAHS 2025)
-4. **India's Journey — From Deficit to Surplus** — interactive 1946–2021 timeline (Amul, NDDB, Operation Flood)
-5. **NDDB — Driving India's Dairy Cooperative Movement** — final assessment
+Each lesson is broken into small **topics**. Every topic follows the same loop:
+
+1. **Teach** — short, simple content (text, a comparison chart, a real-world example, sometimes a "New Word" glossary box).
+2. **Quick Check** — 2 questions to confirm it landed.
+3. **If something's wrong** — the learner is sent right back to re-read *that specific topic* and try again. Nothing moves forward until it's understood.
+
+After all topics in a lesson, a **Lesson Quiz** covers everything together. Any question missed there routes the learner back into a focused review of just that topic (recap + a fresh try) — never the whole lesson — before the lesson is marked complete and the next one unlocks.
+
+1. **What is Dairy, and Why Does It Matter?** — what milk gives your body, dairy as a livelihood (8 crore Indian families)
+2. **The World's Biggest Milk Bowl** — which countries make the most milk, and why India leads (FAOSTAT 2025)
+3. **India's Milk Map** — state-by-state milk production (BAHS 2025)
+4. **The White Revolution — India's Dairy Story** — the Amul story (farmers cheated by a trader → forming their own cooperative), then Operation Flood and NDDB
+5. **NDDB and How a Cooperative Works** — Dr. Kurien, and the Village Society → District Union → State Federation structure
+6. **Real Story: Ramesh and Sita's Dairy Journey** — a full real-numbers case study (a couple who leave the city, start a 1-cow dairy business with real costs/income, and weigh expanding to 4 cows) — this is the module's final assessment
 
 Modules 2–12 are listed on the dashboard as "Coming soon" placeholders (titles pulled from the source training deck), ready to be filled in the same way.
 
 ## How it works
 
-- **No login, no backend.** Progress (which lessons/quizzes are completed) is saved automatically in the learner's browser via `localStorage`.
-- **Sequential unlock.** Lesson 1 of each module is always open; each next lesson unlocks only after the previous lesson's quiz is passed.
-- **Content model.** All lesson content and quizzes live in [`data.js`](data.js) as plain data — add a new module by adding an entry to the `MODULES` array, no other code changes needed.
-- **Rendering.** [`app.js`](app.js) is a small hash-router + renderer (`#/`, `#/module/:id`, `#/module/:id/lesson/:id`, `#/module/:id/complete`). [`progress.js`](progress.js) handles the localStorage-backed unlock/scoring logic. [`styles.css`](styles.css) has all styling.
+- **No login, no backend.** Progress (which lessons are completed) is saved automatically in the learner's browser via `localStorage`.
+- **Sequential unlock.** Lesson 1 of each module is always open; each next lesson unlocks only after the previous lesson is fully completed (every topic understood).
+- **Remedial, not punitive.** Wrong answers never just show "try again" — they show the exact topic's teaching content again first, then a fresh question on it.
+- **Content model.** All lesson content lives in [`data.js`](data.js) as plain data: each lesson has a `hook` (opening blocks), a `topics` array (each with `teach` blocks + `check` questions), and a `finalQuiz` (questions tagged with `topicId` for remedial routing). Add a new module by adding an entry to the `MODULES` array — no other code changes needed.
+- **Rendering.** [`app.js`](app.js) is a small hash-router + renderer (`#/`, `#/module/:id`, `#/module/:id/lesson/:id`, `#/module/:id/complete`) plus a topic-by-topic lesson flow controller (`runLessonFlow`) that manages teach → check → remedial-review state. [`progress.js`](progress.js) handles the localStorage-backed unlock logic. [`styles.css`](styles.css) has all styling.
+- **Block types available for content:** `hero`, `text`, `callout`, `example`, `glossary` (new-word explainer), `ledger` (simple rupee income/expense tables), `stat-grid`, `barchart`, `timeline`.
 
 ## Running locally
 
