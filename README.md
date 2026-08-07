@@ -6,13 +6,9 @@ A self-paced, instructor-free learning management system for Shreeja Sahayaks an
 
 Written for learners with **no formal education and no prior dairy knowledge** — plain, short sentences (about a Class 7 reading level), every technical term explained in a glossary callout, and real numbers instead of abstract jargon.
 
-Each lesson is broken into small **topics**. Every topic follows the same loop:
+Each lesson is broken into small **topics**, walked through one at a time with Previous/Next navigation — examples, comparison charts, "guess before you look" polls, tap-to-reveal glossary boxes, and light animation throughout. Nothing is graded during teaching.
 
-1. **Teach** — short, simple content (text, a comparison chart, a real-world example, sometimes a "New Word" glossary box).
-2. **Quick Check** — 2 questions to confirm it landed.
-3. **If something's wrong** — the learner is sent right back to re-read *that specific topic* and try again. Nothing moves forward until it's understood.
-
-After all topics in a lesson, a **Lesson Quiz** covers everything together. Any question missed there routes the learner back into a focused review of just that topic (recap + a fresh try) — never the whole lesson — before the lesson is marked complete and the next one unlocks.
+Once every topic in the lesson has been seen, a single **Lesson Quiz** covers everything together, all at once. Any question missed there routes the learner back into a focused review of just that one topic (the teaching content again, then a fresh try on it) — never the whole lesson — before the lesson is marked complete and the next one unlocks.
 
 1. **What is Dairy, and Why Does It Matter?** — what milk gives your body, dairy as a livelihood (8 crore Indian families)
 2. **The World's Biggest Milk Bowl** — which countries make the most milk, and why India leads (FAOSTAT 2025)
@@ -26,11 +22,13 @@ Modules 2–12 are listed on the dashboard as "Coming soon" placeholders (titles
 ## How it works
 
 - **No login, no backend.** Progress (which lessons are completed) is saved automatically in the learner's browser via `localStorage`.
-- **Sequential unlock.** Lesson 1 of each module is always open; each next lesson unlocks only after the previous lesson is fully completed (every topic understood).
-- **Remedial, not punitive.** Wrong answers never just show "try again" — they show the exact topic's teaching content again first, then a fresh question on it.
-- **Content model.** All lesson content lives in [`data.js`](data.js) as plain data: each lesson has a `hook` (opening blocks), a `topics` array (each with `teach` blocks + `check` questions), and a `finalQuiz` (questions tagged with `topicId` for remedial routing). Add a new module by adding an entry to the `MODULES` array — no other code changes needed.
-- **Rendering.** [`app.js`](app.js) is a small hash-router + renderer (`#/`, `#/module/:id`, `#/module/:id/lesson/:id`, `#/module/:id/complete`) plus a topic-by-topic lesson flow controller (`runLessonFlow`) that manages teach → check → remedial-review state. [`progress.js`](progress.js) handles the localStorage-backed unlock logic. [`styles.css`](styles.css) has all styling.
-- **Block types available for content:** `hero`, `text`, `callout`, `example`, `glossary` (new-word explainer), `ledger` (simple rupee income/expense tables), `stat-grid`, `barchart`, `timeline`.
+- **Sequential unlock.** Lesson 1 of each module is always open; each next lesson unlocks only after the previous lesson is fully completed (quiz passed, any wrong topics reviewed).
+- **Teach fully, then test once.** All topics are taught first (with examples, polls and animation); the quiz happens in one pass at the end, not interleaved.
+- **Remedial, not punitive.** A wrong quiz answer never just says "try again" — it shows the exact topic's teaching content again first, then a fresh question on just that topic.
+- **Interactive by default.** Glossary boxes are tap-to-reveal ("👆 Tap to see what this means"), some topics include an ungraded "🤔 Guess Before You Look" poll before a chart reveals the real answer, and every content block animates in.
+- **Content model.** All lesson content lives in [`data.js`](data.js) as plain data: each lesson has a `hook` (opening blocks), a `topics` array (each with `teach` blocks + `check` questions used for remedial retries), and a `finalQuiz` (questions tagged with `topicId` for remedial routing). Add a new module by adding an entry to the `MODULES` array — no other code changes needed.
+- **Rendering.** [`app.js`](app.js) is a small hash-router + renderer (`#/`, `#/module/:id`, `#/module/:id/lesson/:id`, `#/module/:id/complete`) plus a topic-by-topic lesson flow controller (`runLessonFlow`) that manages topic navigation → single end quiz → remedial-review state. [`progress.js`](progress.js) handles the localStorage-backed unlock logic. [`styles.css`](styles.css) has all styling and animation keyframes.
+- **Block types available for content:** `hero`, `text`, `callout`, `example`, `glossary` (tap-to-reveal new-word explainer), `ledger` (simple rupee income/expense tables), `stat-grid`, `barchart`, `timeline`, `poll` (ungraded interactive predict-then-reveal question).
 
 ## Running locally
 

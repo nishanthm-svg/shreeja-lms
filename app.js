@@ -13,6 +13,10 @@ const ICONS = {
   lock: "🔒",
 };
 
+const TOPIC_EMOJIS = ["🥛", "🐄", "🌍", "📈", "🤝", "🏆", "🌾", "💡"];
+const CALLOUT_EMOJIS = { info: "💡", tip: "✅", warning: "⚠️" };
+const STAT_EMOJIS = ["🎯", "🌟", "🔑", "📌", "✨", "🌱"];
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -92,14 +96,14 @@ function renderDashboard() {
     ${renderTopbar({ showBack: false })}
     <div class="page">
       <div class="dash-header">
-        <h1>Shreeja Learning Academy</h1>
-        <p>Learn step by step, on your own. Every topic is taught first, then checked — no instructor needed.</p>
+        <h1>🥛 Shreeja Learning Academy</h1>
+        <p>Learn step by step, on your own. Every topic is taught first — with examples and interactive moments — then checked, all at once, at the end.</p>
       </div>
       <div class="overall-progress">
         <div class="ring" style="--pct:${overallPct}" data-label="${overallPct}%"></div>
         <div>
           <div style="font-weight:700; font-size:15px;">${totalDone} of ${totalLessons} lessons completed</div>
-          <div style="font-size:13px; color:var(--gray-500);">Keep going — every lesson builds toward your certificate.</div>
+          <div style="font-size:13px; color:var(--gray-500);">Keep going — every lesson builds toward your certificate. 🎓</div>
         </div>
       </div>
       <div class="module-grid">${cards}</div>
@@ -168,24 +172,34 @@ function renderModulePage(moduleId) {
 }
 
 // ============================================================================
-// Content block renderers (used for both "hook" blocks and topic "teach" blocks)
+// Content block renderers (used for "hook" blocks and topic "teach" blocks)
 // ============================================================================
 function renderBlockHtml(block) {
   switch (block.type) {
     case "hero":
-      return `<div class="block block-hero"><h2>${escapeHtml(block.heading)}</h2><p>${escapeHtml(block.text)}</p></div>`;
+      return `<div class="block block-hero"><h2>🥛 ${escapeHtml(block.heading)}</h2><p>${escapeHtml(block.text)}</p></div>`;
 
     case "text":
-      return `<div class="block block-text"><h3>${escapeHtml(block.heading)}</h3><div class="body">${block.html}</div></div>`;
+      return `<div class="block block-text"><h3>📘 ${escapeHtml(block.heading)}</h3><div class="body">${block.html}</div></div>`;
 
-    case "callout":
-      return `<div class="block callout ${block.style || ""}"><h4>${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
+    case "callout": {
+      const emoji = CALLOUT_EMOJIS[block.style] || "💡";
+      return `<div class="block callout ${block.style || ""}"><h4>${emoji} ${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
+    }
 
     case "example":
-      return `<div class="block example-box"><h4>${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
+      return `<div class="block example-box"><h4>🌟 ${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
 
     case "glossary":
-      return `<div class="block glossary-box"><span class="gloss-icon">📖</span><div><span class="gloss-term">${escapeHtml(block.term)}</span> — <span class="gloss-meaning">${escapeHtml(block.meaning)}</span></div></div>`;
+      return `
+        <div class="block glossary-box" data-toggle="glossary">
+          <span class="gloss-icon">📖</span>
+          <div>
+            <span class="gloss-term">${escapeHtml(block.term)}</span>
+            <span class="gloss-hint">👆 Tap to see what this means</span>
+            <div class="gloss-meaning">${escapeHtml(block.meaning)}</div>
+          </div>
+        </div>`;
 
     case "ledger": {
       const rows = block.rows
@@ -193,7 +207,7 @@ function renderBlockHtml(block) {
         .join("");
       return `
         <div class="block ledger-box">
-          <h3>${escapeHtml(block.heading)}</h3>
+          <h3>💰 ${escapeHtml(block.heading)}</h3>
           ${rows}
           <div class="ledger-row ledger-total"><span>${escapeHtml(block.total.label)}</span><span>${escapeHtml(block.total.amount)}</span></div>
         </div>`;
@@ -202,7 +216,8 @@ function renderBlockHtml(block) {
     case "stat-grid":
       return `<div class="block stat-grid">${block.items
         .map(
-          (it) => `<div class="stat-card"><div class="label">${escapeHtml(it.label)}</div><div class="text">${escapeHtml(it.text)}</div></div>`
+          (it, i) =>
+            `<div class="stat-card"><div class="label">${STAT_EMOJIS[i % STAT_EMOJIS.length]} ${escapeHtml(it.label)}</div><div class="text">${escapeHtml(it.text)}</div></div>`
         )
         .join("")}</div>`;
 
@@ -220,7 +235,7 @@ function renderBlockHtml(block) {
         .join("");
       return `
         <div class="block chart-box">
-          <h3>${escapeHtml(block.heading)}</h3>
+          <h3>📊 ${escapeHtml(block.heading)}</h3>
           <div class="chart-source">${escapeHtml(block.source)}</div>
           ${rows}
         </div>`;
@@ -238,10 +253,26 @@ function renderBlockHtml(block) {
         .join("");
       return `
         <div class="block timeline-box">
-          <h3>${escapeHtml(block.heading)}</h3>
+          <h3>🕰️ ${escapeHtml(block.heading)}</h3>
           <div class="timeline">${items}</div>
-          ${block.result ? `<div class="timeline-result">${escapeHtml(block.result)}</div>` : ""}
+          ${block.result ? `<div class="timeline-result">🏁 ${escapeHtml(block.result)}</div>` : ""}
         </div>`;
+    }
+
+    case "poll": {
+      const qs = block.questions
+        .map(
+          (q, qi) => `
+        <div class="poll-q" data-poll-answer="${q.answer}">
+          <div class="q-text">${escapeHtml(q.q)}</div>
+          <div class="opt-list">
+            ${q.options.map((opt, oi) => `<button type="button" class="opt-btn" data-poll-idx="${oi}">${escapeHtml(opt)}</button>`).join("")}
+          </div>
+          <div class="poll-reveal" style="display:none;">${escapeHtml(q.reveal || "")}</div>
+        </div>`
+        )
+        .join("");
+      return `<div class="block poll-box"><h3>🤔 ${escapeHtml(block.heading)}</h3>${qs}</div>`;
     }
 
     default:
@@ -263,9 +294,37 @@ function animateBarsIn(container) {
 }
 
 // ============================================================================
+// Global interactive-content handlers (glossary tap-to-reveal, ungraded polls)
+// Delegated on document so they keep working across every re-render.
+// ============================================================================
+document.addEventListener("click", (e) => {
+  const glossEl = e.target.closest(".glossary-box");
+  if (glossEl) {
+    glossEl.classList.toggle("revealed");
+    return;
+  }
+  const pollOpt = e.target.closest(".poll-q .opt-btn");
+  if (pollOpt) {
+    const qEl = pollOpt.closest(".poll-q");
+    if (qEl.classList.contains("answered")) return;
+    qEl.classList.add("answered");
+    const correctIdx = Number(qEl.getAttribute("data-poll-answer"));
+    const idx = Number(pollOpt.getAttribute("data-poll-idx"));
+    qEl.querySelectorAll(".opt-btn").forEach((b, i) => {
+      b.disabled = true;
+      if (i === correctIdx) b.classList.add("correct");
+      else if (i === idx) b.classList.add("incorrect");
+    });
+    const reveal = qEl.querySelector(".poll-reveal");
+    if (reveal) reveal.style.display = "block";
+    return;
+  }
+});
+
+// ============================================================================
 // Question set component — renders a group of questions with select+submit,
-// then reports per-question results. Used for both quick-checks and the
-// lesson's final quiz.
+// then reports per-question results. Used for the lesson's single combined
+// quiz, and for the focused re-try questions during topic review.
 // ============================================================================
 function renderQuestionSet(container, questions, opts) {
   const answers = new Array(questions.length).fill(null);
@@ -297,12 +356,8 @@ function renderQuestionSet(container, questions, opts) {
       btn.addEventListener("click", () => {
         const oi = Number(btn.getAttribute("data-quiz-opt"));
         answers[qi] = oi;
-        optBtns.forEach((b) => {
-          b.style.borderColor = "";
-          b.style.background = "";
-        });
-        btn.style.borderColor = "var(--blue-600)";
-        btn.style.background = "var(--blue-50)";
+        optBtns.forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
         submitBtn.disabled = answers.some((a) => a === null);
       });
     });
@@ -334,93 +389,59 @@ function renderQuestionReview(results) {
 }
 
 // ============================================================================
-// Lesson flow controller — teaches one topic at a time, checks understanding,
-// and sends learners back to re-learn any topic they get wrong.
+// Lesson flow controller.
+//   1. Walk through every topic (teach content, examples, interactive polls,
+//      animations) with Previous/Next navigation — nothing graded yet.
+//   2. One combined Lesson Quiz at the end, covering every topic at once.
+//   3. Any wrong answer sends the learner back into that exact topic to
+//      re-learn it, then re-try just that topic, before finishing.
 // ============================================================================
 function runLessonFlow(moduleId, lesson) {
   const flowEl = document.getElementById("flow");
   const dotsEl = document.getElementById("topic-dots");
   const topics = lesson.topics;
 
-  function setDots(activeIdx, clearedIdxs) {
+  function setDots(activeIdx) {
     if (!dotsEl) return;
     dotsEl.innerHTML = topics
       .map((t, i) => {
         let cls = "dot";
-        if (clearedIdxs.has(i)) cls += " dot-done";
+        if (i < activeIdx) cls += " dot-done";
         else if (i === activeIdx) cls += " dot-active";
         return `<div class="${cls}" title="${escapeHtml(t.title)}"></div>`;
       })
       .join("");
   }
 
-  const clearedTopics = new Set();
-
   function showTopic(idx) {
-    setDots(idx, clearedTopics);
+    setDots(idx);
     const topic = topics[idx];
+    const emoji = TOPIC_EMOJIS[idx % TOPIC_EMOJIS.length];
+    const isLast = idx + 1 >= topics.length;
     flowEl.innerHTML = `
       <div class="topic-kicker">Topic ${idx + 1} of ${topics.length}</div>
-      <h2 class="topic-title">${escapeHtml(topic.title)}</h2>
+      <h2 class="topic-title">${emoji} ${escapeHtml(topic.title)}</h2>
       <div id="topic-teach">${renderBlocks(topic.teach)}</div>
-      <div class="check-box">
-        <h3>Quick Check</h3>
-        <div class="sub">Answer these to make sure it's clear before moving on.</div>
-        <div id="topic-check"></div>
+      <div class="topic-nav">
+        ${idx > 0 ? `<button class="btn btn-outline" id="prev-topic-btn">← Previous</button>` : `<span></span>`}
+        <button class="btn btn-primary" id="next-topic-btn">${isLast ? "📝 Start Lesson Quiz →" : "Next Topic →"}</button>
       </div>
     `;
     animateBarsIn(flowEl);
-    showTopicCheck(idx, 1);
-  }
-
-  function showTopicCheck(idx, attempt) {
-    const topic = topics[idx];
-    const checkEl = document.getElementById("topic-check");
-    renderQuestionSet(checkEl, topic.check, {
-      submitLabel: attempt === 1 ? "Check My Answers" : "Check Again",
-      onSubmit: (results) => {
-        const allCorrect = results.every((r) => r.isCorrect);
-        if (allCorrect) {
-          clearedTopics.add(idx);
-          setDots(idx, clearedTopics);
-          checkEl.innerHTML = `
-            <div class="check-pass">
-              <div class="check-pass-icon">✓</div>
-              <div>
-                <div class="check-pass-title">Nicely done — that's clear!</div>
-                <div class="check-pass-sub">You got ${results.length}/${results.length} right.</div>
-              </div>
-            </div>
-            <div class="btn-row"><button class="btn btn-primary" id="next-topic-btn">${idx + 1 < topics.length ? "Continue to Next Topic →" : "Continue to Lesson Quiz →"}</button></div>
-          `;
-          document.getElementById("next-topic-btn").addEventListener("click", () => {
-            if (idx + 1 < topics.length) showTopic(idx + 1);
-            else showFinalIntro();
-          });
-        } else {
-          const numRight = results.filter((r) => r.isCorrect).length;
-          checkEl.innerHTML = `
-            <div class="check-fail">
-              <div class="check-fail-title">Not quite yet — let's learn this again.</div>
-              <div class="check-fail-sub">You got ${numRight}/${results.length} right. Re-read the topic above, then try again.</div>
-            </div>
-            <div class="btn-row"><button class="btn btn-primary" id="retry-topic-btn">Read It Again & Retry</button></div>
-          `;
-          document.getElementById("retry-topic-btn").addEventListener("click", () => {
-            document.getElementById("topic-teach").scrollIntoView({ behavior: "smooth", block: "start" });
-            showTopicCheck(idx, attempt + 1);
-          });
-        }
-      },
+    document.getElementById("next-topic-btn").addEventListener("click", () => {
+      if (!isLast) showTopic(idx + 1);
+      else showFinalIntro();
     });
+    const prevBtn = document.getElementById("prev-topic-btn");
+    if (prevBtn) prevBtn.addEventListener("click", () => showTopic(idx - 1));
   }
 
   function showFinalIntro() {
-    setDots(-1, clearedTopics);
+    setDots(topics.length);
     flowEl.innerHTML = `
       <div class="quiz-section" id="final-quiz-section">
-        <h2>Lesson Quiz</h2>
-        <div class="sub">You've learned every topic in this lesson. Let's check everything together. If you miss something, you'll get a chance to re-learn just that part.</div>
+        <h2>📝 Lesson Quiz</h2>
+        <div class="sub">You've learned every topic in this lesson. Let's check everything together, all at once. If you miss something, you'll get a chance to re-learn just that part.</div>
         <div id="final-quiz-body"></div>
       </div>
     `;
@@ -453,7 +474,6 @@ function runLessonFlow(moduleId, lesson) {
       return;
     }
     const topic = topics.find((t) => t.id === queue[i]);
-    const topicIdx = topics.indexOf(topic);
     flowEl.innerHTML = `
       <div class="review-banner">
         <div class="review-banner-title">📖 Let's Review: ${escapeHtml(topic.title)}</div>
@@ -461,7 +481,7 @@ function runLessonFlow(moduleId, lesson) {
       </div>
       <div id="review-teach">${renderBlocks(topic.teach)}</div>
       <div class="check-box">
-        <h3>Try Again</h3>
+        <h3>🔄 Try Again</h3>
         <div id="review-check"></div>
       </div>
     `;
@@ -474,12 +494,11 @@ function runLessonFlow(moduleId, lesson) {
         onSubmit: (results) => {
           const allCorrect = results.every((r) => r.isCorrect);
           if (allCorrect) {
-            clearedTopics.add(topicIdx);
             reviewCheckEl.innerHTML = `
               <div class="check-pass">
                 <div class="check-pass-icon">✓</div>
                 <div>
-                  <div class="check-pass-title">Got it — that's cleared up now!</div>
+                  <div class="check-pass-title">🎉 Got it — that's cleared up now!</div>
                 </div>
               </div>
               <div class="btn-row"><button class="btn btn-primary" id="review-next-btn">${
@@ -492,8 +511,11 @@ function runLessonFlow(moduleId, lesson) {
           } else {
             reviewCheckEl.innerHTML = `
               <div class="check-fail">
-                <div class="check-fail-title">Still not quite — one more look.</div>
-                <div class="check-fail-sub">Scroll up and re-read this topic, then try once more.</div>
+                <div class="check-fail-icon">🤔</div>
+                <div>
+                  <div class="check-fail-title">Still not quite — one more look.</div>
+                  <div class="check-fail-sub">Scroll up and re-read this topic, then try once more.</div>
+                </div>
               </div>
               <div class="btn-row"><button class="btn btn-primary" id="review-retry-btn">Read It Again & Retry</button></div>
             `;
@@ -512,7 +534,7 @@ function runLessonFlow(moduleId, lesson) {
     const mod = getModule(moduleId);
     const lessonIdx = getLessonIndex(moduleId, lesson.id);
     const nextLesson = mod.lessons[lessonIdx + 1];
-    setDots(-1, new Set(topics.map((_, i) => i)));
+    setDots(topics.length);
 
     let actionsHtml;
     if (lesson.finalQuiz.isFinal) {
@@ -526,6 +548,7 @@ function runLessonFlow(moduleId, lesson) {
     flowEl.innerHTML = `
       <div class="quiz-section">
         <div class="quiz-result pass">
+          <div class="confetti-row">🎉 🎊 ✨ 🎉 🎊</div>
           <div class="score-circle"><div class="pct">${scorePercent}%</div><div class="lbl">Complete</div></div>
           <h3>${wasReviewed ? "All caught up!" : "Great work!"}</h3>
           <p>${
@@ -594,6 +617,7 @@ function renderCompletionPage(moduleId) {
     ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: mod.title })}
     <div class="page page-narrow">
       <div class="completion-box">
+        <div class="confetti-row">🎉 🎊 ✨ 🏆 ✨ 🎊 🎉</div>
         <div class="icon">🏆</div>
         <h2>Module ${mod.number} Complete!</h2>
         <p>You've finished "${escapeHtml(mod.title)}". Great job working through every lesson and quiz on your own.</p>

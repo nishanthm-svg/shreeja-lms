@@ -190,6 +190,18 @@ export const MODULES = [
                 html: "Milk is made in almost every country. But a few countries make much more than others. Let's look at the top 10.",
               },
               {
+                type: "poll",
+                heading: "Guess Before You Look",
+                questions: [
+                  {
+                    q: "Which country do YOU think makes the most milk in the world?",
+                    options: ["USA", "China", "India", "Pakistan"],
+                    answer: 2,
+                    reveal: "Let's check the real numbers below and see if you guessed right!",
+                  },
+                ],
+              },
+              {
                 type: "glossary",
                 term: "Million Tonnes",
                 meaning:
@@ -339,6 +351,18 @@ export const MODULES = [
                 html: "Milk is made in every state of India. But some states make much more than others.",
               },
               {
+                type: "poll",
+                heading: "Guess Before You Look",
+                questions: [
+                  {
+                    q: "Which state do YOU think makes the most milk in India?",
+                    options: ["Punjab", "Uttar Pradesh", "Kerala", "Bihar"],
+                    answer: 1,
+                    reveal: "Let's check the chart below and see if you guessed right!",
+                  },
+                ],
+              },
+              {
                 type: "barchart",
                 heading: "Milk Production by State",
                 source: "Source: BAHS 2025",
@@ -467,6 +491,18 @@ export const MODULES = [
                 style: "warning",
                 heading: "The Unfair Deal",
                 text: "The trader made a big profit, but the farmers who did all the hard work stayed poor. This is called exploitation — when someone with power takes unfair advantage of people who have no other choice.",
+              },
+              {
+                type: "poll",
+                heading: "What Do You Think?",
+                questions: [
+                  {
+                    q: "If only one trader buys your milk and he alone sets the price, is that fair to farmers?",
+                    options: ["Yes, that's fair", "No, that's not fair"],
+                    answer: 1,
+                    reveal: "Right — when farmers have no other buyer to go to, the trader can pay whatever he wants. That's not a fair deal.",
+                  },
+                ],
               },
             ],
             check: [
@@ -780,6 +816,18 @@ export const MODULES = [
                 type: "text",
                 heading: "Meet Ramesh and Sita",
                 html: "Ramesh and Sita lived in a small village called Rampur in Uttar Pradesh. About five years ago, they moved to a big city looking for better work. Ramesh worked as a daily-wage labourer on construction sites. Sita worked cleaning houses. They lived in one small rented room with their 2-year-old son, Chintu.",
+              },
+              {
+                type: "poll",
+                heading: "What Do You Think?",
+                questions: [
+                  {
+                    q: "Do you think Ramesh and Sita found it easy to save money in the city?",
+                    options: ["Yes, easily", "No, it was hard"],
+                    answer: 1,
+                    reveal: "Let's find out exactly why, in the numbers below.",
+                  },
+                ],
               },
               {
                 type: "stat-grid",

@@ -28,6 +28,83 @@
   box-sizing: border-box;
 }
 
+/* ---------- Animation keyframes ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes popIn {
+  0% {
+    transform: scale(0.94);
+  }
+  60% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes shakeX {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes confettiPop {
+  0% {
+    transform: translateY(6px) scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-3px) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes dotPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0);
+  }
+}
+
 html,
 body {
   margin: 0;
@@ -396,6 +473,34 @@ button {
 
 .block {
   margin-bottom: 20px;
+  animation: fadeInUp 0.5s ease both;
+}
+.block:nth-of-type(1) {
+  animation-delay: 0.03s;
+}
+.block:nth-of-type(2) {
+  animation-delay: 0.09s;
+}
+.block:nth-of-type(3) {
+  animation-delay: 0.15s;
+}
+.block:nth-of-type(4) {
+  animation-delay: 0.21s;
+}
+.block:nth-of-type(5) {
+  animation-delay: 0.27s;
+}
+.block:nth-of-type(6) {
+  animation-delay: 0.33s;
+}
+.block:nth-of-type(7) {
+  animation-delay: 0.39s;
+}
+.block:nth-of-type(8) {
+  animation-delay: 0.45s;
+}
+.block:nth-of-type(n + 9) {
+  animation-delay: 0.5s;
 }
 
 .block-hero {
@@ -670,12 +775,19 @@ button {
   background: var(--green-100);
   color: #14532d;
   font-weight: 600;
+  animation: popIn 0.25s ease both;
 }
 .opt-btn.incorrect {
   border-color: var(--red-600);
   background: var(--red-100);
   color: #7f1d1d;
   font-weight: 600;
+  animation: shakeX 0.4s ease both;
+}
+.opt-btn.selected {
+  border-color: var(--blue-600);
+  background: var(--blue-50);
+  animation: popIn 0.2s ease both;
 }
 .poll-reveal {
   margin-top: 10px;
@@ -829,6 +941,17 @@ button {
 .review-item .mark {
   flex-shrink: 0;
   font-weight: 800;
+  animation: bounceIn 0.4s ease both;
+}
+
+.confetti-row {
+  font-size: 22px;
+  letter-spacing: 6px;
+  margin-bottom: 6px;
+}
+.confetti-row span,
+.confetti-row {
+  animation: confettiPop 0.6s ease both;
 }
 .review-item.correct .mark {
   color: var(--green-600);
@@ -873,18 +996,43 @@ button {
   border: 1.5px dashed var(--amber-600);
   border-radius: var(--radius);
   padding: 14px 18px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.glossary-box:hover {
+  background: #ffedd5;
+}
+.glossary-box:active {
+  transform: scale(0.99);
 }
 .gloss-icon {
   font-size: 20px;
   flex-shrink: 0;
+  animation: bounceIn 0.5s ease both;
 }
 .gloss-term {
   font-weight: 800;
   color: #92400e;
 }
+.gloss-hint {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 12px;
+  color: #b45309;
+  font-weight: 600;
+}
+.glossary-box.revealed .gloss-hint {
+  display: none;
+}
 .gloss-meaning {
+  display: none;
   color: var(--gray-700);
   font-size: 14.5px;
+  margin-top: 4px;
+}
+.glossary-box.revealed .gloss-meaning {
+  display: block;
+  animation: fadeInUp 0.3s ease both;
 }
 
 .ledger-box {
@@ -946,9 +1094,18 @@ button {
 .dot.dot-active {
   background: var(--blue-600);
   transform: scale(1.3);
+  animation: dotPulse 1.6s ease-in-out infinite;
 }
 .dot.dot-done {
   background: var(--green-600);
+}
+
+.topic-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  gap: 10px;
 }
 
 .topic-kicker {
@@ -1014,9 +1171,25 @@ button {
 }
 
 .check-fail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background: var(--amber-100);
   border-radius: 10px;
   padding: 12px 16px;
+}
+.check-fail-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--amber-600);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  animation: bounceIn 0.4s ease both;
 }
 .check-fail-title {
   font-weight: 700;
