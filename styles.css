@@ -185,6 +185,86 @@ button {
   background: rgba(255, 255, 255, 0.28);
 }
 
+.lang-switch-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.lang-switch-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* ---------- Language picker ---------- */
+.lang-picker-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--blue-900), var(--blue-600));
+  padding: 24px 16px;
+}
+.lang-picker-box {
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  padding: 40px 28px;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  animation: fadeInUp 0.5s ease both;
+}
+.lang-picker-icon {
+  font-size: 44px;
+  margin-bottom: 8px;
+}
+.lang-picker-box h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  color: var(--blue-900);
+}
+.lang-picker-box p {
+  margin: 0 0 24px;
+  font-size: 14.5px;
+  color: var(--gray-500);
+}
+.lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.lang-card {
+  background: var(--blue-50);
+  border: 2px solid var(--blue-100);
+  border-radius: 14px;
+  padding: 18px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.lang-card:hover {
+  border-color: var(--blue-600);
+  background: var(--blue-100);
+  transform: translateY(-2px);
+}
+.lang-native {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--blue-900);
+  margin-bottom: 4px;
+}
+.lang-label {
+  font-size: 12.5px;
+  color: var(--gray-500);
+}
+.lang-cancel {
+  margin-top: 20px;
+}
+
 /* ---------- Layout ---------- */
 .page {
   max-width: 920px;

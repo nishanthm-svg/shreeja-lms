@@ -5,6 +5,7 @@ import {
   isLessonUnlocked,
   getModuleProgress,
 } from "./progress.js";
+import { LANGUAGES, getLang, setLang, tr, ui } from "./i18n.js";
 
 const root = document.getElementById("app");
 
@@ -16,6 +17,15 @@ const ICONS = {
 const TOPIC_EMOJIS = ["🥛", "🐄", "🌍", "📈", "🤝", "🏆", "🌾", "💡"];
 const CALLOUT_EMOJIS = { info: "💡", tip: "✅", warning: "⚠️" };
 const STAT_EMOJIS = ["🎯", "🌟", "🔑", "📌", "✨", "🌱"];
+
+let lang = getLang(); // null until the learner picks one
+
+function t(field) {
+  return tr(field, lang || "en");
+}
+function u(key, vars) {
+  return ui(key, lang || "en", vars);
+}
 
 function escapeHtml(str) {
   return String(str)
@@ -34,6 +44,49 @@ function navigate(hash) {
 }
 
 // ============================================================================
+// Language picker
+// ============================================================================
+function renderLanguagePicker(isSwitcher) {
+  const cards = LANGUAGES.map(
+    (l) => `
+    <button type="button" class="lang-card" data-lang="${l.code}">
+      <div class="lang-native">${escapeHtml(l.native)}</div>
+      <div class="lang-label">${escapeHtml(l.label)}</div>
+    </button>`
+  ).join("");
+
+  return `
+    <div class="lang-picker-page">
+      <div class="lang-picker-box">
+        <div class="lang-picker-icon">🥛</div>
+        <h1>${u("langPickerTitle")}</h1>
+        <p>${u("langPickerSub")}</p>
+        <div class="lang-grid">${cards}</div>
+        ${isSwitcher ? `<button class="btn btn-outline lang-cancel" id="lang-cancel-btn">${escapeHtml(u("backButton"))}</button>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function wireLanguagePicker(isSwitcher, returnHash) {
+  document.querySelectorAll("[data-lang]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      lang = btn.getAttribute("data-lang");
+      setLang(lang);
+      if (isSwitcher && returnHash) {
+        navigate(returnHash);
+      } else {
+        navigate("#/");
+      }
+    });
+  });
+  const cancelBtn = document.getElementById("lang-cancel-btn");
+  if (cancelBtn && returnHash) {
+    cancelBtn.addEventListener("click", () => navigate(returnHash));
+  }
+}
+
+// ============================================================================
 // Top bar
 // ============================================================================
 function renderTopbar(context) {
@@ -42,11 +95,12 @@ function renderTopbar(context) {
     <div class="topbar">
       ${
         showBack
-          ? `<button class="back-btn" data-nav="${backHash}">← Back</button>`
-          : `<div class="brand" data-nav="#/"><span class="brand-icon">🥛</span> Shreeja LMS</div>`
+          ? `<button class="back-btn" data-nav="${backHash}">${u("backButton")}</button>`
+          : `<div class="brand" data-nav="#/"><span class="brand-icon">🥛</span> ${escapeHtml(u("brandName"))}</div>`
       }
-      ${showBack ? `<div class="brand" data-nav="#/" style="margin-left:4px;"><span class="brand-icon">🥛</span> ${escapeHtml(title || "Shreeja LMS")}</div>` : ""}
+      ${showBack ? `<div class="brand" data-nav="#/" style="margin-left:4px;"><span class="brand-icon">🥛</span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
       <div class="spacer"></div>
+      <button class="lang-switch-btn" data-nav="#/language">🌐 ${escapeHtml((LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]).native)}</button>
     </div>
   `;
 }
@@ -61,25 +115,25 @@ function renderDashboard() {
         <div class="module-card locked">
           <div class="module-number">${mod.number}</div>
           <div class="module-info">
-            <h3>${escapeHtml(mod.title)}</h3>
-            <div class="meta">Coming soon</div>
+            <h3>${escapeHtml(t(mod.title))}</h3>
+            <div class="meta">${u("comingSoon")}</div>
           </div>
-          <span class="badge locked">${ICONS.lock} Locked</span>
+          <span class="badge locked">${u("badgeLocked")}</span>
         </div>
       `;
     }
     const progress = getModuleProgress(mod);
     const badge = progress.isComplete
-      ? `<span class="badge complete">${ICONS.check} Completed</span>`
+      ? `<span class="badge complete">${u("badgeCompleted")}</span>`
       : progress.completed > 0
-      ? `<span class="badge progress">In progress</span>`
-      : `<span class="badge progress">Start</span>`;
+      ? `<span class="badge progress">${u("badgeInProgress")}</span>`
+      : `<span class="badge progress">${u("badgeStart")}</span>`;
     return `
       <div class="module-card available" data-nav="#/module/${mod.id}">
         <div class="module-number">${mod.number}</div>
         <div class="module-info">
-          <h3>${escapeHtml(mod.title)}</h3>
-          <div class="meta">${progress.completed}/${progress.total} lessons complete</div>
+          <h3>${escapeHtml(t(mod.title))}</h3>
+          <div class="meta">${u("lessonsCompleteMeta", { completed: progress.completed, total: progress.total })}</div>
           <div class="mini-bar"><div style="width:${progress.percent}%"></div></div>
         </div>
         ${badge}
@@ -96,18 +150,18 @@ function renderDashboard() {
     ${renderTopbar({ showBack: false })}
     <div class="page">
       <div class="dash-header">
-        <h1>🥛 Shreeja Learning Academy</h1>
-        <p>Learn step by step, on your own. Every topic is taught first — with examples and interactive moments — then checked, all at once, at the end.</p>
+        <h1>${u("dashboardTitle")}</h1>
+        <p>${u("dashboardTagline")}</p>
       </div>
       <div class="overall-progress">
         <div class="ring" style="--pct:${overallPct}" data-label="${overallPct}%"></div>
         <div>
-          <div style="font-weight:700; font-size:15px;">${totalDone} of ${totalLessons} lessons completed</div>
-          <div style="font-size:13px; color:var(--gray-500);">Keep going — every lesson builds toward your certificate. 🎓</div>
+          <div style="font-weight:700; font-size:15px;">${u("lessonsCompletedCount", { done: totalDone, total: totalLessons })}</div>
+          <div style="font-size:13px; color:var(--gray-500);">${u("progressHint")}</div>
         </div>
       </div>
       <div class="module-grid">${cards}</div>
-      <div class="progress-note">Your progress is saved automatically in this browser.</div>
+      <div class="progress-note">${u("progressNote")}</div>
     </div>
   `;
 }
@@ -142,12 +196,15 @@ function renderModulePage(moduleId) {
         rowClass = "locked";
       }
       const topicCount = lesson.topics ? lesson.topics.length : 0;
+      const metaParts = [u("lessonMeta", { min: lesson.estMinutes, topics: topicCount })];
+      if (state.completed) metaParts.push(u("bestScoreSuffix", { score: state.bestScore }));
+      if (!unlocked) metaParts.push(u("lockedHint"));
       return `
         <div class="lesson-row ${rowClass}" ${unlocked ? `data-nav="#/module/${mod.id}/lesson/${lesson.id}"` : ""}>
           <div class="lesson-status-icon ${iconClass}">${iconHtml}</div>
           <div class="lesson-info">
-            <h4>${escapeHtml(lesson.title)}</h4>
-            <div class="meta">${lesson.estMinutes} min · ${topicCount} topics${state.completed ? ` · Best score ${state.bestScore}%` : ""}${!unlocked ? " · Complete the previous lesson to unlock" : ""}</div>
+            <h4>${escapeHtml(t(lesson.title))}</h4>
+            <div class="meta">${metaParts.join(" · ")}</div>
           </div>
           ${unlocked ? `<div class="chev">›</div>` : ""}
         </div>
@@ -156,14 +213,14 @@ function renderModulePage(moduleId) {
     .join("");
 
   return `
-    ${renderTopbar({ showBack: true, backHash: "#/", title: mod.title })}
+    ${renderTopbar({ showBack: true, backHash: "#/", title: t(mod.title) })}
     <div class="page">
       <div class="module-hero">
-        <h1>${escapeHtml(mod.title)}</h1>
-        <p>${escapeHtml(mod.subtitle || "")}</p>
+        <h1>${escapeHtml(t(mod.title))}</h1>
+        <p>${escapeHtml(t(mod.subtitle) || "")}</p>
         <div class="progress-row">
           <div class="bar-track"><div style="width:${progress.percent}%"></div></div>
-          <div class="progress-label">${progress.completed}/${progress.total} complete</div>
+          <div class="progress-label">${u("moduleProgressComplete", { completed: progress.completed, total: progress.total })}</div>
         </div>
       </div>
       <div class="lesson-list">${rows}</div>
@@ -177,39 +234,39 @@ function renderModulePage(moduleId) {
 function renderBlockHtml(block) {
   switch (block.type) {
     case "hero":
-      return `<div class="block block-hero"><h2>🥛 ${escapeHtml(block.heading)}</h2><p>${escapeHtml(block.text)}</p></div>`;
+      return `<div class="block block-hero"><h2>🥛 ${escapeHtml(t(block.heading))}</h2><p>${escapeHtml(t(block.text))}</p></div>`;
 
     case "text":
-      return `<div class="block block-text"><h3>📘 ${escapeHtml(block.heading)}</h3><div class="body">${block.html}</div></div>`;
+      return `<div class="block block-text"><h3>📘 ${escapeHtml(t(block.heading))}</h3><div class="body">${t(block.html)}</div></div>`;
 
     case "callout": {
       const emoji = CALLOUT_EMOJIS[block.style] || "💡";
-      return `<div class="block callout ${block.style || ""}"><h4>${emoji} ${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
+      return `<div class="block callout ${block.style || ""}"><h4>${emoji} ${escapeHtml(t(block.heading))}</h4><p>${escapeHtml(t(block.text))}</p></div>`;
     }
 
     case "example":
-      return `<div class="block example-box"><h4>🌟 ${escapeHtml(block.heading)}</h4><p>${escapeHtml(block.text)}</p></div>`;
+      return `<div class="block example-box"><h4>🌟 ${escapeHtml(t(block.heading))}</h4><p>${escapeHtml(t(block.text))}</p></div>`;
 
     case "glossary":
       return `
         <div class="block glossary-box" data-toggle="glossary">
           <span class="gloss-icon">📖</span>
           <div>
-            <span class="gloss-term">${escapeHtml(block.term)}</span>
-            <span class="gloss-hint">👆 Tap to see what this means</span>
-            <div class="gloss-meaning">${escapeHtml(block.meaning)}</div>
+            <span class="gloss-term">${escapeHtml(t(block.term))}</span>
+            <span class="gloss-hint">${u("tapToReveal")}</span>
+            <div class="gloss-meaning">${escapeHtml(t(block.meaning))}</div>
           </div>
         </div>`;
 
     case "ledger": {
       const rows = block.rows
-        .map((r) => `<div class="ledger-row"><span>${escapeHtml(r.label)}</span><span>${escapeHtml(r.amount)}</span></div>`)
+        .map((r) => `<div class="ledger-row"><span>${escapeHtml(t(r.label))}</span><span>${escapeHtml(r.amount)}</span></div>`)
         .join("");
       return `
         <div class="block ledger-box">
-          <h3>💰 ${escapeHtml(block.heading)}</h3>
+          <h3>💰 ${escapeHtml(t(block.heading))}</h3>
           ${rows}
-          <div class="ledger-row ledger-total"><span>${escapeHtml(block.total.label)}</span><span>${escapeHtml(block.total.amount)}</span></div>
+          <div class="ledger-row ledger-total"><span>${escapeHtml(t(block.total.label))}</span><span>${escapeHtml(block.total.amount)}</span></div>
         </div>`;
     }
 
@@ -217,7 +274,7 @@ function renderBlockHtml(block) {
       return `<div class="block stat-grid">${block.items
         .map(
           (it, i) =>
-            `<div class="stat-card"><div class="label">${STAT_EMOJIS[i % STAT_EMOJIS.length]} ${escapeHtml(it.label)}</div><div class="text">${escapeHtml(it.text)}</div></div>`
+            `<div class="stat-card"><div class="label">${STAT_EMOJIS[i % STAT_EMOJIS.length]} ${escapeHtml(t(it.label))}</div><div class="text">${escapeHtml(t(it.text))}</div></div>`
         )
         .join("")}</div>`;
 
@@ -227,16 +284,16 @@ function renderBlockHtml(block) {
         .map(
           (d, i) => `
         <div class="bar-row">
-          <div class="bar-label">${d.flag ? d.flag + " " : ""}${escapeHtml(d.label)}</div>
+          <div class="bar-label">${d.flag ? d.flag + " " : ""}${escapeHtml(t(d.label))}</div>
           <div class="bar-track"><div class="bar-fill" data-target="${(d.value / max) * 100}" style="transition-delay:${i * 40}ms"></div></div>
-          <div class="bar-value">${d.value} ${escapeHtml(block.unit)}</div>
+          <div class="bar-value">${d.value} ${escapeHtml(t(block.unit))}</div>
         </div>`
         )
         .join("");
       return `
         <div class="block chart-box">
-          <h3>📊 ${escapeHtml(block.heading)}</h3>
-          <div class="chart-source">${escapeHtml(block.source)}</div>
+          <h3>📊 ${escapeHtml(t(block.heading))}</h3>
+          <div class="chart-source">${escapeHtml(t(block.source))}</div>
           ${rows}
         </div>`;
     }
@@ -247,15 +304,15 @@ function renderBlockHtml(block) {
           (it) => `
         <div class="timeline-item">
           <div class="year">${escapeHtml(it.year)}</div>
-          <div class="text">${escapeHtml(it.text)}</div>
+          <div class="text">${escapeHtml(t(it.text))}</div>
         </div>`
         )
         .join("");
       return `
         <div class="block timeline-box">
-          <h3>🕰️ ${escapeHtml(block.heading)}</h3>
+          <h3>🕰️ ${escapeHtml(t(block.heading))}</h3>
           <div class="timeline">${items}</div>
-          ${block.result ? `<div class="timeline-result">🏁 ${escapeHtml(block.result)}</div>` : ""}
+          ${block.result ? `<div class="timeline-result">🏁 ${escapeHtml(t(block.result))}</div>` : ""}
         </div>`;
     }
 
@@ -264,15 +321,15 @@ function renderBlockHtml(block) {
         .map(
           (q, qi) => `
         <div class="poll-q" data-poll-answer="${q.answer}">
-          <div class="q-text">${escapeHtml(q.q)}</div>
+          <div class="q-text">${escapeHtml(t(q.q))}</div>
           <div class="opt-list">
-            ${q.options.map((opt, oi) => `<button type="button" class="opt-btn" data-poll-idx="${oi}">${escapeHtml(opt)}</button>`).join("")}
+            ${q.options.map((opt, oi) => `<button type="button" class="opt-btn" data-poll-idx="${oi}">${escapeHtml(t(opt))}</button>`).join("")}
           </div>
-          <div class="poll-reveal" style="display:none;">${escapeHtml(q.reveal || "")}</div>
+          <div class="poll-reveal" style="display:none;">${escapeHtml(t(q.reveal) || "")}</div>
         </div>`
         )
         .join("");
-      return `<div class="block poll-box"><h3>🤔 ${escapeHtml(block.heading)}</h3>${qs}</div>`;
+      return `<div class="block poll-box"><h3>🤔 ${escapeHtml(t(block.heading))}</h3>${qs}</div>`;
     }
 
     default:
@@ -328,25 +385,23 @@ document.addEventListener("click", (e) => {
 // ============================================================================
 function renderQuestionSet(container, questions, opts) {
   const answers = new Array(questions.length).fill(null);
-  const label = opts.submitLabel || "Check My Answers";
+  const label = opts.submitLabel;
 
   const qsHtml = questions
     .map((q, qi) => {
-      const options = q.type === "truefalse" ? ["True", "False"] : q.options;
+      const options = q.type === "truefalse" ? [u("trueLabel") || "True", u("falseLabel") || "False"] : q.options.map((o) => t(o));
       return `
       <div class="quiz-q" data-quiz-q="${qi}">
-        ${questions.length > 1 ? `<div class="q-num">Question ${qi + 1} of ${questions.length}</div>` : ""}
-        <div class="q-text">${escapeHtml(q.q)}</div>
+        ${questions.length > 1 ? `<div class="q-num">${u("questionOfTotal", { n: qi + 1, total: questions.length })}</div>` : ""}
+        <div class="q-text">${escapeHtml(t(q.q))}</div>
         <div class="opt-list">
-          ${options
-            .map((opt, oi) => `<button type="button" class="opt-btn" data-quiz-opt="${oi}">${escapeHtml(opt)}</button>`)
-            .join("")}
+          ${options.map((opt, oi) => `<button type="button" class="opt-btn" data-quiz-opt="${oi}">${escapeHtml(opt)}</button>`).join("")}
         </div>
       </div>`;
     })
     .join("");
 
-  container.innerHTML = `${qsHtml}<div class="btn-row"><button class="btn btn-primary" id="qs-submit" disabled>${label}</button></div>`;
+  container.innerHTML = `${qsHtml}<div class="btn-row"><button class="btn btn-primary" id="qs-submit" disabled>${escapeHtml(label)}</button></div>`;
 
   const qBlocks = container.querySelectorAll("[data-quiz-q]");
   qBlocks.forEach((qEl) => {
@@ -380,8 +435,8 @@ function renderQuestionReview(results) {
       <div class="review-item ${r.isCorrect ? "correct" : "incorrect"}">
         <div class="mark">${r.isCorrect ? "✓" : "✕"}</div>
         <div>
-          <div>${escapeHtml(r.q.q)}</div>
-          <div class="exp">${escapeHtml(r.q.explain || "")}</div>
+          <div>${escapeHtml(t(r.q.q))}</div>
+          <div class="exp">${escapeHtml(t(r.q.explain) || "")}</div>
         </div>
       </div>`
     )
@@ -404,11 +459,11 @@ function runLessonFlow(moduleId, lesson) {
   function setDots(activeIdx) {
     if (!dotsEl) return;
     dotsEl.innerHTML = topics
-      .map((t, i) => {
+      .map((topic, i) => {
         let cls = "dot";
         if (i < activeIdx) cls += " dot-done";
         else if (i === activeIdx) cls += " dot-active";
-        return `<div class="${cls}" title="${escapeHtml(t.title)}"></div>`;
+        return `<div class="${cls}" title="${escapeHtml(t(topic.title))}"></div>`;
       })
       .join("");
   }
@@ -419,12 +474,12 @@ function runLessonFlow(moduleId, lesson) {
     const emoji = TOPIC_EMOJIS[idx % TOPIC_EMOJIS.length];
     const isLast = idx + 1 >= topics.length;
     flowEl.innerHTML = `
-      <div class="topic-kicker">Topic ${idx + 1} of ${topics.length}</div>
-      <h2 class="topic-title">${emoji} ${escapeHtml(topic.title)}</h2>
+      <div class="topic-kicker">${u("topicOfTotal", { n: idx + 1, total: topics.length })}</div>
+      <h2 class="topic-title">${emoji} ${escapeHtml(t(topic.title))}</h2>
       <div id="topic-teach">${renderBlocks(topic.teach)}</div>
       <div class="topic-nav">
-        ${idx > 0 ? `<button class="btn btn-outline" id="prev-topic-btn">← Previous</button>` : `<span></span>`}
-        <button class="btn btn-primary" id="next-topic-btn">${isLast ? "📝 Start Lesson Quiz →" : "Next Topic →"}</button>
+        ${idx > 0 ? `<button class="btn btn-outline" id="prev-topic-btn">${u("prevButton")}</button>` : `<span></span>`}
+        <button class="btn btn-primary" id="next-topic-btn">${isLast ? u("startQuizButton") : u("nextTopicButton")}</button>
       </div>
     `;
     animateBarsIn(flowEl);
@@ -440,8 +495,8 @@ function runLessonFlow(moduleId, lesson) {
     setDots(topics.length);
     flowEl.innerHTML = `
       <div class="quiz-section" id="final-quiz-section">
-        <h2>📝 Lesson Quiz</h2>
-        <div class="sub">You've learned every topic in this lesson. Let's check everything together, all at once. If you miss something, you'll get a chance to re-learn just that part.</div>
+        <h2>${u("lessonQuizTitle")}</h2>
+        <div class="sub">${u("lessonQuizSub")}</div>
         <div id="final-quiz-body"></div>
       </div>
     `;
@@ -451,7 +506,7 @@ function runLessonFlow(moduleId, lesson) {
   function showFinalQuiz() {
     const body = document.getElementById("final-quiz-body");
     renderQuestionSet(body, lesson.finalQuiz.questions, {
-      submitLabel: "Submit Lesson Quiz",
+      submitLabel: u("submitQuizButton"),
       onSubmit: (results) => {
         const correctCount = results.filter((r) => r.isCorrect).length;
         const scorePercent = Math.round((correctCount / results.length) * 100);
@@ -473,15 +528,15 @@ function runLessonFlow(moduleId, lesson) {
       showLessonComplete(100, null, true);
       return;
     }
-    const topic = topics.find((t) => t.id === queue[i]);
+    const topic = topics.find((tp) => tp.id === queue[i]);
     flowEl.innerHTML = `
       <div class="review-banner">
-        <div class="review-banner-title">📖 Let's Review: ${escapeHtml(topic.title)}</div>
-        <div class="review-banner-sub">You missed a question about this earlier. Here it is again — take your time.</div>
+        <div class="review-banner-title">${u("reviewTitlePrefix")} ${escapeHtml(t(topic.title))}</div>
+        <div class="review-banner-sub">${u("reviewSub")}</div>
       </div>
       <div id="review-teach">${renderBlocks(topic.teach)}</div>
       <div class="check-box">
-        <h3>🔄 Try Again</h3>
+        <h3>${u("tryAgainHeading")}</h3>
         <div id="review-check"></div>
       </div>
     `;
@@ -490,7 +545,7 @@ function runLessonFlow(moduleId, lesson) {
 
     function attemptReview() {
       renderQuestionSet(reviewCheckEl, topic.check, {
-        submitLabel: "Check My Answers",
+        submitLabel: u("checkAnswersButton"),
         onSubmit: (results) => {
           const allCorrect = results.every((r) => r.isCorrect);
           if (allCorrect) {
@@ -498,11 +553,11 @@ function runLessonFlow(moduleId, lesson) {
               <div class="check-pass">
                 <div class="check-pass-icon">✓</div>
                 <div>
-                  <div class="check-pass-title">🎉 Got it — that's cleared up now!</div>
+                  <div class="check-pass-title">${u("checkPassGotIt")}</div>
                 </div>
               </div>
               <div class="btn-row"><button class="btn btn-primary" id="review-next-btn">${
-                i + 1 < queue.length ? "Review Next Topic →" : "Finish Lesson →"
+                i + 1 < queue.length ? u("reviewNextTopic") : u("finishLesson")
               }</button></div>
             `;
             document.getElementById("review-next-btn").addEventListener("click", () => {
@@ -513,11 +568,11 @@ function runLessonFlow(moduleId, lesson) {
               <div class="check-fail">
                 <div class="check-fail-icon">🤔</div>
                 <div>
-                  <div class="check-fail-title">Still not quite — one more look.</div>
-                  <div class="check-fail-sub">Scroll up and re-read this topic, then try once more.</div>
+                  <div class="check-fail-title">${u("checkFailTitle")}</div>
+                  <div class="check-fail-sub">${u("checkFailSub")}</div>
                 </div>
               </div>
-              <div class="btn-row"><button class="btn btn-primary" id="review-retry-btn">Read It Again & Retry</button></div>
+              <div class="btn-row"><button class="btn btn-primary" id="review-retry-btn">${u("reviewRetry")}</button></div>
             `;
             document.getElementById("review-retry-btn").addEventListener("click", () => {
               document.getElementById("review-teach").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -538,24 +593,20 @@ function runLessonFlow(moduleId, lesson) {
 
     let actionsHtml;
     if (lesson.finalQuiz.isFinal) {
-      actionsHtml = `<button class="btn btn-success" data-nav="#/module/${moduleId}/complete">View Certificate</button>`;
+      actionsHtml = `<button class="btn btn-success" data-nav="#/module/${moduleId}/complete">${u("viewCertificate")}</button>`;
     } else if (nextLesson) {
-      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}/lesson/${nextLesson.id}">Continue to Next Lesson →</button>`;
+      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}/lesson/${nextLesson.id}">${u("continueNextLesson")}</button>`;
     } else {
-      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}">Back to Module</button>`;
+      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}">${u("backToModule")}</button>`;
     }
 
     flowEl.innerHTML = `
       <div class="quiz-section">
         <div class="quiz-result pass">
           <div class="confetti-row">🎉 🎊 ✨ 🎉 🎊</div>
-          <div class="score-circle"><div class="pct">${scorePercent}%</div><div class="lbl">Complete</div></div>
-          <h3>${wasReviewed ? "All caught up!" : "Great work!"}</h3>
-          <p>${
-            wasReviewed
-              ? "You reviewed a few things and now know this lesson well."
-              : "You've learned and passed every topic in this lesson."
-          }</p>
+          <div class="score-circle"><div class="pct">${scorePercent}%</div><div class="lbl">${wasReviewed ? "" : ""}</div></div>
+          <h3>${wasReviewed ? u("completeReviewedTitle") : u("completePassTitle")}</h3>
+          <p>${wasReviewed ? u("completeReviewedText") : u("completePassText")}</p>
           <div class="btn-row" style="justify-content:center;">${actionsHtml}</div>
           ${results ? `<div class="quiz-review">${renderQuestionReview(results)}</div>` : ""}
         </div>
@@ -584,11 +635,11 @@ function renderLessonPage(moduleId, lessonId) {
   const hookHtml = lesson.hook ? renderBlocks(lesson.hook) : "";
 
   return `
-    ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: mod.title })}
+    ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: t(mod.title) })}
     <div class="page page-narrow">
       <div class="lesson-title-bar">
-        <div class="kicker">Lesson ${lessonIdx + 1} of ${mod.lessons.length}</div>
-        <h1>${escapeHtml(lesson.title)}</h1>
+        <div class="kicker">${u("lessonOfTotal", { n: lessonIdx + 1, total: mod.lessons.length })}</div>
+        <h1>${escapeHtml(t(lesson.title))}</h1>
       </div>
       ${hookHtml}
       <div id="topic-dots" class="topic-dots"></div>
@@ -614,19 +665,19 @@ function renderCompletionPage(moduleId) {
   }
   const nextMod = MODULES.find((m) => m.number === mod.number + 1);
   return `
-    ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: mod.title })}
+    ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: t(mod.title) })}
     <div class="page page-narrow">
       <div class="completion-box">
         <div class="confetti-row">🎉 🎊 ✨ 🏆 ✨ 🎊 🎉</div>
         <div class="icon">🏆</div>
-        <h2>Module ${mod.number} Complete!</h2>
-        <p>You've finished "${escapeHtml(mod.title)}". Great job working through every lesson and quiz on your own.</p>
+        <h2>${u("moduleCompleteTitle", { n: mod.number })}</h2>
+        <p>${u("moduleCompleteText", { title: t(mod.title) })}</p>
         <div class="btn-row" style="justify-content:center;">
-          <button class="btn btn-outline" style="background:white;" data-nav="#/">Back to Dashboard</button>
-          <button class="btn btn-success" data-nav="#/module/${moduleId}">Review Module</button>
+          <button class="btn btn-outline" style="background:white;" data-nav="#/">${u("backToDashboard")}</button>
+          <button class="btn btn-success" data-nav="#/module/${moduleId}">${u("reviewModule")}</button>
         </div>
       </div>
-      ${nextMod ? `<p style="text-align:center; color:var(--gray-500); margin-top:18px; font-size:14px;">Module ${nextMod.number}: "${escapeHtml(nextMod.title)}" is coming soon.</p>` : ""}
+      ${nextMod ? `<p style="text-align:center; color:var(--gray-500); margin-top:18px; font-size:14px;">${u("nextModuleComingSoon", { n: nextMod.number, title: t(nextMod.title) })}</p>` : ""}
     </div>
   `;
 }
@@ -638,6 +689,7 @@ function parseHash() {
   const hash = location.hash || "#/";
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean);
   if (parts.length === 0) return { route: "dashboard" };
+  if (parts[0] === "language") return { route: "language" };
   if (parts[0] === "module" && parts[1]) {
     if (parts[2] === "lesson" && parts[3]) {
       return { route: "lesson", moduleId: parts[1], lessonId: parts[3] };
@@ -650,12 +702,29 @@ function parseHash() {
   return { route: "dashboard" };
 }
 
+let lastNonLanguageHash = "#/";
+
 function render() {
   const parsed = parseHash();
+
+  // Force the language picker on first visit, before anything else.
+  if (!lang && parsed.route !== "language") {
+    root.innerHTML = renderLanguagePicker(false);
+    wireLanguagePicker(false, null);
+    return;
+  }
+
+  if (parsed.route !== "language") {
+    lastNonLanguageHash = location.hash || "#/";
+  }
+
   let html = "";
   let afterRender = null;
 
   switch (parsed.route) {
+    case "language":
+      html = renderLanguagePicker(!!lang);
+      break;
     case "dashboard":
       html = renderDashboard();
       break;
@@ -677,6 +746,9 @@ function render() {
 
   if (html) {
     root.innerHTML = html;
+    if (parsed.route === "language") {
+      wireLanguagePicker(!!lang, lastNonLanguageHash);
+    }
     if (afterRender) afterRender();
   }
 }

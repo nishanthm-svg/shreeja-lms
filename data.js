@@ -2,18 +2,29 @@
 // Shreeja LMS — Content data
 // Written for learners with no formal education and no prior dairy
 // knowledge (about a Class 7 reading level). Every lesson is broken into
-// small TOPICS. Each topic is taught, then checked with a couple of quick
-// questions. If a learner gets something wrong, they are sent back to that
-// exact topic to learn it again before moving on — never a whole lesson.
+// small TOPICS, taught fully first (with examples, animation and light
+// interactivity), then checked with ONE combined quiz at the end. Wrong
+// answers send the learner back to re-learn that exact topic.
+//
+// Every learner-facing string is written with the L() helper:
+//   L("English", "Telugu", "Tamil", "Kannada")
+// so the whole app can render in the language the learner picked. English
+// is always the fallback if a translation is thin.
 // ============================================================================
+
+import { L } from "./i18n.js";
 
 export const MODULES = [
   {
     id: "m1",
     number: 1,
-    title: "Introduction to Dairy",
-    subtitle:
+    title: L("Introduction to Dairy", "డైరీకి పరిచయం", "பால் பண்ணைக்கு அறிமுகம்", "ಡೈರಿ ಪರಿಚಯ"),
+    subtitle: L(
       "Learn step by step — no experience needed. Every topic is taught first, then checked with a few simple questions.",
+      "అంచెలంచెలుగా నేర్చుకోండి — అనుభవం అవసరం లేదు. ప్రతి అంశం ముందు బోధించబడుతుంది, తర్వాత కొన్ని సరళమైన ప్రశ్నలతో పరిశీలించబడుతుంది.",
+      "படிப்படியாக கற்றுக்கொள்ளுங்கள் — அனுபவம் தேவையில்லை. ஒவ்வொரு தலைப்பும் முதலில் கற்பிக்கப்படும், பின்னர் சில எளிய கேள்விகளால் சரிபார்க்கப்படும்.",
+      "ಹಂತ ಹಂತವಾಗಿ ಕಲಿಯಿರಿ — ಅನುಭವ ಅಗತ್ಯವಿಲ್ಲ. ಪ್ರತಿ ವಿಷಯವನ್ನು ಮೊದಲು ಕಲಿಸಲಾಗುತ್ತದೆ, ನಂತರ ಕೆಲವು ಸರಳ ಪ್ರಶ್ನೆಗಳಿಂದ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ."
+    ),
     icon: "milk",
     available: true,
     lessons: [
@@ -22,124 +33,266 @@ export const MODULES = [
       // ==================================================================
       {
         id: "m1-l1",
-        title: "What is Dairy, and Why Does It Matter?",
+        title: L(
+          "What is Dairy, and Why Does It Matter?",
+          "డైరీ అంటే ఏమిటి, ఇది ఎందుకు ముఖ్యం?",
+          "பால் பண்ணை என்றால் என்ன, ஏன் இது முக்கியம்?",
+          "ಡೈರಿ ಎಂದರೇನು, ಇದು ಏಕೆ ಮುಖ್ಯ?"
+        ),
         estMinutes: 6,
         hook: [
           {
             type: "hero",
-            heading: "What is Dairy?",
-            text: "Let's start from zero — no experience needed. By the end of this lesson, you'll know why milk matters to families like yours.",
+            heading: L("What is Dairy?", "డైరీ అంటే ఏమిటి?", "பால் பண்ணை என்றால் என்ன?", "ಡೈರಿ ಎಂದರೇನು?"),
+            text: L(
+              "Let's start from zero — no experience needed. By the end of this lesson, you'll know why milk matters to families like yours.",
+              "మనం సున్నా నుండి మొదలుపెడదాం — అనుభవం అవసరం లేదు. ఈ పాఠం చివరికి, మీలాంటి కుటుంబాలకు పాలు ఎందుకు ముఖ్యమో మీకు తెలుస్తుంది.",
+              "நாம் பூஜ்ஜியத்திலிருந்து தொடங்குவோம் — அனுபவம் தேவையில்லை. இந்த பாடத்தின் முடிவில், உங்களைப் போன்ற குடும்பங்களுக்கு பால் ஏன் முக்கியம் என்பது உங்களுக்குத் தெரியும்.",
+              "ನಾವು ಶೂನ್ಯದಿಂದ ಪ್ರಾರಂಭಿಸೋಣ — ಅನುಭವ ಅಗತ್ಯವಿಲ್ಲ. ಈ ಪಾಠದ ಕೊನೆಯಲ್ಲಿ, ನಿಮ್ಮಂತಹ ಕುಟುಂಬಗಳಿಗೆ ಹಾಲು ಏಕೆ ಮುಖ್ಯ ಎಂದು ನಿಮಗೆ ತಿಳಿಯುತ್ತದೆ."
+            ),
           },
         ],
         topics: [
           {
             id: "t-milk-body",
-            title: "Milk and Your Body",
+            title: L("Milk and Your Body", "పాలు మరియు మీ శరీరం", "பால் மற்றும் உங்கள் உடல்", "ಹಾಲು ಮತ್ತು ನಿಮ್ಮ ದೇಹ"),
             teach: [
               {
                 type: "text",
-                heading: "What Does 'Dairy' Mean?",
-                html: "<b>Dairy</b> means anything made from milk — milk, curd (dahi), buttermilk (chaas), butter, ghee, paneer and cheese. A <b>dairy farmer</b> is a person who keeps cows or buffaloes and collects their milk to sell.",
+                heading: L("What Does 'Dairy' Mean?", "'డైరీ' అంటే ఏమిటి?", "'பால் பண்ணை' என்றால் என்ன?", "'ಡೈರಿ' ಎಂದರೇನು?"),
+                html: L(
+                  "<b>Dairy</b> means anything made from milk — milk, curd (dahi), buttermilk (chaas), butter, ghee, paneer and cheese. A <b>dairy farmer</b> is a person who keeps cows or buffaloes and collects their milk to sell.",
+                  "<b>డైరీ</b> అంటే పాల నుండి తయారైన ఏదైనా — పాలు, పెరుగు, మజ్జిగ, వెన్న, నెయ్యి, పన్నీర్ మరియు చీజ్. <b>డైరీ రైతు</b> అంటే ఆవులు లేదా గేదెలను పెంచి, వాటి పాలను సేకరించి అమ్మే వ్యక్తి.",
+                  "<b>பால் பண்ணை</b> என்பது பாலிலிருந்து தயாரிக்கப்படும் எதுவும் — பால், தயிர், மோர், வெண்ணெய், நெய், பன்னீர் மற்றும் சீஸ். <b>பால் பண்ணை விவசாயி</b> என்பவர் மாடு அல்லது எருமையை வளர்த்து, அவற்றின் பாலை சேகரித்து விற்பவர்.",
+                  "<b>ಡೈರಿ</b> ಎಂದರೆ ಹಾಲಿನಿಂದ ತಯಾರಿಸಿದ ಯಾವುದೇ ವಸ್ತು — ಹಾಲು, ಮೊಸರು, ಮಜ್ಜಿಗೆ, ಬೆಣ್ಣೆ, ತುಪ್ಪ, ಪನೀರ್ ಮತ್ತು ಚೀಸ್. <b>ಡೈರಿ ರೈತ</b> ಎಂದರೆ ಹಸು ಅಥವಾ ಎಮ್ಮೆಗಳನ್ನು ಸಾಕಿ, ಅವುಗಳ ಹಾಲನ್ನು ಸಂಗ್ರಹಿಸಿ ಮಾರಾಟ ಮಾಡುವ ವ್ಯಕ್ತಿ."
+                ),
               },
               {
                 type: "text",
-                heading: "Why Do We Drink Milk?",
-                html: "Milk is not just a drink — it is food. It has things our body needs every single day to grow and stay strong.",
+                heading: L("Why Do We Drink Milk?", "మనం పాలు ఎందుకు తాగుతాము?", "நாம் ஏன் பால் குடிக்கிறோம்?", "ನಾವು ಹಾಲು ಏಕೆ ಕುಡಿಯುತ್ತೇವೆ?"),
+                html: L(
+                  "Milk is not just a drink — it is food. It has things our body needs every single day to grow and stay strong.",
+                  "పాలు కేవలం పానీయం కాదు — అది ఆహారం. మన శరీరం పెరగడానికి మరియు బలంగా ఉండటానికి ప్రతిరోజూ అవసరమైన అంశాలు దీనిలో ఉన్నాయి.",
+                  "பால் ஒரு பானம் மட்டுமல்ல — அது உணவு. நமது உடல் வளர்வதற்கும் வலிமையாக இருப்பதற்கும் தினமும் தேவையான பொருட்கள் இதில் உள்ளன.",
+                  "ಹಾಲು ಕೇವಲ ಪಾನೀಯವಲ್ಲ — ಅದು ಆಹಾರ. ನಮ್ಮ ದೇಹ ಬೆಳೆಯಲು ಮತ್ತು ಬಲಿಷ್ಠವಾಗಿರಲು ಪ್ರತಿದಿನ ಬೇಕಾದ ಅಂಶಗಳು ಇದರಲ್ಲಿವೆ."
+                ),
               },
               {
                 type: "stat-grid",
                 items: [
                   {
-                    label: "Protein — for strong muscles",
-                    text: "Milk has protein. Protein helps build and repair muscles — like bricks build a house.",
+                    label: L(
+                      "Protein — for strong muscles",
+                      "ప్రోటీన్ — బలమైన కండరాల కోసం",
+                      "புரதம் — வலிமையான தசைகளுக்காக",
+                      "ಪ್ರೋಟೀನ್ — ಬಲಿಷ್ಠ ಸ್ನಾಯುಗಳಿಗಾಗಿ"
+                    ),
+                    text: L(
+                      "Milk has protein. Protein helps build and repair muscles — like bricks build a house.",
+                      "పాలలో ప్రోటీన్ ఉంటుంది. ఇటుకలు ఇల్లు కడతాయి అన్నట్లు, ప్రోటీన్ కండరాలను నిర్మించి, బాగుచేయడంలో సహాయపడుతుంది.",
+                      "பாலில் புரதம் உள்ளது. செங்கல் வீட்டைக் கட்டுவது போல, புரதம் தசைகளை உருவாக்கி, சரிசெய்ய உதவுகிறது.",
+                      "ಹಾಲಿನಲ್ಲಿ ಪ್ರೋಟೀನ್ ಇದೆ. ಇಟ್ಟಿಗೆಗಳು ಮನೆ ಕಟ್ಟುವಂತೆ, ಪ್ರೋಟೀನ್ ಸ್ನಾಯುಗಳನ್ನು ನಿರ್ಮಿಸಿ, ಸರಿಪಡಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+                    ),
                   },
                   {
-                    label: "Calcium — for strong bones",
-                    text: "Milk has calcium. Calcium makes bones and teeth strong — very important for growing children.",
+                    label: L(
+                      "Calcium — for strong bones",
+                      "కాల్షియం — బలమైన ఎముకల కోసం",
+                      "கால்சியம் — வலிமையான எலும்புகளுக்காக",
+                      "ಕ್ಯಾಲ್ಸಿಯಂ — ಬಲಿಷ್ಠ ಮೂಳೆಗಳಿಗಾಗಿ"
+                    ),
+                    text: L(
+                      "Milk has calcium. Calcium makes bones and teeth strong — very important for growing children.",
+                      "పాలలో కాల్షియం ఉంటుంది. కాల్షియం ఎముకలు మరియు దంతాలను బలంగా చేస్తుంది — పెరుగుతున్న పిల్లలకు ఇది చాలా ముఖ్యం.",
+                      "பாலில் கால்சியம் உள்ளது. கால்சியம் எலும்புகளையும் பற்களையும் வலிமையாக்குகிறது — வளரும் குழந்தைகளுக்கு இது மிக முக்கியம்.",
+                      "ಹಾಲಿನಲ್ಲಿ ಕ್ಯಾಲ್ಸಿಯಂ ಇದೆ. ಕ್ಯಾಲ್ಸಿಯಂ ಮೂಳೆಗಳು ಮತ್ತು ಹಲ್ಲುಗಳನ್ನು ಬಲಗೊಳಿಸುತ್ತದೆ — ಬೆಳೆಯುತ್ತಿರುವ ಮಕ್ಕಳಿಗೆ ಇದು ಬಹಳ ಮುಖ್ಯ."
+                    ),
                   },
                   {
-                    label: "Vitamins — for energy",
-                    text: "Milk has Vitamin A and Vitamin B12. These help our eyes, our skin, and give us energy for the day's work.",
+                    label: L("Vitamins — for energy", "విటమిన్లు — శక్తి కోసం", "வைட்டமின்கள் — ஆற்றலுக்காக", "ವಿಟಮಿನ್‌ಗಳು — ಶಕ್ತಿಗಾಗಿ"),
+                    text: L(
+                      "Milk has Vitamin A and Vitamin B12. These help our eyes, our skin, and give us energy for the day's work.",
+                      "పాలలో విటమిన్ A మరియు విటమిన్ B12 ఉంటాయి. ఇవి మన కళ్ళకు, చర్మానికి సహాయపడతాయి, రోజువారీ పనికి శక్తినిస్తాయి.",
+                      "பாலில் வைட்டமின் A மற்றும் வைட்டமின் B12 உள்ளன. இவை நமது கண்களுக்கும், தோலுக்கும் உதவுகின்றன, நாள் முழுவதும் வேலை செய்ய ஆற்றல் தருகின்றன.",
+                      "ಹಾಲಿನಲ್ಲಿ ವಿಟಮಿನ್ A ಮತ್ತು ವಿಟಮಿನ್ B12 ಇವೆ. ಇವು ನಮ್ಮ ಕಣ್ಣುಗಳಿಗೆ, ಚರ್ಮಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತವೆ ಮತ್ತು ದಿನದ ಕೆಲಸಕ್ಕೆ ಶಕ್ತಿ ನೀಡುತ್ತವೆ."
+                    ),
                   },
                 ],
               },
               {
                 type: "glossary",
-                term: "Nutrition",
-                meaning:
+                term: L("Nutrition", "పోషకాహారం", "ஊட்டச்சத்து", "ಪೋಷಣೆ"),
+                meaning: L(
                   "The good things in food that help our body grow, stay healthy, and have energy.",
+                  "మన శరీరం పెరగడానికి, ఆరోగ్యంగా ఉండటానికి, శక్తి పొందడానికి సహాయపడే ఆహారంలోని మంచి అంశాలు.",
+                  "நமது உடல் வளர, ஆரோக்கியமாக இருக்க, ஆற்றல் பெற உதவும் உணவில் உள்ள நல்ல பொருட்கள்.",
+                  "ನಮ್ಮ ದೇಹ ಬೆಳೆಯಲು, ಆರೋಗ್ಯವಾಗಿರಲು, ಶಕ್ತಿ ಪಡೆಯಲು ಸಹಾಯ ಮಾಡುವ ಆಹಾರದಲ್ಲಿನ ಒಳ್ಳೆಯ ಅಂಶಗಳು."
+                ),
               },
               {
                 type: "example",
-                heading: "Think About It",
-                text: "A glass of milk in the morning gives a child protein and calcium for the whole day. That is why many schools and anganwadis give milk to children.",
+                heading: L("Think About It", "దీని గురించి ఆలోచించండి", "இதைப் பற்றி சிந்தியுங்கள்", "ಇದರ ಬಗ್ಗೆ ಯೋಚಿಸಿ"),
+                text: L(
+                  "A glass of milk in the morning gives a child protein and calcium for the whole day. That is why many schools and anganwadis give milk to children.",
+                  "ఉదయం ఒక గ్లాసు పాలు ఒక పిల్లవాడికి రోజంతా అవసరమైన ప్రోటీన్ మరియు కాల్షియంను ఇస్తాయి. అందుకే చాలా పాఠశాలలు మరియు అంగన్‌వాడీలు పిల్లలకు పాలు ఇస్తాయి.",
+                  "காலையில் ஒரு கிளாஸ் பால் ஒரு குழந்தைக்கு நாள் முழுவதும் தேவையான புரதத்தையும் கால்சியத்தையும் தருகிறது. அதனால்தான் பல பள்ளிகளும் அங்கன்வாடிகளும் குழந்தைகளுக்கு பால் தருகின்றன.",
+                  "ಬೆಳಿಗ್ಗೆ ಒಂದು ಲೋಟ ಹಾಲು ಒಂದು ಮಗುವಿಗೆ ಇಡೀ ದಿನಕ್ಕೆ ಬೇಕಾದ ಪ್ರೋಟೀನ್ ಮತ್ತು ಕ್ಯಾಲ್ಸಿಯಂ ನೀಡುತ್ತದೆ. ಅದಕ್ಕಾಗಿಯೇ ಅನೇಕ ಶಾಲೆಗಳು ಮತ್ತು ಅಂಗನವಾಡಿಗಳು ಮಕ್ಕಳಿಗೆ ಹಾಲು ನೀಡುತ್ತವೆ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "Which part of milk helps make our bones strong?",
-                options: ["Water", "Calcium", "Its colour", "Its smell"],
+                q: L(
+                  "Which part of milk helps make our bones strong?",
+                  "పాలలోని ఏ భాగం మన ఎముకలను బలంగా చేయడంలో సహాయపడుతుంది?",
+                  "பாலின் எந்த பகுதி நமது எலும்புகளை வலிமையாக்க உதவுகிறது?",
+                  "ಹಾಲಿನ ಯಾವ ಭಾಗ ನಮ್ಮ ಮೂಳೆಗಳನ್ನು ಬಲಗೊಳಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ?"
+                ),
+                options: [
+                  L("Water", "నీరు", "நீர்", "ನೀರು"),
+                  L("Calcium", "కాల్షియం", "கால்சியம்", "ಕ್ಯಾಲ್ಸಿಯಂ"),
+                  L("Its colour", "దాని రంగు", "அதன் நிறம்", "ಅದರ ಬಣ್ಣ"),
+                  L("Its smell", "దాని వాసన", "அதன் வாசனை", "ಅದರ ವಾಸನೆ"),
+                ],
                 answer: 1,
-                explain: "Calcium in milk builds strong bones and teeth.",
+                explain: L(
+                  "Calcium in milk builds strong bones and teeth.",
+                  "పాలలోని కాల్షియం బలమైన ఎముకలు మరియు దంతాలను నిర్మిస్తుంది.",
+                  "பாலில் உள்ள கால்சியம் வலிமையான எலும்புகளையும் பற்களையும் உருவாக்குகிறது.",
+                  "ಹಾಲಿನಲ್ಲಿರುವ ಕ್ಯಾಲ್ಸಿಯಂ ಬಲಿಷ್ಠ ಮೂಳೆಗಳು ಮತ್ತು ಹಲ್ಲುಗಳನ್ನು ನಿರ್ಮಿಸುತ್ತದೆ."
+                ),
               },
               {
                 type: "truefalse",
-                q: "Milk only tastes good — it does not really help the body.",
+                q: L(
+                  "Milk only tastes good — it does not really help the body.",
+                  "పాలు రుచిగా ఉంటాయి అంతే — అవి శరీరానికి నిజంగా సహాయపడవు.",
+                  "பால் சுவையாக இருக்கும், அவ்வளவுதான் — அது உடலுக்கு உண்மையில் உதவாது.",
+                  "ಹಾಲು ರುಚಿಯಾಗಿರುತ್ತದೆ ಅಷ್ಟೇ — ಅದು ದೇಹಕ್ಕೆ ನಿಜವಾಗಿಯೂ ಸಹಾಯ ಮಾಡುವುದಿಲ್ಲ."
+                ),
                 answer: false,
-                explain:
+                explain: L(
                   "Milk is real food. It gives protein, calcium and vitamins that the body needs every day.",
+                  "పాలు నిజమైన ఆహారం. ఇది శరీరానికి ప్రతిరోజూ అవసరమైన ప్రోటీన్, కాల్షియం మరియు విటమిన్లను ఇస్తుంది.",
+                  "பால் ஒரு உண்மையான உணவு. இது உடலுக்கு தினமும் தேவையான புரதம், கால்சியம் மற்றும் வைட்டமின்களைத் தருகிறது.",
+                  "ಹಾಲು ನಿಜವಾದ ಆಹಾರ. ಇದು ದೇಹಕ್ಕೆ ಪ್ರತಿದಿನ ಬೇಕಾದ ಪ್ರೋಟೀನ್, ಕ್ಯಾಲ್ಸಿಯಂ ಮತ್ತು ವಿಟಮಿನ್‌ಗಳನ್ನು ನೀಡುತ್ತದೆ."
+                ),
               },
             ],
           },
           {
             id: "t-dairy-livelihood",
-            title: "Dairy as a Livelihood",
+            title: L(
+              "Dairy as a Livelihood",
+              "జీవనోపాధిగా డైరీ",
+              "வாழ்வாதாரமாக பால் பண்ணை",
+              "ಜೀವನೋಪಾಯವಾಗಿ ಡೈರಿ"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "More Than Just Food",
-                html: "For millions of families in India, milk is not only food — it is also their main way of earning money. Keeping even 1, 2 or 4 milk animals and selling milk every day can support a whole family.",
+                heading: L("More Than Just Food", "కేవలం ఆహారం మాత్రమే కాదు", "வெறும் உணவு மட்டுமல்ல", "ಕೇವಲ ಆಹಾರ ಮಾತ್ರವಲ್ಲ"),
+                html: L(
+                  "For millions of families in India, milk is not only food — it is also their main way of earning money. Keeping even 1, 2 or 4 milk animals and selling milk every day can support a whole family.",
+                  "భారతదేశంలోని లక్షలాది కుటుంబాలకు, పాలు కేవలం ఆహారం మాత్రమే కాదు — అది వారి ప్రధాన సంపాదన మార్గం కూడా. 1, 2 లేదా 4 పాడి పశువులను పెంచి, ప్రతిరోజూ పాలు అమ్మడం ద్వారా ఒక కుటుంబం మొత్తం జీవించగలదు.",
+                  "இந்தியாவில் உள்ள மில்லியன் கணக்கான குடும்பங்களுக்கு, பால் வெறும் உணவு மட்டுமல்ல — அது அவர்களின் முக்கிய வருமான வழியும் கூட. 1, 2 அல்லது 4 பால் கால்நடைகளை வளர்த்து, தினமும் பால் விற்பதன் மூலம் ஒரு முழு குடும்பமும் வாழ முடியும்.",
+                  "ಭಾರತದಲ್ಲಿನ ಲಕ್ಷಾಂತರ ಕುಟುಂಬಗಳಿಗೆ, ಹಾಲು ಕೇವಲ ಆಹಾರ ಮಾತ್ರವಲ್ಲ — ಅದು ಅವರ ಮುಖ್ಯ ಸಂಪಾದನೆಯ ಮಾರ್ಗವೂ ಹೌದು. 1, 2 ಅಥವಾ 4 ಹೈನು ಪ್ರಾಣಿಗಳನ್ನು ಸಾಕಿ, ಪ್ರತಿದಿನ ಹಾಲು ಮಾರುವ ಮೂಲಕ ಇಡೀ ಕುಟುಂಬ ಜೀವನ ಸಾಗಿಸಬಹುದು."
+                ),
               },
               {
                 type: "stat-grid",
                 items: [
                   {
-                    label: "8 crore farmers",
-                    text: "More than 8 crore (80 million) families across India earn a living from dairy.",
+                    label: L("8 crore farmers", "8 కోట్ల రైతులు", "8 கோடி விவசாயிகள்", "8 ಕೋಟಿ ರೈತರು"),
+                    text: L(
+                      "More than 8 crore (80 million) families across India earn a living from dairy.",
+                      "భారతదేశం అంతటా 8 కోట్లకు (80 మిలియన్లకు) పైగా కుటుంబాలు డైరీ ద్వారా జీవనోపాధి పొందుతున్నాయి.",
+                      "இந்தியா முழுவதும் 8 கோடிக்கும் (80 மில்லியன்) மேற்பட்ட குடும்பங்கள் பால் பண்ணையிலிருந்து வருமானம் ஈட்டுகின்றன.",
+                      "ಭಾರತದಾದ್ಯಂತ 8 ಕೋಟಿಗೂ (80 ಮಿಲಿಯನ್) ಹೆಚ್ಚು ಕುಟುಂಬಗಳು ಡೈರಿಯಿಂದ ಜೀವನ ಸಾಗಿಸುತ್ತಿವೆ."
+                    ),
                   },
                   {
-                    label: "Dairy earns the most",
-                    text: "Milk is India's single largest farm product — worth more than wheat, rice or sugarcane.",
+                    label: L("Dairy earns the most", "డైరీ అత్యధికంగా సంపాదిస్తుంది", "பால் பண்ணை அதிக வருமானம் தரும்", "ಡೈರಿ ಅತಿ ಹೆಚ್ಚು ಗಳಿಸುತ್ತದೆ"),
+                    text: L(
+                      "Milk is India's single largest farm product — worth more than wheat, rice or sugarcane.",
+                      "పాలు భారతదేశపు అతిపెద్ద వ్యవసాయ ఉత్పత్తి — గోధుమలు, బియ్యం లేదా చెరకు కంటే ఎక్కువ విలువైనది.",
+                      "பால் இந்தியாவின் மிகப்பெரிய விவசாய உற்பத்தி — கோதுமை, அரிசி அல்லது கரும்பை விட மதிப்பு மிக்கது.",
+                      "ಹಾಲು ಭಾರತದ ಅತಿದೊಡ್ಡ ಕೃಷಿ ಉತ್ಪನ್ನ — ಗೋಧಿ, ಅಕ್ಕಿ ಅಥವಾ ಕಬ್ಬಿಗಿಂತ ಹೆಚ್ಚು ಮೌಲ್ಯಯುತ."
+                    ),
                   },
                   {
-                    label: "7 out of 10 workers are women",
-                    text: "About 70% of the people who do daily dairy work — feeding, milking, cleaning — are women.",
+                    label: L(
+                      "7 out of 10 workers are women",
+                      "10 మందిలో 7 మంది కార్మికులు మహిళలు",
+                      "10 பேரில் 7 பேர் பெண் தொழிலாளர்கள்",
+                      "10 ರಲ್ಲಿ 7 ಕಾರ್ಮಿಕರು ಮಹಿಳೆಯರು"
+                    ),
+                    text: L(
+                      "About 70% of the people who do daily dairy work — feeding, milking, cleaning — are women.",
+                      "మేత పెట్టడం, పాలు పితకడం, శుభ్రం చేయడం వంటి రోజువారీ డైరీ పనులు చేసే వారిలో సుమారు 70% మంది మహిళలు.",
+                      "தீவனம் கொடுத்தல், பால் கறத்தல், சுத்தம் செய்தல் போன்ற தினசரி பால் பண்ணை வேலைகளைச் செய்பவர்களில் சுமார் 70% பேர் பெண்கள்.",
+                      "ಆಹಾರ ನೀಡುವುದು, ಹಾಲು ಕರೆಯುವುದು, ಸ್ವಚ್ಛಗೊಳಿಸುವುದು ಮುಂತಾದ ದೈನಂದಿನ ಡೈರಿ ಕೆಲಸ ಮಾಡುವವರಲ್ಲಿ ಸುಮಾರು 70% ಮಹಿಳೆಯರು."
+                    ),
                   },
                 ],
               },
               {
                 type: "callout",
                 style: "info",
-                heading: "Did you know?",
-                text: "Dairy work happens every single day, twice a day — morning and evening. That is why it gives families a steady income, not income that comes only once or twice a year like some crops.",
+                heading: L("Did you know?", "మీకు తెలుసా?", "உங்களுக்குத் தெரியுமா?", "ನಿಮಗೆ ಗೊತ್ತೇ?"),
+                text: L(
+                  "Dairy work happens every single day, twice a day — morning and evening. That is why it gives families a steady income, not income that comes only once or twice a year like some crops.",
+                  "డైరీ పని ప్రతిరోజూ, రోజుకు రెండుసార్లు — ఉదయం మరియు సాయంత్రం జరుగుతుంది. అందుకే ఇది కుటుంబాలకు స్థిరమైన ఆదాయాన్ని ఇస్తుంది, కొన్ని పంటల్లా సంవత్సరానికి ఒకటి రెండుసార్లు వచ్చే ఆదాయం కాదు.",
+                  "பால் பண்ணை வேலை ஒவ்வொரு நாளும், நாளொன்றுக்கு இருமுறை — காலையும் மாலையும் நடக்கும். அதனால்தான் இது குடும்பங்களுக்கு நிலையான வருமானத்தைத் தருகிறது, சில பயிர்களைப் போல வருடத்திற்கு ஒரு முறை அல்லது இரு முறை மட்டும் வரும் வருமானம் அல்ல.",
+                  "ಡೈರಿ ಕೆಲಸ ಪ್ರತಿದಿನ, ದಿನಕ್ಕೆ ಎರಡು ಬಾರಿ — ಬೆಳಿಗ್ಗೆ ಮತ್ತು ಸಂಜೆ ನಡೆಯುತ್ತದೆ. ಅದಕ್ಕಾಗಿಯೇ ಇದು ಕುಟುಂಬಗಳಿಗೆ ಸ್ಥಿರವಾದ ಆದಾಯ ನೀಡುತ್ತದೆ, ಕೆಲವು ಬೆಳೆಗಳಂತೆ ವರ್ಷಕ್ಕೊಮ್ಮೆ ಅಥವಾ ಎರಡು ಬಾರಿ ಮಾತ್ರ ಬರುವ ಆದಾಯವಲ್ಲ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "About how many families in India earn a living from dairy?",
-                options: ["8 lakh", "80 lakh", "8 crore", "8 thousand"],
+                q: L(
+                  "About how many families in India earn a living from dairy?",
+                  "భారతదేశంలో సుమారు ఎన్ని కుటుంబాలు డైరీ ద్వారా జీవనోపాధి పొందుతున్నాయి?",
+                  "இந்தியாவில் சுமார் எத்தனை குடும்பங்கள் பால் பண்ணையிலிருந்து வருமானம் ஈட்டுகின்றன?",
+                  "ಭಾರತದಲ್ಲಿ ಸುಮಾರು ಎಷ್ಟು ಕುಟುಂಬಗಳು ಡೈರಿಯಿಂದ ಜೀವನ ಸಾಗಿಸುತ್ತಿವೆ?"
+                ),
+                options: [
+                  L("8 lakh", "8 లక్షలు", "8 லட்சம்", "8 ಲಕ್ಷ"),
+                  L("80 lakh", "80 లక్షలు", "80 லட்சம்", "80 ಲಕ್ಷ"),
+                  L("8 crore", "8 కోట్లు", "8 கோடி", "8 ಕೋಟಿ"),
+                  L("8 thousand", "8 వేలు", "8 ஆயிரம்", "8 ಸಾವಿರ"),
+                ],
                 answer: 2,
-                explain:
+                explain: L(
                   "More than 8 crore (80 million) families across India depend on dairy for their livelihood.",
+                  "భారతదేశం అంతటా 8 కోట్లకు పైగా కుటుంబాలు తమ జీవనోపాధి కోసం డైరీపై ఆధారపడతాయి.",
+                  "இந்தியா முழுவதும் 8 கோடிக்கும் மேற்பட்ட குடும்பங்கள் தங்கள் வாழ்வாதாரத்திற்காக பால் பண்ணையை நம்பியுள்ளன.",
+                  "ಭಾರತದಾದ್ಯಂತ 8 ಕೋಟಿಗೂ ಹೆಚ್ಚು ಕುಟುಂಬಗಳು ತಮ್ಮ ಜೀವನೋಪಾಯಕ್ಕಾಗಿ ಡೈರಿಯನ್ನು ಅವಲಂಬಿಸಿವೆ."
+                ),
               },
               {
                 type: "mcq",
-                q: "Roughly what share of dairy farm workers are women?",
-                options: ["1 in 10", "3 in 10", "5 in 10", "7 in 10"],
+                q: L(
+                  "Roughly what share of dairy farm workers are women?",
+                  "డైరీ పనిలో సుమారు ఎంత శాతం మంది మహిళలు?",
+                  "பால் பண்ணை தொழிலாளர்களில் தோராயமாக எத்தனை சதவீதம் பெண்கள்?",
+                  "ಡೈರಿ ಕೆಲಸಗಾರರಲ್ಲಿ ಸುಮಾರು ಎಷ್ಟು ಪ್ರತಿಶತ ಮಹಿಳೆಯರು?"
+                ),
+                options: [
+                  L("1 in 10", "10లో 1", "10 இல் 1", "10 ರಲ್ಲಿ 1"),
+                  L("3 in 10", "10లో 3", "10 இல் 3", "10 ರಲ್ಲಿ 3"),
+                  L("5 in 10", "10లో 5", "10 இல் 5", "10 ರಲ್ಲಿ 5"),
+                  L("7 in 10", "10లో 7", "10 இல் 7", "10 ರಲ್ಲಿ 7"),
+                ],
                 answer: 3,
-                explain: "About 70% (7 out of 10) of dairy farm workers are women.",
+                explain: L(
+                  "About 70% (7 out of 10) of dairy farm workers are women.",
+                  "డైరీ కార్మికులలో సుమారు 70% (10కి 7) మంది మహిళలు.",
+                  "பால் பண்ணை தொழிலாளர்களில் சுமார் 70% (10 இல் 7) பேர் பெண்கள்.",
+                  "ಡೈರಿ ಕೆಲಸಗಾರರಲ್ಲಿ ಸುಮಾರು 70% (10 ರಲ್ಲಿ 7) ಮಹಿಳೆಯರು."
+                ),
               },
             ],
           },
@@ -150,17 +303,42 @@ export const MODULES = [
             {
               topicId: "t-milk-body",
               type: "mcq",
-              q: "Which of these is found in milk and helps build strong muscles?",
-              options: ["Protein", "Sugar", "Salt", "Oil"],
+              q: L(
+                "Which of these is found in milk and helps build strong muscles?",
+                "కింది వాటిలో పాలలో ఉండి, బలమైన కండరాలను నిర్మించడంలో సహాయపడేది ఏది?",
+                "பாலில் உள்ள, வலிமையான தசைகளை உருவாக்க உதவும் பொருள் எது?",
+                "ಹಾಲಿನಲ್ಲಿರುವ, ಬಲಿಷ್ಠ ಸ್ನಾಯುಗಳನ್ನು ನಿರ್ಮಿಸಲು ಸಹಾಯ ಮಾಡುವುದು ಯಾವುದು?"
+              ),
+              options: [
+                L("Protein", "ప్రోటీన్", "புரதம்", "ಪ್ರೋಟೀನ್"),
+                L("Sugar", "చక్కెర", "சர்க்கரை", "ಸಕ್ಕರೆ"),
+                L("Salt", "ఉప్పు", "உப்பு", "ಉಪ್ಪು"),
+                L("Oil", "నూనె", "எண்ணெய்", "ಎಣ್ಣೆ"),
+              ],
               answer: 0,
-              explain: "Protein in milk helps build and repair muscles.",
+              explain: L(
+                "Protein in milk helps build and repair muscles.",
+                "పాలలోని ప్రోటీన్ కండరాలను నిర్మించడంలో, బాగుచేయడంలో సహాయపడుతుంది.",
+                "பாலில் உள்ள புரதம் தசைகளை உருவாக்கவும் சரிசெய்யவும் உதவுகிறது.",
+                "ಹಾಲಿನಲ್ಲಿರುವ ಪ್ರೋಟೀನ್ ಸ್ನಾಯುಗಳನ್ನು ನಿರ್ಮಿಸಲು ಮತ್ತು ಸರಿಪಡಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+              ),
             },
             {
               topicId: "t-dairy-livelihood",
               type: "truefalse",
-              q: "Dairy farming gives income only once a year, like some crops.",
+              q: L(
+                "Dairy farming gives income only once a year, like some crops.",
+                "కొన్ని పంటల్లా, డైరీ వ్యవసాయం సంవత్సరానికి ఒక్కసారి మాత్రమే ఆదాయాన్నిస్తుంది.",
+                "சில பயிர்களைப் போல, பால் பண்ணை வருடத்திற்கு ஒரு முறை மட்டுமே வருமானம் தரும்.",
+                "ಕೆಲವು ಬೆಳೆಗಳಂತೆ, ಡೈರಿ ಕೃಷಿ ವರ್ಷಕ್ಕೊಮ್ಮೆ ಮಾತ್ರ ಆದಾಯ ನೀಡುತ್ತದೆ."
+              ),
               answer: false,
-              explain: "Dairy gives income every day, twice a day, because animals are milked daily.",
+              explain: L(
+                "Dairy gives income every day, twice a day, because animals are milked daily.",
+                "పశువులకు ప్రతిరోజూ పాలు పితుకుతారు కాబట్టి, డైరీ ప్రతిరోజూ, రోజుకు రెండుసార్లు ఆదాయాన్నిస్తుంది.",
+                "விலங்குகள் தினமும் கறக்கப்படுவதால், பால் பண்ணை தினமும், நாளொன்றுக்கு இருமுறை வருமானம் தரும்.",
+                "ಪ್ರಾಣಿಗಳನ್ನು ಪ್ರತಿದಿನ ಹಾಲು ಕರೆಯುವುದರಿಂದ, ಡೈರಿ ಪ್ರತಿದಿನ, ದಿನಕ್ಕೆ ಎರಡು ಬಾರಿ ಆದಾಯ ನೀಡುತ್ತದೆ."
+              ),
             },
           ],
         },
@@ -170,109 +348,228 @@ export const MODULES = [
       // ==================================================================
       {
         id: "m1-l2",
-        title: "The World's Biggest Milk Bowl",
+        title: L(
+          "The World's Biggest Milk Bowl",
+          "ప్రపంచంలోనే అతిపెద్ద పాల గిన్నె",
+          "உலகின் மிகப்பெரிய பால் கிண்ணம்",
+          "ವಿಶ್ವದ ಅತಿದೊಡ್ಡ ಹಾಲಿನ ಬಟ್ಟಲು"
+        ),
         estMinutes: 7,
         hook: [
           {
             type: "hero",
-            heading: "The World's Biggest Milk Bowl",
-            text: "Which countries make the most milk? Let's find out — and see where India stands.",
+            heading: L(
+              "The World's Biggest Milk Bowl",
+              "ప్రపంచంలోనే అతిపెద్ద పాల గిన్నె",
+              "உலகின் மிகப்பெரிய பால் கிண்ணம்",
+              "ವಿಶ್ವದ ಅತಿದೊಡ್ಡ ಹಾಲಿನ ಬಟ್ಟಲು"
+            ),
+            text: L(
+              "Which countries make the most milk? Let's find out — and see where India stands.",
+              "ఏ దేశాలు అత్యధిక పాలు ఉత్పత్తి చేస్తాయి? తెలుసుకుందాం — భారతదేశం ఎక్కడ నిలుస్తుందో చూద్దాం.",
+              "எந்த நாடுகள் அதிக பால் உற்பத்தி செய்கின்றன? கண்டுபிடிப்போம் — இந்தியா எங்கு நிற்கிறது என்று பார்ப்போம்.",
+              "ಯಾವ ದೇಶಗಳು ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತವೆ? ತಿಳಿದುಕೊಳ್ಳೋಣ — ಭಾರತ ಎಲ್ಲಿ ನಿಂತಿದೆ ಎಂದು ನೋಡೋಣ."
+            ),
           },
         ],
         topics: [
           {
             id: "t-world-chart",
-            title: "Which Countries Make the Most Milk?",
+            title: L(
+              "Which Countries Make the Most Milk?",
+              "ఏ దేశాలు అత్యధిక పాలు ఉత్పత్తి చేస్తాయి?",
+              "எந்த நாடுகள் அதிக பால் உற்பத்தி செய்கின்றன?",
+              "ಯಾವ ದೇಶಗಳು ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತವೆ?"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "Milk Around the World",
-                html: "Milk is made in almost every country. But a few countries make much more than others. Let's look at the top 10.",
+                heading: L("Milk Around the World", "ప్రపంచవ్యాప్తంగా పాలు", "உலகம் முழுவதும் பால்", "ಪ್ರಪಂಚದಾದ್ಯಂತ ಹಾಲು"),
+                html: L(
+                  "Milk is made in almost every country. But a few countries make much more than others. Let's look at the top 10.",
+                  "దాదాపు ప్రతి దేశంలో పాలు ఉత్పత్తి అవుతాయి. కానీ కొన్ని దేశాలు మిగతా వాటి కంటే చాలా ఎక్కువ ఉత్పత్తి చేస్తాయి. టాప్ 10 దేశాలను చూద్దాం.",
+                  "கிட்டத்தட்ட ஒவ்வொரு நாட்டிலும் பால் தயாரிக்கப்படுகிறது. ஆனால் சில நாடுகள் மற்றவற்றை விட மிக அதிகமாக தயாரிக்கின்றன. முதல் 10 நாடுகளைப் பார்ப்போம்.",
+                  "ಬಹುತೇಕ ಪ್ರತಿ ದೇಶದಲ್ಲೂ ಹಾಲು ತಯಾರಿಸಲಾಗುತ್ತದೆ. ಆದರೆ ಕೆಲವು ದೇಶಗಳು ಇತರರಿಗಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತವೆ. ಟಾಪ್ 10 ದೇಶಗಳನ್ನು ನೋಡೋಣ."
+                ),
               },
               {
                 type: "poll",
-                heading: "Guess Before You Look",
+                heading: L("Guess Before You Look", "చూసే ముందు ఊహించండి", "பார்ப்பதற்கு முன் யூகியுங்கள்", "ನೋಡುವ ಮೊದಲು ಊಹಿಸಿ"),
                 questions: [
                   {
-                    q: "Which country do YOU think makes the most milk in the world?",
-                    options: ["USA", "China", "India", "Pakistan"],
+                    q: L(
+                      "Which country do YOU think makes the most milk in the world?",
+                      "ప్రపంచంలో అత్యధిక పాలు ఉత్పత్తి చేసేది ఏ దేశం అని మీరు అనుకుంటున్నారు?",
+                      "உலகில் அதிக பால் உற்பத்தி செய்வது எந்த நாடு என்று நீங்கள் நினைக்கிறீர்கள்?",
+                      "ಜಗತ್ತಿನಲ್ಲಿ ಅತಿ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುವುದು ಯಾವ ದೇಶ ಎಂದು ನೀವು ಭಾವಿಸುತ್ತೀರಿ?"
+                    ),
+                    options: [
+                      L("USA", "అమెరికా", "அமெரிக்கா", "ಅಮೆರಿಕಾ"),
+                      L("China", "చైనా", "சீனா", "ಚೀನಾ"),
+                      L("India", "భారతదేశం", "இந்தியா", "ಭಾರತ"),
+                      L("Pakistan", "పాకిస్తాన్", "பாகிஸ்தான்", "ಪಾಕಿಸ್ತಾನ"),
+                    ],
                     answer: 2,
-                    reveal: "Let's check the real numbers below and see if you guessed right!",
+                    reveal: L(
+                      "Let's check the real numbers below and see if you guessed right!",
+                      "కింద ఉన్న అసలు సంఖ్యలను చూసి మీరు సరిగ్గా ఊహించారో లేదో చూద్దాం!",
+                      "கீழே உள்ள உண்மையான எண்களைப் பார்த்து நீங்கள் சரியாக யூகித்தீர்களா என்று பார்ப்போம்!",
+                      "ಕೆಳಗಿನ ನಿಜವಾದ ಸಂಖ್ಯೆಗಳನ್ನು ನೋಡಿ ನೀವು ಸರಿಯಾಗಿ ಊಹಿಸಿದ್ದೀರಾ ಎಂದು ನೋಡೋಣ!"
+                    ),
                   },
                 ],
               },
               {
                 type: "glossary",
-                term: "Million Tonnes",
-                meaning:
+                term: L("Million Tonnes", "మిలియన్ టన్నులు", "மில்லியன் டன்கள்", "ಮಿಲಿಯನ್ ಟನ್‌ಗಳು"),
+                meaning: L(
                   "A HUGE amount. 1 tonne = 1,000 kg. 1 million tonnes = 1,000,000 tonnes. If you filled milk tankers that each carry 10 tonnes, 1 million tonnes would need 1,00,000 tankers, one after another.",
+                  "చాలా పెద్ద మొత్తం. 1 టన్ను = 1,000 కిలోలు. 1 మిలియన్ టన్నులు = 10,00,000 టన్నులు. ఒక్కొక్కటి 10 టన్నుల సామర్థ్యం ఉన్న పాల ట్యాంకర్లతో నింపితే, 1 మిలియన్ టన్నులకు 1,00,000 ట్యాంకర్లు వరుసగా అవసరం.",
+                  "மிகப் பெரிய அளவு. 1 டன் = 1,000 கிலோ. 1 மில்லியன் டன் = 10,00,000 டன். ஒவ்வொன்றும் 10 டன் கொள்ளளவு கொண்ட பால் டேங்கர்களை நிரப்பினால், 1 மில்லியன் டன்னுக்கு 1,00,000 டேங்கர்கள் தொடர்ச்சியாக தேவை.",
+                  "ಬಹಳ ದೊಡ್ಡ ಪ್ರಮಾಣ. 1 ಟನ್ = 1,000 ಕೆಜಿ. 1 ಮಿಲಿಯನ್ ಟನ್ = 10,00,000 ಟನ್. ಪ್ರತಿಯೊಂದೂ 10 ಟನ್ ಸಾಮರ್ಥ್ಯದ ಹಾಲಿನ ಟ್ಯಾಂಕರ್‌ಗಳನ್ನು ತುಂಬಿಸಿದರೆ, 1 ಮಿಲಿಯನ್ ಟನ್‌ಗೆ 1,00,000 ಟ್ಯಾಂಕರ್‌ಗಳು ಸಾಲಾಗಿ ಬೇಕಾಗುತ್ತವೆ."
+                ),
               },
               {
                 type: "barchart",
-                heading: "Top 10 Milk-Making Countries (Million Tonnes per year)",
-                source: "Source: FAOSTAT 2025",
-                unit: "million tonnes",
+                heading: L(
+                  "Top 10 Milk-Making Countries (Million Tonnes per year)",
+                  "టాప్ 10 పాల ఉత్పత్తి దేశాలు (సంవత్సరానికి మిలియన్ టన్నులు)",
+                  "முதல் 10 பால் உற்பத்தி நாடுகள் (ஆண்டுக்கு மில்லியன் டன்)",
+                  "ಟಾಪ್ 10 ಹಾಲು ಉತ್ಪಾದಿಸುವ ದೇಶಗಳು (ವರ್ಷಕ್ಕೆ ಮಿಲಿಯನ್ ಟನ್)"
+                ),
+                source: L("Source: FAOSTAT 2025", "మూలం: FAOSTAT 2025", "ஆதாரம்: FAOSTAT 2025", "ಮೂಲ: FAOSTAT 2025"),
+                unit: L("million tonnes", "మిలియన్ టన్నులు", "மில்லியன் டன்", "ಮಿಲಿಯನ್ ಟನ್"),
                 data: [
-                  { label: "India", value: 241, flag: "🇮🇳" },
-                  { label: "USA", value: 102, flag: "🇺🇸" },
-                  { label: "Pakistan", value: 65, flag: "🇵🇰" },
-                  { label: "China", value: 44, flag: "🇨🇳" },
-                  { label: "Brazil", value: 37, flag: "🇧🇷" },
-                  { label: "Germany", value: 34, flag: "🇩🇪" },
-                  { label: "Russia", value: 33, flag: "🇷🇺" },
-                  { label: "France", value: 24, flag: "🇫🇷" },
-                  { label: "New Zealand", value: 22, flag: "🇳🇿" },
-                  { label: "Türkiye", value: 21, flag: "🇹🇷" },
+                  { label: L("India", "భారతదేశం", "இந்தியா", "ಭಾರತ"), value: 241, flag: "🇮🇳" },
+                  { label: L("USA", "అమెరికా", "அமெரிக்கா", "ಅಮೆರಿಕಾ"), value: 102, flag: "🇺🇸" },
+                  { label: L("Pakistan", "పాకిస్తాన్", "பாகிஸ்தான்", "ಪಾಕಿಸ್ತಾನ"), value: 65, flag: "🇵🇰" },
+                  { label: L("China", "చైనా", "சீனா", "ಚೀನಾ"), value: 44, flag: "🇨🇳" },
+                  { label: L("Brazil", "బ్రెజిల్", "பிரேசில்", "ಬ್ರೆಜಿಲ್"), value: 37, flag: "🇧🇷" },
+                  { label: L("Germany", "జర్మనీ", "ஜெர்மனி", "ಜರ್ಮನಿ"), value: 34, flag: "🇩🇪" },
+                  { label: L("Russia", "రష్యా", "ரஷியா", "ರಷ್ಯಾ"), value: 33, flag: "🇷🇺" },
+                  { label: L("France", "ఫ్రాన్స్", "பிரான்ஸ்", "ಫ್ರಾನ್ಸ್"), value: 24, flag: "🇫🇷" },
+                  { label: L("New Zealand", "న్యూజిలాండ్", "நியூசிலாந்து", "ನ್ಯೂಜಿಲೆಂಡ್"), value: 22, flag: "🇳🇿" },
+                  { label: L("Türkiye", "టర్కీ", "துருக்கி", "ಟರ್ಕಿ"), value: 21, flag: "🇹🇷" },
                 ],
               },
               {
                 type: "example",
-                heading: "Let's Compare",
-                text: "India makes 241 million tonnes of milk a year. The USA, in 2nd place, makes 102 million tonnes. That means India makes more than DOUBLE what the USA makes.",
+                heading: L("Let's Compare", "పోల్చి చూద్దాం", "ஒப்பிடுவோம்", "ಹೋಲಿಸೋಣ"),
+                text: L(
+                  "India makes 241 million tonnes of milk a year. The USA, in 2nd place, makes 102 million tonnes. That means India makes more than DOUBLE what the USA makes.",
+                  "భారతదేశం సంవత్సరానికి 241 మిలియన్ టన్నుల పాలు ఉత్పత్తి చేస్తుంది. రెండవ స్థానంలో ఉన్న అమెరికా 102 మిలియన్ టన్నులు ఉత్పత్తి చేస్తుంది. అంటే భారతదేశం అమెరికా కంటే రెండింతలకు పైగా ఉత్పత్తి చేస్తుంది.",
+                  "இந்தியா ஆண்டுக்கு 241 மில்லியன் டன் பால் தயாரிக்கிறது. இரண்டாவது இடத்தில் உள்ள அமெரிக்கா 102 மில்லியன் டன் தயாரிக்கிறது. அதாவது இந்தியா அமெரிக்காவை விட இரண்டு மடங்கிற்கும் அதிகமாக தயாரிக்கிறது.",
+                  "ಭಾರತ ವರ್ಷಕ್ಕೆ 241 ಮಿಲಿಯನ್ ಟನ್ ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತದೆ. ಎರಡನೇ ಸ್ಥಾನದಲ್ಲಿರುವ ಅಮೆರಿಕಾ 102 ಮಿಲಿಯನ್ ಟನ್ ಉತ್ಪಾದಿಸುತ್ತದೆ. ಅಂದರೆ ಭಾರತ ಅಮೆರಿಕಾಗಿಂತ ಎರಡು ಪಟ್ಟಿಗಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತದೆ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "Which country makes the most milk in the world?",
-                options: ["USA", "China", "India", "Pakistan"],
+                q: L(
+                  "Which country makes the most milk in the world?",
+                  "ప్రపంచంలో అత్యధిక పాలు ఉత్పత్తి చేసే దేశం ఏది?",
+                  "உலகில் அதிக பால் உற்பத்தி செய்யும் நாடு எது?",
+                  "ಜಗತ್ತಿನಲ್ಲಿ ಅತಿ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುವ ದೇಶ ಯಾವುದು?"
+                ),
+                options: [
+                  L("USA", "అమెరికా", "அமெரிக்கா", "ಅಮೆರಿಕಾ"),
+                  L("China", "చైనా", "சீனா", "ಚೀನಾ"),
+                  L("India", "భారతదేశం", "இந்தியா", "ಭಾರತ"),
+                  L("Pakistan", "పాకిస్తాన్", "பாகிஸ்தான்", "ಪಾಕಿಸ್ತಾನ"),
+                ],
                 answer: 2,
-                explain: "India is the world's largest milk producer.",
+                explain: L(
+                  "India is the world's largest milk producer.",
+                  "భారతదేశం ప్రపంచంలోనే అతిపెద్ద పాల ఉత్పత్తిదారు.",
+                  "இந்தியா உலகின் மிகப்பெரிய பால் உற்பத்தியாளர்.",
+                  "ಭಾರತ ಜಗತ್ತಿನ ಅತಿದೊಡ್ಡ ಹಾಲು ಉತ್ಪಾದಕ."
+                ),
               },
               {
                 type: "mcq",
-                q: "Which country is in 2nd place for milk production?",
-                options: ["Pakistan", "China", "USA", "Germany"],
+                q: L(
+                  "Which country is in 2nd place for milk production?",
+                  "పాల ఉత్పత్తిలో రెండవ స్థానంలో ఏ దేశం ఉంది?",
+                  "பால் உற்பத்தியில் இரண்டாவது இடத்தில் இருக்கும் நாடு எது?",
+                  "ಹಾಲು ಉತ್ಪಾದನೆಯಲ್ಲಿ ಎರಡನೇ ಸ್ಥಾನದಲ್ಲಿರುವ ದೇಶ ಯಾವುದು?"
+                ),
+                options: [
+                  L("Pakistan", "పాకిస్తాన్", "பாகிஸ்தான்", "ಪಾಕಿಸ್ತಾನ"),
+                  L("China", "చైనా", "சீனா", "ಚೀನಾ"),
+                  L("USA", "అమెరికా", "அமெரிக்கா", "ಅಮೆರಿಕಾ"),
+                  L("Germany", "జర్మనీ", "ஜெர்மனி", "ಜರ್ಮನಿ"),
+                ],
                 answer: 2,
-                explain: "The USA is 2nd, making 102 million tonnes a year.",
+                explain: L(
+                  "The USA is 2nd, making 102 million tonnes a year.",
+                  "అమెరికా రెండవ స్థానంలో ఉంది, సంవత్సరానికి 102 మిలియన్ టన్నులు ఉత్పత్తి చేస్తుంది.",
+                  "அமெரிக்கா இரண்டாவது இடத்தில் உள்ளது, ஆண்டுக்கு 102 மில்லியன் டன் தயாரிக்கிறது.",
+                  "ಅಮೆರಿಕಾ ಎರಡನೇ ಸ್ಥಾನದಲ್ಲಿದೆ, ವರ್ಷಕ್ಕೆ 102 ಮಿಲಿಯನ್ ಟನ್ ಉತ್ಪಾದಿಸುತ್ತದೆ."
+                ),
               },
             ],
           },
           {
             id: "t-world-why",
-            title: "Why is India Number One?",
+            title: L(
+              "Why is India Number One?",
+              "భారతదేశం మొదటి స్థానంలో ఎందుకు ఉంది?",
+              "இந்தியா ஏன் முதலிடத்தில் உள்ளது?",
+              "ಭಾರತ ಏಕೆ ಮೊದಲ ಸ್ಥಾನದಲ್ಲಿದೆ?"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "How Did This Happen?",
-                html: "India did not become the world's top milk maker with a few giant farms. It happened because MILLIONS of small farmers — people like you, and the farmers you work with — each keep a few animals and sell milk every day.",
+                heading: L("How Did This Happen?", "ఇది ఎలా జరిగింది?", "இது எப்படி நடந்தது?", "ಇದು ಹೇಗೆ ಸಂಭವಿಸಿತು?"),
+                html: L(
+                  "India did not become the world's top milk maker with a few giant farms. It happened because MILLIONS of small farmers — people like you, and the farmers you work with — each keep a few animals and sell milk every day.",
+                  "కొన్ని పెద్ద పెద్ద పొలాలతో భారతదేశం ప్రపంచంలోనే అగ్రస్థానానికి రాలేదు. మీలాంటి వారు, మీరు కలిసి పనిచేసే రైతులు — లక్షలాది మంది చిన్న రైతులు కొన్ని పశువులను పెంచి, ప్రతిరోజూ పాలు అమ్మడం వల్ల ఇది జరిగింది.",
+                  "இந்தியா சில பெரிய பண்ணைகளால் உலகின் முதன்மை பால் உற்பத்தியாளராக ஆகவில்லை. உங்களைப் போன்றவர்கள், நீங்கள் இணைந்து பணிபுரியும் விவசாயிகள் — மில்லியன் கணக்கான சிறு விவசாயிகள் ஒவ்வொருவரும் சில கால்நடைகளை வளர்த்து, தினமும் பால் விற்பதால் இது நடந்தது.",
+                  "ಕೆಲವು ದೊಡ್ಡ ಫಾರ್ಮ್‌ಗಳಿಂದ ಭಾರತ ಜಗತ್ತಿನ ಅಗ್ರ ಹಾಲು ತಯಾರಕನಾಗಲಿಲ್ಲ. ನಿಮ್ಮಂತಹವರು, ನೀವು ಕೆಲಸ ಮಾಡುವ ರೈತರು — ಲಕ್ಷಾಂತರ ಸಣ್ಣ ರೈತರು ಪ್ರತಿಯೊಬ್ಬರೂ ಕೆಲವು ಪ್ರಾಣಿಗಳನ್ನು ಸಾಕಿ, ಪ್ರತಿದಿನ ಹಾಲು ಮಾರುವುದರಿಂದ ಇದು ಸಂಭವಿಸಿತು."
+                ),
               },
               {
                 type: "callout",
                 style: "tip",
-                heading: "Small Farmers, Big Result",
-                text: "Most milk in India comes from farmers who own just 1 to 4 animals — not big companies. Every small farmer's milk adds up to the world's largest supply.",
+                heading: L(
+                  "Small Farmers, Big Result",
+                  "చిన్న రైతులు, పెద్ద ఫలితం",
+                  "சிறு விவசாயிகள், பெரிய பலன்",
+                  "ಸಣ್ಣ ರೈತರು, ದೊಡ್ಡ ಫಲಿತಾಂಶ"
+                ),
+                text: L(
+                  "Most milk in India comes from farmers who own just 1 to 4 animals — not big companies. Every small farmer's milk adds up to the world's largest supply.",
+                  "భారతదేశంలో ఎక్కువ పాలు 1 నుండి 4 పశువులు మాత్రమే ఉన్న రైతుల నుండి వస్తాయి — పెద్ద కంపెనీల నుండి కాదు. ప్రతి చిన్న రైతు పాలు కలిసి ప్రపంచంలోనే అతిపెద్ద సరఫరాగా మారతాయి.",
+                  "இந்தியாவில் அதிக பால் 1 முதல் 4 கால்நடைகள் மட்டும் வைத்திருக்கும் விவசாயிகளிடமிருந்து வருகிறது — பெரிய நிறுவனங்களிடமிருந்து அல்ல. ஒவ்வொரு சிறு விவசாயியின் பாலும் சேர்ந்து உலகின் மிகப்பெரிய விநியோகமாக மாறுகிறது.",
+                  "ಭಾರತದಲ್ಲಿ ಹೆಚ್ಚಿನ ಹಾಲು 1 ರಿಂದ 4 ಪ್ರಾಣಿಗಳನ್ನು ಮಾತ್ರ ಹೊಂದಿರುವ ರೈತರಿಂದ ಬರುತ್ತದೆ — ದೊಡ್ಡ ಕಂಪನಿಗಳಿಂದಲ್ಲ. ಪ್ರತಿ ಸಣ್ಣ ರೈತನ ಹಾಲು ಸೇರಿ ಜಗತ್ತಿನ ಅತಿದೊಡ್ಡ ಪೂರೈಕೆಯಾಗುತ್ತದೆ."
+                ),
               },
               {
                 type: "stat-grid",
                 items: [
                   {
-                    label: "Nutrition for millions",
-                    text: "This much milk helps feed families and children across India and the world.",
+                    label: L(
+                      "Nutrition for millions",
+                      "లక్షలాది మందికి పోషకాహారం",
+                      "மில்லியன் கணக்கானோருக்கு ஊட்டச்சத்து",
+                      "ಲಕ್ಷಾಂತರ ಜನರಿಗೆ ಪೋಷಣೆ"
+                    ),
+                    text: L(
+                      "This much milk helps feed families and children across India and the world.",
+                      "ఇంత పాలు భారతదేశం మరియు ప్రపంచవ్యాప్తంగా కుటుంబాలు మరియు పిల్లలకు ఆహారం అందించడంలో సహాయపడతాయి.",
+                      "இவ்வளவு பால் இந்தியா மற்றும் உலகம் முழுவதும் உள்ள குடும்பங்கள் மற்றும் குழந்தைகளுக்கு உணவளிக்க உதவுகிறது.",
+                      "ಈ ಪ್ರಮಾಣದ ಹಾಲು ಭಾರತ ಮತ್ತು ಜಗತ್ತಿನಾದ್ಯಂತ ಕುಟುಂಬಗಳು ಮತ್ತು ಮಕ್ಕಳಿಗೆ ಆಹಾರ ನೀಡಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+                    ),
                   },
                   {
-                    label: "Income for villages",
-                    text: "Every litre sold puts money directly into a village family's hands.",
+                    label: L("Income for villages", "గ్రామాలకు ఆదాయం", "கிராமங்களுக்கு வருமானம்", "ಗ್ರಾಮಗಳಿಗೆ ಆದಾಯ"),
+                    text: L(
+                      "Every litre sold puts money directly into a village family's hands.",
+                      "అమ్మిన ప్రతి లీటరు నేరుగా గ్రామ కుటుంబం చేతికి డబ్బు అందిస్తుంది.",
+                      "விற்கப்படும் ஒவ்வொரு லிட்டரும் நேரடியாக ஒரு கிராம குடும்பத்தின் கைகளுக்கு பணத்தைத் தருகிறது.",
+                      "ಮಾರಾಟವಾಗುವ ಪ್ರತಿ ಲೀಟರ್ ಹಣವನ್ನು ನೇರವಾಗಿ ಗ್ರಾಮದ ಕುಟುಂಬದ ಕೈಗೆ ತಲುಪಿಸುತ್ತದೆ."
+                    ),
                   },
                 ],
               },
@@ -280,21 +577,41 @@ export const MODULES = [
             check: [
               {
                 type: "truefalse",
-                q: "India became the top milk producer mainly because of a few very large dairy companies.",
+                q: L(
+                  "India became the top milk producer mainly because of a few very large dairy companies.",
+                  "కొన్ని పెద్ద డైరీ కంపెనీల వల్లనే భారతదేశం అగ్రశ్రేణి పాల ఉత్పత్తిదారు అయింది.",
+                  "இந்தியா முக்கியமாக சில பெரிய பால் நிறுவனங்களால் முதன்மை பால் உற்பத்தியாளராக ஆனது.",
+                  "ಕೆಲವು ದೊಡ್ಡ ಡೈರಿ ಕಂಪನಿಗಳಿಂದಾಗಿ ಭಾರತ ಪ್ರಮುಖ ಹಾಲು ಉತ್ಪಾದಕವಾಯಿತು."
+                ),
                 answer: false,
-                explain: "It happened because of millions of small farmers, each keeping a few animals.",
+                explain: L(
+                  "It happened because of millions of small farmers, each keeping a few animals.",
+                  "ఇది లక్షలాది మంది చిన్న రైతులు, ఒక్కొక్కరు కొన్ని పశువులను పెంచడం వల్ల జరిగింది.",
+                  "இது மில்லியன் கணக்கான சிறு விவசாயிகள், ஒவ்வொருவரும் சில கால்நடைகளை வளர்ப்பதால் நடந்தது.",
+                  "ಇದು ಲಕ್ಷಾಂತರ ಸಣ್ಣ ರೈತರು, ಪ್ರತಿಯೊಬ್ಬರೂ ಕೆಲವು ಪ್ರಾಣಿಗಳನ್ನು ಸಾಕುವುದರಿಂದ ಸಂಭವಿಸಿತು."
+                ),
               },
               {
                 type: "mcq",
-                q: "What is the main reason India makes so much milk?",
+                q: L(
+                  "What is the main reason India makes so much milk?",
+                  "భారతదేశం ఇంత ఎక్కువ పాలు ఉత్పత్తి చేయడానికి ప్రధాన కారణం ఏమిటి?",
+                  "இந்தியா இவ்வளவு அதிக பால் தயாரிப்பதற்கு முக்கிய காரணம் என்ன?",
+                  "ಭಾರತ ಇಷ್ಟು ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸಲು ಮುಖ್ಯ ಕಾರಣವೇನು?"
+                ),
                 options: [
-                  "A few huge factories",
-                  "Millions of small farmers together",
-                  "Milk imported from other countries",
-                  "Only cows, no buffaloes",
+                  L("A few huge factories", "కొన్ని పెద్ద కర్మాగారాలు", "சில பெரிய தொழிற்சாலைகள்", "ಕೆಲವು ದೊಡ್ಡ ಕಾರ್ಖಾನೆಗಳು"),
+                  L("Millions of small farmers", "లక్షలాది చిన్న రైతులు", "மில்லியன் சிறு விவசாயிகள்", "ಲಕ್ಷಾಂತರ ಸಣ್ಣ ರೈತರು"),
+                  L("Milk imported from abroad", "విదేశాల నుండి దిగుమతి చేసిన పాలు", "வெளிநாட்டிலிருந்து இறக்குமதி செய்யப்பட்ட பால்", "ವಿದೇಶದಿಂದ ಆಮದು ಮಾಡಿದ ಹಾಲು"),
+                  L("Only cows, no buffaloes", "ఆవులు మాత్రమే, గేదెలు లేవు", "மாடுகள் மட்டும், எருமைகள் இல்லை", "ಹಸುಗಳು ಮಾತ್ರ, ಎಮ್ಮೆಗಳಿಲ್ಲ"),
                 ],
                 answer: 1,
-                explain: "Millions of small farmers, each with a few animals, together produce the most milk in the world.",
+                explain: L(
+                  "Millions of small farmers, each with a few animals, together produce the most milk in the world.",
+                  "కొన్ని పశువులతో ఉన్న లక్షలాది చిన్న రైతులు కలిసి ప్రపంచంలోనే అత్యధిక పాలు ఉత్పత్తి చేస్తారు.",
+                  "சில கால்நடைகளுடன் கூடிய மில்லியன் கணக்கான சிறு விவசாயிகள் சேர்ந்து உலகில் அதிக பால் உற்பத்தி செய்கின்றனர்.",
+                  "ಕೆಲವು ಪ್ರಾಣಿಗಳೊಂದಿಗೆ ಲಕ್ಷಾಂತರ ಸಣ್ಣ ರೈತರು ಒಟ್ಟಾಗಿ ಜಗತ್ತಿನಲ್ಲಿ ಅತಿ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತಾರೆ."
+                ),
               },
             ],
           },
@@ -305,23 +622,48 @@ export const MODULES = [
             {
               topicId: "t-world-chart",
               type: "mcq",
-              q: "About how many times more milk does India make compared to the USA?",
-              options: ["Same amount", "Half as much", "About 2 times more", "10 times more"],
+              q: L(
+                "About how many times more milk does India make compared to the USA?",
+                "అమెరికాతో పోలిస్తే భారతదేశం సుమారు ఎన్ని రెట్లు ఎక్కువ పాలు ఉత్పత్తి చేస్తుంది?",
+                "அமெரிக்காவுடன் ஒப்பிடும்போது இந்தியா தோராயமாக எத்தனை மடங்கு அதிக பால் தயாரிக்கிறது?",
+                "ಅಮೆರಿಕಾಗೆ ಹೋಲಿಸಿದರೆ ಭಾರತ ಸುಮಾರು ಎಷ್ಟು ಪಟ್ಟು ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತದೆ?"
+              ),
+              options: [
+                L("Same amount", "అదే మొత్తం", "அதே அளவு", "ಅದೇ ಪ್ರಮಾಣ"),
+                L("Half as much", "సగం", "பாதி அளவு", "ಅರ್ಧದಷ್ಟು"),
+                L("About 2 times more", "సుమారు 2 రెట్లు ఎక్కువ", "சுமார் 2 மடங்கு அதிகம்", "ಸುಮಾರು 2 ಪಟ್ಟು ಹೆಚ್ಚು"),
+                L("10 times more", "10 రెట్లు ఎక్కువ", "10 மடங்கு அதிகம்", "10 ಪಟ್ಟು ಹೆಚ್ಚು"),
+              ],
               answer: 2,
-              explain: "India (241) makes a little more than double the USA's (102) milk.",
+              explain: L(
+                "India (241) makes a little more than double the USA's (102) milk.",
+                "భారతదేశం (241) అమెరికా (102) కంటే కొంచెం ఎక్కువగా రెట్టింపు పాలు ఉత్పత్తి చేస్తుంది.",
+                "இந்தியா (241) அமெரிக்காவை (102) விட சற்று அதிகமாக இரு மடங்கு பால் தயாரிக்கிறது.",
+                "ಭಾರತ (241) ಅಮೆರಿಕಾಗಿಂತ (102) ಸ್ವಲ್ಪ ಹೆಚ್ಚು ಎರಡು ಪಟ್ಟು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತದೆ."
+              ),
             },
             {
               topicId: "t-world-why",
               type: "mcq",
-              q: "India is the world's top milk maker mainly because of:",
+              q: L(
+                "India is the world's top milk maker mainly because of:",
+                "భారతదేశం ప్రపంచంలోనే అగ్రశ్రేణి పాల ఉత్పత్తిదారు కావడానికి ప్రధాన కారణం:",
+                "இந்தியா உலகின் முதன்மை பால் உற்பத்தியாளராக இருப்பதற்கு முக்கிய காரணம்:",
+                "ಭಾರತ ಜಗತ್ತಿನ ಪ್ರಮುಖ ಹಾಲು ಉತ್ಪಾದಕವಾಗಲು ಮುಖ್ಯ ಕಾರಣ:"
+              ),
               options: [
-                "A few big companies",
-                "Millions of small farmers",
-                "Milk imported from abroad",
-                "Only cows, no buffaloes",
+                L("A few big companies", "కొన్ని పెద్ద కంపెనీలు", "சில பெரிய நிறுவனங்கள்", "ಕೆಲವು ದೊಡ್ಡ ಕಂಪನಿಗಳು"),
+                L("Millions of small farmers", "లక్షలాది చిన్న రైతులు", "மில்லியன் சிறு விவசாயிகள்", "ಲಕ್ಷಾಂತರ ಸಣ್ಣ ರೈತರು"),
+                L("Milk imported from abroad", "విదేశాల నుండి దిగుమతి చేసిన పాలు", "வெளிநாட்டிலிருந்து இறக்குமதி செய்யப்பட்ட பால்", "ವಿದೇಶದಿಂದ ಆಮದು ಮಾಡಿದ ಹಾಲು"),
+                L("Only cows, no buffaloes", "ఆవులు మాత్రమే, గేదెలు లేవు", "மாடுகள் மட்டும், எருமைகள் இல்லை", "ಹಸುಗಳು ಮಾತ್ರ, ಎಮ್ಮೆಗಳಿಲ್ಲ"),
               ],
               answer: 1,
-              explain: "Millions of small farmers together make India number one.",
+              explain: L(
+                "Millions of small farmers together make India number one.",
+                "లక్షలాది చిన్న రైతులు కలిసి భారతదేశాన్ని మొదటి స్థానంలో నిలిపారు.",
+                "மில்லியன் கணக்கான சிறு விவசாயிகள் சேர்ந்து இந்தியாவை முதலிடத்தில் வைக்கின்றனர்.",
+                "ಲಕ್ಷಾಂತರ ಸಣ್ಣ ರೈತರು ಒಟ್ಟಾಗಿ ಭಾರತವನ್ನು ಮೊದಲ ಸ್ಥಾನದಲ್ಲಿ ಇರಿಸಿದ್ದಾರೆ."
+              ),
             },
           ],
         },
@@ -331,112 +673,222 @@ export const MODULES = [
       // ==================================================================
       {
         id: "m1-l3",
-        title: "India's Milk Map",
+        title: L("India's Milk Map", "భారతదేశ పాల మ్యాప్", "இந்தியாவின் பால் வரைபடம்", "ಭಾರತದ ಹಾಲಿನ ನಕ್ಷೆ"),
         estMinutes: 7,
         hook: [
           {
             type: "hero",
-            heading: "India's Milk Map",
-            text: "Now let's zoom into India. Which states make the most milk?",
+            heading: L("India's Milk Map", "భారతదేశ పాల మ్యాప్", "இந்தியாவின் பால் வரைபடம்", "ಭಾರತದ ಹಾಲಿನ ನಕ್ಷೆ"),
+            text: L(
+              "Now let's zoom into India. Which states make the most milk?",
+              "ఇప్పుడు భారతదేశంలోకి లోతుగా చూద్దాం. ఏ రాష్ట్రాలు అత్యధిక పాలు ఉత్పత్తి చేస్తాయి?",
+              "இப்போது இந்தியாவை நுணுக்கமாகப் பார்ப்போம். எந்த மாநிலங்கள் அதிக பால் தயாரிக்கின்றன?",
+              "ಈಗ ಭಾರತವನ್ನು ಹತ್ತಿರದಿಂದ ನೋಡೋಣ. ಯಾವ ರಾಜ್ಯಗಳು ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತವೆ?"
+            ),
           },
         ],
         topics: [
           {
             id: "t-state-chart",
-            title: "Top Milk-Making States",
+            title: L(
+              "Top Milk-Making States",
+              "అత్యధిక పాలు ఉత్పత్తి చేసే రాష్ట్రాలు",
+              "அதிக பால் தயாரிக்கும் மாநிலங்கள்",
+              "ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುವ ರಾಜ್ಯಗಳು"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "Every State Contributes",
-                html: "Milk is made in every state of India. But some states make much more than others.",
+                heading: L("Every State Contributes", "ప్రతి రాష్ట్రం సహకరిస్తుంది", "ஒவ்வொரு மாநிலமும் பங்களிக்கிறது", "ಪ್ರತಿ ರಾಜ್ಯವೂ ಕೊಡುಗೆ ನೀಡುತ್ತದೆ"),
+                html: L(
+                  "Milk is made in every state of India. But some states make much more than others.",
+                  "భారతదేశంలోని ప్రతి రాష్ట్రంలో పాలు ఉత్పత్తి అవుతాయి. కానీ కొన్ని రాష్ట్రాలు మిగతా వాటి కంటే చాలా ఎక్కువ ఉత్పత్తి చేస్తాయి.",
+                  "இந்தியாவின் ஒவ்வொரு மாநிலத்திலும் பால் தயாரிக்கப்படுகிறது. ஆனால் சில மாநிலங்கள் மற்றவற்றை விட மிக அதிகமாக தயாரிக்கின்றன.",
+                  "ಭಾರತದ ಪ್ರತಿ ರಾಜ್ಯದಲ್ಲೂ ಹಾಲು ಉತ್ಪಾದಿಸಲಾಗುತ್ತದೆ. ಆದರೆ ಕೆಲವು ರಾಜ್ಯಗಳು ಇತರರಿಗಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತವೆ."
+                ),
               },
               {
                 type: "poll",
-                heading: "Guess Before You Look",
+                heading: L("Guess Before You Look", "చూసే ముందు ఊహించండి", "பார்ப்பதற்கு முன் யூகியுங்கள்", "ನೋಡುವ ಮೊದಲು ಊಹಿಸಿ"),
                 questions: [
                   {
-                    q: "Which state do YOU think makes the most milk in India?",
-                    options: ["Punjab", "Uttar Pradesh", "Kerala", "Bihar"],
+                    q: L(
+                      "Which state do YOU think makes the most milk in India?",
+                      "భారతదేశంలో అత్యధిక పాలు ఉత్పత్తి చేసేది ఏ రాష్ట్రం అని మీరు అనుకుంటున్నారు?",
+                      "இந்தியாவில் அதிக பால் தயாரிப்பது எந்த மாநிலம் என்று நீங்கள் நினைக்கிறீர்கள்?",
+                      "ಭಾರತದಲ್ಲಿ ಅತಿ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುವುದು ಯಾವ ರಾಜ್ಯ ಎಂದು ನೀವು ಭಾವಿಸುತ್ತೀರಿ?"
+                    ),
+                    options: [
+                      L("Punjab", "పంజాబ్", "பஞ்சாப்", "ಪಂಜಾಬ್"),
+                      L("Uttar Pradesh", "ఉత్తర ప్రదేశ్", "உத்தரப் பிரதேசம்", "ಉತ್ತರ ಪ್ರದೇಶ"),
+                      L("Kerala", "కేరళ", "கேரளா", "ಕೇರಳ"),
+                      L("Bihar", "బీహార్", "பீகார்", "ಬಿಹಾರ"),
+                    ],
                     answer: 1,
-                    reveal: "Let's check the chart below and see if you guessed right!",
+                    reveal: L(
+                      "Let's check the chart below and see if you guessed right!",
+                      "కింద ఉన్న చార్ట్‌ను చూసి మీరు సరిగ్గా ఊహించారో లేదో చూద్దాం!",
+                      "கீழே உள்ள விளக்கப்படத்தைப் பார்த்து நீங்கள் சரியாக யூகித்தீர்களா என்று பார்ப்போம்!",
+                      "ಕೆಳಗಿನ ಚಾರ್ಟ್ ನೋಡಿ ನೀವು ಸರಿಯಾಗಿ ಊಹಿಸಿದ್ದೀರಾ ಎಂದು ನೋಡೋಣ!"
+                    ),
                   },
                 ],
               },
               {
                 type: "barchart",
-                heading: "Milk Production by State",
-                source: "Source: BAHS 2025",
-                unit: "'000 tonnes",
+                heading: L(
+                  "Milk Production by State",
+                  "రాష్ట్రాల వారీగా పాల ఉత్పత్తి",
+                  "மாநில வாரியாக பால் உற்பத்தி",
+                  "ರಾಜ್ಯವಾರು ಹಾಲು ಉತ್ಪಾದನೆ"
+                ),
+                source: L("Source: BAHS 2025", "మూలం: BAHS 2025", "ஆதாரம்: BAHS 2025", "ಮೂಲ: BAHS 2025"),
+                unit: L("'000 tonnes", "వేల టన్నులు", "ஆயிரம் டன்", "ಸಾವಿರ ಟನ್"),
                 data: [
-                  { label: "Uttar Pradesh", value: 39 },
-                  { label: "Rajasthan", value: 36 },
-                  { label: "Madhya Pradesh", value: 22 },
-                  { label: "Gujarat", value: 19 },
-                  { label: "Maharashtra", value: 16 },
-                  { label: "Punjab", value: 15 },
-                  { label: "Andhra Pradesh", value: 14 },
-                  { label: "Karnataka", value: 14 },
-                  { label: "Bihar", value: 14 },
-                  { label: "Haryana", value: 13 },
-                  { label: "Tamil Nadu", value: 11 },
-                  { label: "West Bengal", value: 8 },
-                  { label: "Telangana", value: 6 },
-                  { label: "Jharkhand", value: 3 },
-                  { label: "Jammu & Kashmir", value: 3 },
+                  { label: L("Uttar Pradesh", "ఉత్తర ప్రదేశ్", "உத்தரப் பிரதேசம்", "ಉತ್ತರ ಪ್ರದೇಶ"), value: 39 },
+                  { label: L("Rajasthan", "రాజస్థాన్", "ராஜஸ்தான்", "ರಾಜಸ್ಥಾನ"), value: 36 },
+                  { label: L("Madhya Pradesh", "మధ్యప్రదేశ్", "மத்திய பிரதேசம்", "ಮಧ್ಯಪ್ರದೇಶ"), value: 22 },
+                  { label: L("Gujarat", "గుజరాత్", "குஜராத்", "ಗುಜರಾತ್"), value: 19 },
+                  { label: L("Maharashtra", "మహారాష్ట్ర", "மகாராஷ்டிரா", "ಮಹಾರಾಷ್ಟ್ರ"), value: 16 },
+                  { label: L("Punjab", "పంజాబ్", "பஞ்சாப்", "ಪಂಜಾಬ್"), value: 15 },
+                  { label: L("Andhra Pradesh", "ఆంధ్రప్రదేశ్", "ஆந்திரப் பிரதேசம்", "ಆಂಧ್ರಪ್ರದೇಶ"), value: 14 },
+                  { label: L("Karnataka", "కర్ణాటక", "கர்நாடகா", "ಕರ್ನಾಟಕ"), value: 14 },
+                  { label: L("Bihar", "బీహార్", "பீகார்", "ಬಿಹಾರ"), value: 14 },
+                  { label: L("Haryana", "హర్యానా", "ஹரியானா", "ಹರಿಯಾಣ"), value: 13 },
+                  { label: L("Tamil Nadu", "తమిళనాడు", "தமிழ்நாடு", "ತಮಿಳುನಾಡು"), value: 11 },
+                  { label: L("West Bengal", "పశ్చిమ బెంగాల్", "மேற்கு வங்காளம்", "ಪಶ್ಚಿಮ ಬಂಗಾಳ"), value: 8 },
+                  { label: L("Telangana", "తెలంగాణ", "தெலங்காணா", "ತೆಲಂಗಾಣ"), value: 6 },
+                  { label: L("Jharkhand", "జార్ఖండ్", "ஜார்க்கண்ட்", "ಜಾರ್ಖಂಡ್"), value: 3 },
+                  { label: L("Jammu & Kashmir", "జమ్ము & కాశ్మీర్", "ஜம்மு & காஷ்மீர்", "ಜಮ್ಮು & ಕಾಶ್ಮೀರ"), value: 3 },
                 ],
               },
               {
                 type: "example",
-                heading: "Let's Compare",
-                text: "Uttar Pradesh makes the most milk. That is more than 10 times what Jharkhand or Jammu & Kashmir make.",
+                heading: L("Let's Compare", "పోల్చి చూద్దాం", "ஒப்பிடுவோம்", "ಹೋಲಿಸೋಣ"),
+                text: L(
+                  "Uttar Pradesh makes the most milk. That is more than 10 times what Jharkhand or Jammu & Kashmir make.",
+                  "ఉత్తర ప్రదేశ్ అత్యధిక పాలు ఉత్పత్తి చేస్తుంది. ఇది జార్ఖండ్ లేదా జమ్ము & కాశ్మీర్ ఉత్పత్తి చేసే దాని కంటే 10 రెట్లకు పైగా ఎక్కువ.",
+                  "உத்தரப் பிரதேசம் அதிக பால் தயாரிக்கிறது. இது ஜார்க்கண்ட் அல்லது ஜம்மு & காஷ்மீர் தயாரிப்பதை விட 10 மடங்கிற்கும் அதிகம்.",
+                  "ಉತ್ತರ ಪ್ರದೇಶ ಅತಿ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತದೆ. ಇದು ಜಾರ್ಖಂಡ್ ಅಥವಾ ಜಮ್ಮು & ಕಾಶ್ಮೀರ ಉತ್ಪಾದಿಸುವುದಕ್ಕಿಂತ 10 ಪಟ್ಟಿಗಿಂತ ಹೆಚ್ಚು."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "Which state makes the most milk in India?",
-                options: ["Punjab", "Uttar Pradesh", "Gujarat", "Bihar"],
+                q: L(
+                  "Which state makes the most milk in India?",
+                  "భారతదేశంలో అత్యధిక పాలు ఉత్పత్తి చేసే రాష్ట్రం ఏది?",
+                  "இந்தியாவில் அதிக பால் தயாரிக்கும் மாநிலம் எது?",
+                  "ಭಾರತದಲ್ಲಿ ಅತಿ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುವ ರಾಜ್ಯ ಯಾವುದು?"
+                ),
+                options: [
+                  L("Punjab", "పంజాబ్", "பஞ்சாப்", "ಪಂಜಾಬ್"),
+                  L("Uttar Pradesh", "ఉత్తర ప్రదేశ్", "உத்தரப் பிரதேசம்", "ಉತ್ತರ ಪ್ರದೇಶ"),
+                  L("Gujarat", "గుజరాత్", "குஜராத்", "ಗುಜರಾತ್"),
+                  L("Bihar", "బీహార్", "பீகார்", "ಬಿಹಾರ"),
+                ],
                 answer: 1,
-                explain: "Uttar Pradesh leads all Indian states in milk production.",
+                explain: L(
+                  "Uttar Pradesh leads all Indian states in milk production.",
+                  "పాల ఉత్పత్తిలో అన్ని భారత రాష్ట్రాలలో ఉత్తర ప్రదేశ్ ముందుంది.",
+                  "பால் உற்பத்தியில் அனைத்து இந்திய மாநிலங்களிலும் உத்தரப் பிரதேசம் முன்னணியில் உள்ளது.",
+                  "ಹಾಲು ಉತ್ಪಾದನೆಯಲ್ಲಿ ಎಲ್ಲಾ ಭಾರತೀಯ ರಾಜ್ಯಗಳಲ್ಲಿ ಉತ್ತರ ಪ್ರದೇಶ ಮುಂಚೂಣಿಯಲ್ಲಿದೆ."
+                ),
               },
               {
                 type: "truefalse",
-                q: "All Indian states make about the same amount of milk.",
+                q: L(
+                  "All Indian states make about the same amount of milk.",
+                  "అన్ని భారత రాష్ట్రాలు దాదాపు సమానంగా పాలు ఉత్పత్తి చేస్తాయి.",
+                  "அனைத்து இந்திய மாநிலங்களும் தோராயமாக ஒரே அளவு பால் தயாரிக்கின்றன.",
+                  "ಎಲ್ಲಾ ಭಾರತೀಯ ರಾಜ್ಯಗಳು ಸುಮಾರು ಒಂದೇ ಪ್ರಮಾಣದ ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತವೆ."
+                ),
                 answer: false,
-                explain: "Some states, like Uttar Pradesh and Rajasthan, make much more milk than others.",
+                explain: L(
+                  "Some states, like Uttar Pradesh and Rajasthan, make much more milk than others.",
+                  "ఉత్తర ప్రదేశ్, రాజస్థాన్ వంటి కొన్ని రాష్ట్రాలు మిగతా వాటి కంటే చాలా ఎక్కువ పాలు ఉత్పత్తి చేస్తాయి.",
+                  "உத்தரப் பிரதேசம், ராஜஸ்தான் போன்ற சில மாநிலங்கள் மற்றவற்றை விட அதிக பால் தயாரிக்கின்றன.",
+                  "ಉತ್ತರ ಪ್ರದೇಶ, ರಾಜಸ್ಥಾನದಂತಹ ಕೆಲವು ರಾಜ್ಯಗಳು ಇತರರಿಗಿಂತ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತವೆ."
+                ),
               },
             ],
           },
           {
             id: "t-state-meaning",
-            title: "What This Means for You",
+            title: L(
+              "What This Means for You",
+              "ఇది మీకు అర్థం ఏమిటి",
+              "இது உங்களுக்கு என்ன அர்த்தம்",
+              "ಇದು ನಿಮಗೆ ಏನು ಅರ್ಥ"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "The Top 5 States",
-                html: "Uttar Pradesh, Rajasthan, Madhya Pradesh, Gujarat and Maharashtra are the top 5 milk-making states. Together, just these 5 states make more than 65 out of every 100 litres of milk in India.",
+                heading: L("The Top 5 States", "టాప్ 5 రాష్ట్రాలు", "முதல் 5 மாநிலங்கள்", "ಟಾಪ್ 5 ರಾಜ್ಯಗಳು"),
+                html: L(
+                  "Uttar Pradesh, Rajasthan, Madhya Pradesh, Gujarat and Maharashtra are the top 5 milk-making states. Together, just these 5 states make more than 65 out of every 100 litres of milk in India.",
+                  "ఉత్తర ప్రదేశ్, రాజస్థాన్, మధ్యప్రదేశ్, గుజరాత్ మరియు మహారాష్ట్ర టాప్ 5 పాల ఉత్పత్తి రాష్ట్రాలు. కలిపి, ఈ 5 రాష్ట్రాలు మాత్రమే భారతదేశంలోని ప్రతి 100 లీటర్ల పాలలో 65 కి పైగా ఉత్పత్తి చేస్తాయి.",
+                  "உத்தரப் பிரதேசம், ராஜஸ்தான், மத்திய பிரதேசம், குஜராத் மற்றும் மகாராஷ்டிரா ஆகியவை முதல் 5 பால் தயாரிக்கும் மாநிலங்கள். சேர்ந்து, இந்த 5 மாநிலங்கள் மட்டும் இந்தியாவின் ஒவ்வொரு 100 லிட்டர் பாலில் 65 க்கும் மேல் தயாரிக்கின்றன.",
+                  "ಉತ್ತರ ಪ್ರದೇಶ, ರಾಜಸ್ಥಾನ, ಮಧ್ಯಪ್ರದೇಶ, ಗುಜರಾತ್ ಮತ್ತು ಮಹಾರಾಷ್ಟ್ರ ಟಾಪ್ 5 ಹಾಲು ಉತ್ಪಾದಿಸುವ ರಾಜ್ಯಗಳು. ಒಟ್ಟಿಗೆ, ಈ 5 ರಾಜ್ಯಗಳು ಮಾತ್ರ ಭಾರತದ ಪ್ರತಿ 100 ಲೀಟರ್ ಹಾಲಿನಲ್ಲಿ 65 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತವೆ."
+                ),
               },
               {
                 type: "callout",
                 style: "info",
-                heading: "Did you know?",
-                text: "Even in states that make less milk overall, dairy is still a vital income source for the families there. Every village's contribution matters.",
+                heading: L("Did you know?", "మీకు తెలుసా?", "உங்களுக்குத் தெரியுமா?", "ನಿಮಗೆ ಗೊತ್ತೇ?"),
+                text: L(
+                  "Even in states that make less milk overall, dairy is still a vital income source for the families there. Every village's contribution matters.",
+                  "మొత్తంగా తక్కువ పాలు ఉత్పత్తి చేసే రాష్ట్రాలలో కూడా, డైరీ అక్కడి కుటుంబాలకు ఒక ముఖ్యమైన ఆదాయ వనరుగా ఉంది. ప్రతి గ్రామం యొక్క సహకారం ముఖ్యమైనది.",
+                  "மொத்தத்தில் குறைவான பால் தயாரிக்கும் மாநிலங்களிலும் கூட, பால் பண்ணை அங்குள்ள குடும்பங்களுக்கு முக்கிய வருமான ஆதாரமாக உள்ளது. ஒவ்வொரு கிராமத்தின் பங்களிப்பும் முக்கியம்.",
+                  "ಒಟ್ಟಾರೆಯಾಗಿ ಕಡಿಮೆ ಹಾಲು ಉತ್ಪಾದಿಸುವ ರಾಜ್ಯಗಳಲ್ಲೂ ಸಹ, ಡೈರಿ ಅಲ್ಲಿನ ಕುಟುಂಬಗಳಿಗೆ ಪ್ರಮುಖ ಆದಾಯದ ಮೂಲವಾಗಿದೆ. ಪ್ರತಿ ಗ್ರಾಮದ ಕೊಡುಗೆಯೂ ಮುಖ್ಯ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "Roughly what share of India's milk comes from the top 5 states?",
-                options: ["Under 20%", "About 40%", "Over 65%", "100%"],
+                q: L(
+                  "Roughly what share of India's milk comes from the top 5 states?",
+                  "భారతదేశ పాలలో సుమారు ఎంత శాతం టాప్ 5 రాష్ట్రాల నుండి వస్తుంది?",
+                  "இந்தியாவின் பாலில் தோராயமாக எத்தனை சதவீதம் முதல் 5 மாநிலங்களிலிருந்து வருகிறது?",
+                  "ಭಾರತದ ಹಾಲಿನಲ್ಲಿ ಸುಮಾರು ಎಷ್ಟು ಪಾಲು ಟಾಪ್ 5 ರಾಜ್ಯಗಳಿಂದ ಬರುತ್ತದೆ?"
+                ),
+                options: [
+                  L("Under 20%", "20% కంటే తక్కువ", "20% க்கும் குறைவு", "20% ಕ್ಕಿಂತ ಕಡಿಮೆ"),
+                  L("About 40%", "సుమారు 40%", "சுமார் 40%", "ಸುಮಾರು 40%"),
+                  L("Over 65%", "65% కంటే ఎక్కువ", "65% க்கும் அதிகம்", "65% ಕ್ಕಿಂತ ಹೆಚ್ಚು"),
+                  L("100%", "100%", "100%", "100%"),
+                ],
                 answer: 2,
-                explain: "The top 5 states together contribute over 65% of India's total milk.",
+                explain: L(
+                  "The top 5 states together contribute over 65% of India's total milk.",
+                  "టాప్ 5 రాష్ట్రాలు కలిపి భారతదేశ మొత్తం పాలలో 65% కంటే ఎక్కువ అందిస్తాయి.",
+                  "முதல் 5 மாநிலங்கள் சேர்ந்து இந்தியாவின் மொத்த பாலில் 65% க்கும் அதிகமாக பங்களிக்கின்றன.",
+                  "ಟಾಪ್ 5 ರಾಜ್ಯಗಳು ಒಟ್ಟಾಗಿ ಭಾರತದ ಒಟ್ಟು ಹಾಲಿನಲ್ಲಿ 65% ಕ್ಕಿಂತ ಹೆಚ್ಚು ಕೊಡುಗೆ ನೀಡುತ್ತವೆ."
+                ),
               },
               {
                 type: "mcq",
-                q: "Which of these is one of the top 5 milk-making states?",
-                options: ["Kerala", "Gujarat", "Goa", "Assam"],
+                q: L(
+                  "Which of these is one of the top 5 milk-making states?",
+                  "కింది వాటిలో టాప్ 5 పాల ఉత్పత్తి రాష్ట్రాలలో ఒకటి ఏది?",
+                  "இவற்றில் முதல் 5 பால் தயாரிக்கும் மாநிலங்களில் ஒன்று எது?",
+                  "ಇವುಗಳಲ್ಲಿ ಟಾಪ್ 5 ಹಾಲು ಉತ್ಪಾದಿಸುವ ರಾಜ್ಯಗಳಲ್ಲಿ ಒಂದು ಯಾವುದು?"
+                ),
+                options: [
+                  L("Kerala", "కేరళ", "கேரளா", "ಕೇರಳ"),
+                  L("Gujarat", "గుజరాత్", "குஜராத்", "ಗುಜರಾತ್"),
+                  L("Goa", "గోవా", "கோவா", "ಗೋವಾ"),
+                  L("Assam", "అస్సాం", "அசாம்", "ಅಸ್ಸಾಂ"),
+                ],
                 answer: 1,
-                explain: "Gujarat is one of the top 5 states, along with UP, Rajasthan, MP and Maharashtra.",
+                explain: L(
+                  "Gujarat is one of the top 5 states, along with UP, Rajasthan, MP and Maharashtra.",
+                  "UP, రాజస్థాన్, MP మరియు మహారాష్ట్రలతో పాటు గుజరాత్ కూడా టాప్ 5 రాష్ట్రాలలో ఒకటి.",
+                  "உ.பி., ராஜஸ்தான், ம.பி. மற்றும் மகாராஷ்டிராவுடன் குஜராத்தும் முதல் 5 மாநிலங்களில் ஒன்று.",
+                  "UP, ರಾಜಸ್ಥಾನ, MP ಮತ್ತು ಮಹಾರಾಷ್ಟ್ರದೊಂದಿಗೆ ಗುಜರಾತ್ ಕೂಡ ಟಾಪ್ 5 ರಾಜ್ಯಗಳಲ್ಲಿ ಒಂದು."
+                ),
               },
             ],
           },
@@ -447,17 +899,42 @@ export const MODULES = [
             {
               topicId: "t-state-chart",
               type: "mcq",
-              q: "Which state produces more milk — Bihar or Haryana?",
-              options: ["Bihar", "Haryana", "Exactly equal", "Cannot say"],
+              q: L(
+                "Which state produces more milk — Bihar or Haryana?",
+                "ఏ రాష్ట్రం ఎక్కువ పాలు ఉత్పత్తి చేస్తుంది — బీహార్ లేదా హర్యానా?",
+                "எந்த மாநிலம் அதிக பால் தயாரிக்கிறது — பீகார் அல்லது ஹரியானா?",
+                "ಯಾವ ರಾಜ್ಯ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸುತ್ತದೆ — ಬಿಹಾರ ಅಥವಾ ಹರಿಯಾಣ?"
+              ),
+              options: [
+                L("Bihar", "బీహార్", "பீகார்", "ಬಿಹಾರ"),
+                L("Haryana", "హర్యానా", "ஹரியானா", "ಹರಿಯಾಣ"),
+                L("Exactly equal", "సరిగ్గా సమానం", "சரியாக சமம்", "ಸರಿಸಮ"),
+                L("Cannot say", "చెప్పలేము", "சொல்ல முடியாது", "ಹೇಳಲಾಗುವುದಿಲ್ಲ"),
+              ],
               answer: 0,
-              explain: "Bihar (14 units) produces slightly more than Haryana (13 units).",
+              explain: L(
+                "Bihar (14 units) produces slightly more than Haryana (13 units).",
+                "బీహార్ (14 యూనిట్లు) హర్యానా (13 యూనిట్లు) కంటే కొంచెం ఎక్కువ ఉత్పత్తి చేస్తుంది.",
+                "பீகார் (14 அலகுகள்) ஹரியானாவை (13 அலகுகள்) விட சற்று அதிகமாக தயாரிக்கிறது.",
+                "ಬಿಹಾರ (14 ಘಟಕಗಳು) ಹರಿಯಾಣಕ್ಕಿಂತ (13 ಘಟಕಗಳು) ಸ್ವಲ್ಪ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತದೆ."
+              ),
             },
             {
               topicId: "t-state-meaning",
               type: "truefalse",
-              q: "The top 5 states alone make more than half of all of India's milk.",
+              q: L(
+                "The top 5 states alone make more than half of all of India's milk.",
+                "టాప్ 5 రాష్ట్రాలు మాత్రమే భారతదేశ మొత్తం పాలలో సగానికి పైగా ఉత్పత్తి చేస్తాయి.",
+                "முதல் 5 மாநிலங்கள் மட்டும் இந்தியாவின் மொத்த பாலில் பாதிக்கும் மேல் தயாரிக்கின்றன.",
+                "ಟಾಪ್ 5 ರಾಜ್ಯಗಳು ಮಾತ್ರ ಭಾರತದ ಒಟ್ಟು ಹಾಲಿನಲ್ಲಿ ಅರ್ಧಕ್ಕಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತವೆ."
+              ),
               answer: true,
-              explain: "Yes — the top 5 states make over 65% of India's total milk.",
+              explain: L(
+                "Yes — the top 5 states make over 65% of India's total milk.",
+                "అవును — టాప్ 5 రాష్ట్రాలు భారతదేశ మొత్తం పాలలో 65% కంటే ఎక్కువ ఉత్పత్తి చేస్తాయి.",
+                "ஆம் — முதல் 5 மாநிலங்கள் இந்தியாவின் மொத்த பாலில் 65% க்கும் அதிகமாக தயாரிக்கின்றன.",
+                "ಹೌದು — ಟಾಪ್ 5 ರಾಜ್ಯಗಳು ಭಾರತದ ಒಟ್ಟು ಹಾಲಿನಲ್ಲಿ 65% ಕ್ಕಿಂತ ಹೆಚ್ಚು ಉತ್ಪಾದಿಸುತ್ತವೆ."
+              ),
             },
           ],
         },
@@ -467,40 +944,78 @@ export const MODULES = [
       // ==================================================================
       {
         id: "m1-l4",
-        title: "The White Revolution — India's Dairy Story",
+        title: L(
+          "The White Revolution — India's Dairy Story",
+          "శ్వేత విప్లవం — భారత డైరీ కథ",
+          "வெள்ளைப் புரட்சி — இந்தியாவின் பால் கதை",
+          "ಶ್ವೇತ ಕ್ರಾಂತಿ — ಭಾರತದ ಡೈರಿ ಕಥೆ"
+        ),
         estMinutes: 9,
         hook: [
           {
             type: "hero",
-            heading: "The White Revolution",
-            text: "How did India go from not having enough milk to being the world's biggest milk maker? It's a story about ordinary farmers.",
+            heading: L("The White Revolution", "శ్వేత విప్లవం", "வெள்ளைப் புரட்சி", "ಶ್ವೇತ ಕ್ರಾಂತಿ"),
+            text: L(
+              "How did India go from not having enough milk to being the world's biggest milk maker? It's a story about ordinary farmers.",
+              "సరిపడా పాలు లేని స్థితి నుండి ప్రపంచంలోనే అతిపెద్ద పాల ఉత్పత్తిదారుగా భారతదేశం ఎలా మారింది? ఇది సాధారణ రైతుల కథ.",
+              "போதிய பால் இல்லாத நிலையிலிருந்து உலகின் மிகப்பெரிய பால் உற்பத்தியாளராக இந்தியா எப்படி மாறியது? இது சாதாரண விவசாயிகளின் கதை.",
+              "ಸಾಕಷ್ಟು ಹಾಲು ಇಲ್ಲದ ಸ್ಥಿತಿಯಿಂದ ಜಗತ್ತಿನ ಅತಿದೊಡ್ಡ ಹಾಲು ತಯಾರಕವಾಗಿ ಭಾರತ ಹೇಗೆ ಬದಲಾಯಿತು? ಇದು ಸಾಮಾನ್ಯ ರೈತರ ಕಥೆ."
+            ),
           },
         ],
         topics: [
           {
             id: "t-problem",
-            title: "The Problem: Farmers Were Cheated",
+            title: L(
+              "The Problem: Farmers Were Cheated",
+              "సమస్య: రైతులను మోసం చేశారు",
+              "பிரச்சனை: விவசாயிகள் ஏமாற்றப்பட்டனர்",
+              "ಸಮಸ್ಯೆ: ರೈತರನ್ನು ಮೋಸಗೊಳಿಸಲಾಯಿತು"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "Before 1946",
-                html: "Long ago, in Kaira district in Gujarat, farmers sold their milk to a private trader. The trader paid very little and decided the price all by himself. Farmers had no other place to sell milk, so they had no choice but to accept it.",
+                heading: L("Before 1946", "1946కి ముందు", "1946க்கு முன்", "1946 ರ ಮೊದಲು"),
+                html: L(
+                  "Long ago, in Kaira district in Gujarat, farmers sold their milk to a private trader. The trader paid very little and decided the price all by himself. Farmers had no other place to sell milk, so they had no choice but to accept it.",
+                  "చాలా కాలం క్రితం, గుజరాత్‌లోని కైరా జిల్లాలో, రైతులు తమ పాలను ఒక ప్రైవేట్ వ్యాపారికి అమ్మేవారు. వ్యాపారి చాలా తక్కువ చెల్లించేవాడు, ధరను తానే నిర్ణయించేవాడు. రైతులకు పాలు అమ్మడానికి వేరే చోటు లేకపోవడంతో, దానిని అంగీకరించక తప్పలేదు.",
+                  "வெகு காலத்திற்கு முன்பு, குஜராத்தில் உள்ள கைரா மாவட்டத்தில், விவசாயிகள் தங்கள் பாலை ஒரு தனியார் வர்த்தகருக்கு விற்றனர். வர்த்தகர் மிகக் குறைவாக பணம் கொடுத்து, விலையை தானே முடிவு செய்தார். விவசாயிகளுக்கு பால் விற்க வேறு இடம் இல்லாததால், அதை ஏற்றுக்கொள்ள வேண்டியிருந்தது.",
+                  "ಬಹಳ ಹಿಂದೆ, ಗುಜರಾತ್‌ನ ಕೈರಾ ಜಿಲ್ಲೆಯಲ್ಲಿ, ರೈತರು ತಮ್ಮ ಹಾಲನ್ನು ಒಬ್ಬ ಖಾಸಗಿ ವ್ಯಾಪಾರಿಗೆ ಮಾರುತ್ತಿದ್ದರು. ವ್ಯಾಪಾರಿ ಬಹಳ ಕಡಿಮೆ ಪಾವತಿಸುತ್ತಿದ್ದನು ಮತ್ತು ಬೆಲೆಯನ್ನು ತಾನೇ ನಿರ್ಧರಿಸುತ್ತಿದ್ದನು. ರೈತರಿಗೆ ಹಾಲು ಮಾರಲು ಬೇರೆ ಸ್ಥಳವಿಲ್ಲದ ಕಾರಣ, ಅದನ್ನು ಒಪ್ಪಿಕೊಳ್ಳುವುದು ಅನಿವಾರ್ಯವಾಗಿತ್ತು."
+                ),
               },
               {
                 type: "callout",
                 style: "warning",
-                heading: "The Unfair Deal",
-                text: "The trader made a big profit, but the farmers who did all the hard work stayed poor. This is called exploitation — when someone with power takes unfair advantage of people who have no other choice.",
+                heading: L("The Unfair Deal", "అన్యాయమైన ఒప్పందం", "நியாயமற்ற ஒப்பந்தம்", "ಅನ್ಯಾಯದ ಒಪ್ಪಂದ"),
+                text: L(
+                  "The trader made a big profit, but the farmers who did all the hard work stayed poor. This is called exploitation — when someone with power takes unfair advantage of people who have no other choice.",
+                  "వ్యాపారి పెద్ద లాభం సంపాదించాడు, కానీ కష్టపడి పనిచేసిన రైతులు పేదవారిగానే ఉండిపోయారు. దీనిని దోపిడీ అంటారు — అధికారం ఉన్నవారు వేరే మార్గం లేని వారిని అన్యాయంగా ఉపయోగించుకోవడం.",
+                  "வர்த்தகர் பெரிய லாபம் ஈட்டினார், ஆனால் கடினமாக உழைத்த விவசாயிகள் ஏழையாகவே இருந்தனர். இது சுரண்டல் எனப்படும் — அதிகாரம் உள்ளவர் வேறு வழியில்லாதவர்களை நியாயமின்றி பயன்படுத்திக்கொள்வது.",
+                  "ವ್ಯಾಪಾರಿ ದೊಡ್ಡ ಲಾಭ ಗಳಿಸಿದನು, ಆದರೆ ಕಷ್ಟಪಟ್ಟು ಕೆಲಸ ಮಾಡಿದ ರೈತರು ಬಡವರಾಗಿಯೇ ಉಳಿದರು. ಇದನ್ನು ಶೋಷಣೆ ಎಂದು ಕರೆಯಲಾಗುತ್ತದೆ — ಅಧಿಕಾರವಿರುವವರು ಬೇರೆ ಆಯ್ಕೆಯಿಲ್ಲದವರನ್ನು ಅನ್ಯಾಯವಾಗಿ ಬಳಸಿಕೊಳ್ಳುವುದು."
+                ),
               },
               {
                 type: "poll",
-                heading: "What Do You Think?",
+                heading: L("What Do You Think?", "మీరు ఏమనుకుంటున్నారు?", "நீங்கள் என்ன நினைக்கிறீர்கள்?", "ನೀವು ಏನು ಯೋಚಿಸುತ್ತೀರಿ?"),
                 questions: [
                   {
-                    q: "If only one trader buys your milk and he alone sets the price, is that fair to farmers?",
-                    options: ["Yes, that's fair", "No, that's not fair"],
+                    q: L(
+                      "If only one trader buys your milk and he alone sets the price, is that fair to farmers?",
+                      "మీ పాలను ఒకే వ్యాపారి కొంటే, అతనే ధరను నిర్ణయిస్తే, అది రైతులకు న్యాయమేనా?",
+                      "ஒரே வர்த்தகர் மட்டும் உங்கள் பாலை வாங்கி, அவரே விலையை நிர்ணயித்தால், அது விவசாயிகளுக்கு நியாயமா?",
+                      "ಒಬ್ಬ ವ್ಯಾಪಾರಿ ಮಾತ್ರ ನಿಮ್ಮ ಹಾಲನ್ನು ಖರೀದಿಸಿ, ಅವನೇ ಬೆಲೆ ನಿಗದಿಪಡಿಸಿದರೆ, ಅದು ರೈತರಿಗೆ ನ್ಯಾಯಯುತವೇ?"
+                    ),
+                    options: [
+                      L("Yes, that's fair", "అవును, అది న్యాయమే", "ஆம், அது நியாயம்", "ಹೌದು, ಅದು ನ್ಯಾಯಯುತ"),
+                      L("No, that's not fair", "కాదు, అది న్యాయం కాదు", "இல்லை, அது நியாயமில்லை", "ಇಲ್ಲ, ಅದು ನ್ಯಾಯಯುತವಲ್ಲ"),
+                    ],
                     answer: 1,
-                    reveal: "Right — when farmers have no other buyer to go to, the trader can pay whatever he wants. That's not a fair deal.",
+                    reveal: L(
+                      "Right — when farmers have no other buyer to go to, the trader can pay whatever he wants. That's not a fair deal.",
+                      "సరైనది — రైతులకు వెళ్ళడానికి వేరే కొనుగోలుదారు లేనప్పుడు, వ్యాపారి తనకు నచ్చినట్లు చెల్లించవచ్చు. అది న్యాయమైన ఒప్పందం కాదు.",
+                      "சரி — விவசாயிகளுக்கு வேறு வாங்குபவர் இல்லாதபோது, வர்த்தகர் தனக்கு விருப்பமான தொகையை கொடுக்கலாம். அது நியாயமான ஒப்பந்தம் அல்ல.",
+                      "ಸರಿ — ರೈತರಿಗೆ ಹೋಗಲು ಬೇರೆ ಖರೀದಿದಾರರಿಲ್ಲದಿದ್ದಾಗ, ವ್ಯಾಪಾರಿ ತನಗೆ ಬೇಕಾದಷ್ಟು ಪಾವತಿಸಬಹುದು. ಅದು ನ್ಯಾಯಯುತ ಒಪ್ಪಂದವಲ್ಲ."
+                    ),
                   },
                 ],
               },
@@ -508,128 +1023,332 @@ export const MODULES = [
             check: [
               {
                 type: "mcq",
-                q: "Before 1946, why did farmers in Kaira accept a low price for their milk?",
+                q: L(
+                  "Before 1946, why did farmers in Kaira accept a low price for their milk?",
+                  "1946కి ముందు, కైరాలోని రైతులు తమ పాలకు తక్కువ ధరను ఎందుకు అంగీకరించారు?",
+                  "1946க்கு முன், கைராவில் உள்ள விவசாயிகள் தங்கள் பாலுக்கு குறைந்த விலையை ஏன் ஏற்றுக்கொண்டனர்?",
+                  "1946 ರ ಮೊದಲು, ಕೈರಾದ ರೈತರು ತಮ್ಮ ಹಾಲಿಗೆ ಕಡಿಮೆ ಬೆಲೆಯನ್ನು ಏಕೆ ಒಪ್ಪಿಕೊಂಡರು?"
+                ),
                 options: [
-                  "The trader paid a fair price",
-                  "They had no other place to sell milk",
-                  "They didn't need money",
-                  "Milk was not valuable then",
+                  L("The trader paid a fair price", "వ్యాపారి న్యాయమైన ధర చెల్లించాడు", "வர்த்தகர் நியாயமான விலை கொடுத்தார்", "ವ್ಯಾಪಾರಿ ನ್ಯಾಯಯುತ ಬೆಲೆ ಪಾವತಿಸಿದನು"),
+                  L("They had no other place to sell milk", "పాలు అమ్మడానికి వేరే చోటు లేదు", "பால் விற்க வேறு இடம் இல்லை", "ಹಾಲು ಮಾರಲು ಬೇರೆ ಸ್ಥಳವಿರಲಿಲ್ಲ"),
+                  L("They didn't need money", "వారికి డబ్బు అవసరం లేదు", "அவர்களுக்கு பணம் தேவையில்லை", "ಅವರಿಗೆ ಹಣ ಬೇಕಾಗಿರಲಿಲ್ಲ"),
+                  L("Milk was not valuable then", "అప్పుడు పాలకు విలువ లేదు", "அப்போது பாலுக்கு மதிப்பு இல்லை", "ಆಗ ಹಾಲಿಗೆ ಬೆಲೆ ಇರಲಿಲ್ಲ"),
                 ],
                 answer: 1,
-                explain: "With only one trader to sell to, farmers had no choice but to accept the low price he offered.",
+                explain: L(
+                  "With only one trader to sell to, farmers had no choice but to accept the low price he offered.",
+                  "అమ్మడానికి ఒకే వ్యాపారి ఉండటంతో, అతను ఇచ్చిన తక్కువ ధరను అంగీకరించడం తప్ప రైతులకు వేరే మార్గం లేదు.",
+                  "விற்க ஒரே வர்த்தகர் மட்டும் இருந்ததால், அவர் அளித்த குறைந்த விலையை ஏற்க வேண்டியதைத் தவிர விவசாயிகளுக்கு வேறு வழியில்லை.",
+                  "ಮಾರಲು ಒಬ್ಬ ವ್ಯಾಪಾರಿ ಮಾತ್ರ ಇದ್ದುದರಿಂದ, ಅವನು ನೀಡಿದ ಕಡಿಮೆ ಬೆಲೆಯನ್ನು ಒಪ್ಪಿಕೊಳ್ಳುವುದನ್ನು ಬಿಟ್ಟು ರೈತರಿಗೆ ಬೇರೆ ದಾರಿ ಇರಲಿಲ್ಲ."
+                ),
               },
               {
                 type: "truefalse",
-                q: "Before 1946, farmers in Kaira were getting a fair price for their milk.",
+                q: L(
+                  "Before 1946, farmers in Kaira were getting a fair price for their milk.",
+                  "1946కి ముందు, కైరాలోని రైతులకు వారి పాలకు న్యాయమైన ధర లభించేది.",
+                  "1946க்கு முன், கைராவில் உள்ள விவசாயிகள் தங்கள் பாலுக்கு நியாயமான விலை பெற்றனர்.",
+                  "1946 ರ ಮೊದಲು, ಕೈರಾದ ರೈತರಿಗೆ ಅವರ ಹಾಲಿಗೆ ನ್ಯಾಯಯುತ ಬೆಲೆ ಸಿಗುತ್ತಿತ್ತು."
+                ),
                 answer: false,
-                explain: "A single private trader controlled the price and paid farmers very little.",
+                explain: L(
+                  "A single private trader controlled the price and paid farmers very little.",
+                  "ఒకే ప్రైవేట్ వ్యాపారి ధరను నియంత్రించి, రైతులకు చాలా తక్కువ చెల్లించేవాడు.",
+                  "ஒரே தனியார் வர்த்தகர் விலையை கட்டுப்படுத்தி, விவசாயிகளுக்கு மிகக் குறைவாக கொடுத்தார்.",
+                  "ಒಬ್ಬ ಖಾಸಗಿ ವ್ಯಾಪಾರಿ ಬೆಲೆಯನ್ನು ನಿಯಂತ್ರಿಸಿ, ರೈತರಿಗೆ ಬಹಳ ಕಡಿಮೆ ಪಾವತಿಸುತ್ತಿದ್ದನು."
+                ),
               },
             ],
           },
           {
             id: "t-amul",
-            title: "1946: Farmers Build Their Own Dairy",
+            title: L(
+              "1946: Farmers Build Their Own Dairy",
+              "1946: రైతులు తమ సొంత డైరీని నిర్మించారు",
+              "1946: விவசாயிகள் தங்கள் சொந்த பால் பண்ணையை உருவாக்கினர்",
+              "1946: ರೈತರು ತಮ್ಮದೇ ಡೈರಿಯನ್ನು ನಿರ್ಮಿಸಿದರು"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "A New Idea: Owning It Together",
-                html: "In 1946, the farmers of Kaira stopped selling to the unfair trader. With support from leaders like Sardar Patel, they formed their own dairy — owned by the farmers themselves. This dairy became AMUL.",
+                heading: L(
+                  "A New Idea: Owning It Together",
+                  "కొత్త ఆలోచన: కలిసి యజమానులు కావడం",
+                  "புதிய யோசனை: ஒன்றாக சொந்தமாக்குதல்",
+                  "ಹೊಸ ಕಲ್ಪನೆ: ಒಟ್ಟಿಗೆ ಮಾಲೀಕತ್ವ"
+                ),
+                html: L(
+                  "In 1946, the farmers of Kaira stopped selling to the unfair trader. With support from leaders like Sardar Patel, they formed their own dairy — owned by the farmers themselves. This dairy became AMUL.",
+                  "1946లో, కైరా రైతులు అన్యాయమైన వ్యాపారికి అమ్మడం ఆపేశారు. సర్దార్ పటేల్ వంటి నాయకుల మద్దతుతో, వారు తమ సొంత డైరీని ఏర్పాటు చేశారు — రైతులే యజమానులుగా. ఈ డైరీయే అముల్ గా మారింది.",
+                  "1946ல், கைரா விவசாயிகள் நியாயமற்ற வர்த்தகருக்கு விற்பதை நிறுத்தினர். சர்தார் படேல் போன்ற தலைவர்களின் ஆதரவுடன், அவர்கள் தங்கள் சொந்த பால் பண்ணையை உருவாக்கினர் — விவசாயிகளே சொந்தக்காரர்களாக. இந்த பால் பண்ணையே அமுல் ஆனது.",
+                  "1946 ರಲ್ಲಿ, ಕೈರಾದ ರೈತರು ಅನ್ಯಾಯದ ವ್ಯಾಪಾರಿಗೆ ಮಾರುವುದನ್ನು ನಿಲ್ಲಿಸಿದರು. ಸರ್ದಾರ್ ಪಟೇಲ್‌ರಂತಹ ನಾಯಕರ ಬೆಂಬಲದೊಂದಿಗೆ, ಅವರು ತಮ್ಮದೇ ಡೈರಿಯನ್ನು ರಚಿಸಿದರು — ರೈತರೇ ಮಾಲೀಕರಾಗಿ. ಈ ಡೈರಿಯೇ ಅಮುಲ್ ಆಯಿತು."
+                ),
               },
               {
                 type: "glossary",
-                term: "Cooperative",
-                meaning:
+                term: L("Cooperative", "సహకార సంఘం", "கூட்டுறவு", "ಸಹಕಾರ ಸಂಘ"),
+                meaning: L(
                   "A business owned and run TOGETHER by the people who use it — here, by the farmers themselves. No single trader controls the price.",
+                  "దీనిని ఉపయోగించే వారు — ఇక్కడ రైతులు — కలిసి యజమానులుగా ఉండి, కలిసి నడిపే వ్యాపారం. ఒక్క వ్యాపారి ధరను నియంత్రించడు.",
+                  "இதைப் பயன்படுத்துபவர்கள் — இங்கு விவசாயிகள் — சேர்ந்து சொந்தமாக்கி, சேர்ந்து நடத்தும் வணிகம். ஒரு வர்த்தகர் மட்டும் விலையை கட்டுப்படுத்த மாட்டார்.",
+                  "ಇದನ್ನು ಬಳಸುವವರು — ಇಲ್ಲಿ ರೈತರು — ಒಟ್ಟಿಗೆ ಮಾಲೀಕತ್ವ ಹೊಂದಿ, ಒಟ್ಟಿಗೆ ನಡೆಸುವ ವ್ಯಾಪಾರ. ಒಬ್ಬ ವ್ಯಾಪಾರಿ ಬೆಲೆಯನ್ನು ನಿಯಂತ್ರಿಸುವುದಿಲ್ಲ."
+                ),
               },
               {
                 type: "text",
-                heading: "How It Was Different",
-                html: "In a cooperative, there is no middleman taking a big cut. Farmers bring their milk, it gets tested and sold, and the profit goes back to the farmers who own it. Today, Amul is owned by 3.6 million farmer families.",
+                heading: L("How It Was Different", "ఇది ఎలా భిన్నంగా ఉండేది", "இது எப்படி வேறுபட்டது", "ಇದು ಹೇಗೆ ಭಿನ್ನವಾಗಿತ್ತು"),
+                html: L(
+                  "In a cooperative, there is no middleman taking a big cut. Farmers bring their milk, it gets tested and sold, and the profit goes back to the farmers who own it. Today, Amul is owned by 3.6 million farmer families.",
+                  "సహకార సంఘంలో, పెద్ద మొత్తం తీసుకునే మధ్యవర్తి ఉండడు. రైతులు తమ పాలను తీసుకువస్తారు, అది పరీక్షించి అమ్ముతారు, లాభం యజమానులైన రైతులకే తిరిగి వెళుతుంది. నేడు, అముల్ 3.6 మిలియన్ రైతు కుటుంబాల యాజమాన్యంలో ఉంది.",
+                  "கூட்டுறவில், பெரிய பங்கை எடுக்கும் இடைத்தரகர் இல்லை. விவசாயிகள் தங்கள் பாலைக் கொண்டு வருகிறார்கள், அது சோதிக்கப்பட்டு விற்கப்படுகிறது, லாபம் சொந்தக்காரர்களான விவசாயிகளுக்கே திரும்பிச் செல்கிறது. இன்று, அமுல் 3.6 மில்லியன் விவசாயி குடும்பங்களுக்கு சொந்தமானது.",
+                  "ಸಹಕಾರ ಸಂಘದಲ್ಲಿ, ದೊಡ್ಡ ಪಾಲು ತೆಗೆದುಕೊಳ್ಳುವ ಮಧ್ಯವರ್ತಿ ಇಲ್ಲ. ರೈತರು ತಮ್ಮ ಹಾಲನ್ನು ತರುತ್ತಾರೆ, ಅದನ್ನು ಪರೀಕ್ಷಿಸಿ ಮಾರಲಾಗುತ್ತದೆ, ಲಾಭ ಮಾಲೀಕರಾದ ರೈತರಿಗೆ ಹಿಂತಿರುಗುತ್ತದೆ. ಇಂದು, ಅಮುಲ್ 3.6 ಮಿಲಿಯನ್ ರೈತ ಕುಟುಂಬಗಳ ಒಡೆತನದಲ್ಲಿದೆ."
+                ),
               },
               {
                 type: "example",
-                heading: "Think About It",
-                text: "Imagine 100 farmers each owning a small part of one big dairy business, instead of 100 farmers each depending on one trader's mood. That is the power of a cooperative.",
+                heading: L("Think About It", "దీని గురించి ఆలోచించండి", "இதைப் பற்றி சிந்தியுங்கள்", "ಇದರ ಬಗ್ಗೆ ಯೋಚಿಸಿ"),
+                text: L(
+                  "Imagine 100 farmers each owning a small part of one big dairy business, instead of 100 farmers each depending on one trader's mood. That is the power of a cooperative.",
+                  "100 మంది రైతులు ఒక వ్యాపారి మనోభావంపై ఆధారపడకుండా, ఒక పెద్ద డైరీ వ్యాపారంలో ఒక్కొక్కరు చిన్న భాగానికి యజమానులుగా ఉండటాన్ని ఊహించండి. అదే సహకార సంఘం యొక్క శక్తి.",
+                  "100 விவசாயிகள் ஒரு வர்த்தகரின் மனநிலையை நம்பியிருப்பதற்குப் பதிலாக, ஒரு பெரிய பால் பண்ணை வணிகத்தில் ஒவ்வொருவரும் ஒரு சிறு பங்குக்கு சொந்தக்காரர்களாக இருப்பதை கற்பனை செய்யுங்கள். அதுவே கூட்டுறவின் சக்தி.",
+                  "100 ರೈತರು ಒಬ್ಬ ವ್ಯಾಪಾರಿಯ ಮನಸ್ಥಿತಿಯನ್ನು ಅವಲಂಬಿಸುವ ಬದಲು, ಒಂದು ದೊಡ್ಡ ಡೈರಿ ವ್ಯಾಪಾರದಲ್ಲಿ ಪ್ರತಿಯೊಬ್ಬರೂ ಸಣ್ಣ ಪಾಲನ್ನು ಹೊಂದಿರುವುದನ್ನು ಊಹಿಸಿ. ಅದೇ ಸಹಕಾರ ಸಂಘದ ಶಕ್ತಿ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "What is a 'cooperative'?",
+                q: L(
+                  "What is a 'cooperative'?",
+                  "'సహకార సంఘం' అంటే ఏమిటి?",
+                  "'கூட்டுறவு' என்றால் என்ன?",
+                  "'ಸಹಕಾರ ಸಂಘ' ಎಂದರೇನು?"
+                ),
                 options: [
-                  "A business owned by one rich trader",
-                  "A business owned together by the farmers who use it",
-                  "A government office",
-                  "A bank loan",
+                  L("A business owned by one rich trader", "ఒక ధనిక వ్యాపారి యజమానిగా ఉన్న వ్యాపారం", "ஒரு பணக்கார வர்த்தகருக்கு சொந்தமான வணிகம்", "ಒಬ್ಬ ಶ್ರೀಮಂತ ವ್ಯಾಪಾರಿಯ ಒಡೆತನದ ವ್ಯಾಪಾರ"),
+                  L(
+                    "A business owned together by the farmers who use it",
+                    "దీనిని ఉపయోగించే రైతులు కలిసి యజమానులుగా ఉన్న వ్యాపారం",
+                    "இதைப் பயன்படுத்தும் விவசாயிகள் சேர்ந்து சொந்தமாக்கிய வணிகம்",
+                    "ಇದನ್ನು ಬಳಸುವ ರೈತರು ಒಟ್ಟಿಗೆ ಮಾಲೀಕತ್ವ ಹೊಂದಿರುವ ವ್ಯಾಪಾರ"
+                  ),
+                  L("A government office", "ప్రభుత్వ కార్యాలయం", "அரசு அலுவலகம்", "ಸರ್ಕಾರಿ ಕಚೇರಿ"),
+                  L("A bank loan", "బ్యాంకు రుణం", "வங்கிக் கடன்", "ಬ್ಯಾಂಕ್ ಸಾಲ"),
                 ],
                 answer: 1,
-                explain: "A cooperative is owned and run together by its members — the farmers themselves.",
+                explain: L(
+                  "A cooperative is owned and run together by its members — the farmers themselves.",
+                  "సహకార సంఘం దాని సభ్యులు — రైతులు — కలిసి యజమానులుగా ఉండి, కలిసి నడుపుతారు.",
+                  "கூட்டுறவு அதன் உறுப்பினர்களால் — விவசாயிகளாலேயே — சேர்ந்து சொந்தமாக்கப்பட்டு நடத்தப்படுகிறது.",
+                  "ಸಹಕಾರ ಸಂಘವನ್ನು ಅದರ ಸದಸ್ಯರು — ರೈತರೇ — ಒಟ್ಟಿಗೆ ಮಾಲೀಕತ್ವ ಹೊಂದಿ ನಡೆಸುತ್ತಾರೆ."
+                ),
               },
               {
                 type: "mcq",
-                q: "In which year was Amul formed?",
-                options: ["1946", "1965", "1991", "1998"],
+                q: L(
+                  "In which year was Amul formed?",
+                  "అముల్ ఏ సంవత్సరంలో స్థాపించబడింది?",
+                  "அமுல் எந்த ஆண்டில் உருவாக்கப்பட்டது?",
+                  "ಅಮುಲ್ ಯಾವ ವರ್ಷ ಸ್ಥಾಪನೆಯಾಯಿತು?"
+                ),
+                options: [L("1946", "1946", "1946", "1946"), L("1965", "1965", "1965", "1965"), L("1991", "1991", "1991", "1991"), L("1998", "1998", "1998", "1998")],
                 answer: 0,
-                explain: "Amul was formed in 1946 by the farmers of Kaira district.",
+                explain: L(
+                  "Amul was formed in 1946 by the farmers of Kaira district.",
+                  "అముల్‌ను 1946లో కైరా జిల్లా రైతులు స్థాపించారు.",
+                  "அமுல் 1946ல் கைரா மாவட்ட விவசாயிகளால் உருவாக்கப்பட்டது.",
+                  "ಅಮುಲ್ ಅನ್ನು 1946 ರಲ್ಲಿ ಕೈರಾ ಜಿಲ್ಲೆಯ ರೈತರು ಸ್ಥಾಪಿಸಿದರು."
+                ),
               },
             ],
           },
           {
             id: "t-operation-flood",
-            title: "Spreading the Idea Across India",
+            title: L(
+              "Spreading the Idea Across India",
+              "ఈ ఆలోచనను భారతదేశం అంతటా విస్తరించడం",
+              "இந்தியா முழுவதும் யோசனையை பரப்புதல்",
+              "ಭಾರತದಾದ್ಯಂತ ಕಲ್ಪನೆಯನ್ನು ಹರಡುವುದು"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "One Success Becomes a Movement",
-                html: "Amul worked so well that the government wanted every state to have the same kind of farmer-owned dairy. In 1965, NDDB (National Dairy Development Board) was formed to make this happen, led by Dr. Verghese Kurien.",
+                heading: L(
+                  "One Success Becomes a Movement",
+                  "ఒక విజయం ఉద్యమంగా మారింది",
+                  "ஒரு வெற்றி இயக்கமாக மாறியது",
+                  "ಒಂದು ಯಶಸ್ಸು ಚಳುವಳಿಯಾಯಿತು"
+                ),
+                html: L(
+                  "Amul worked so well that the government wanted every state to have the same kind of farmer-owned dairy. In 1965, NDDB (National Dairy Development Board) was formed to make this happen, led by Dr. Verghese Kurien.",
+                  "అముల్ చాలా బాగా పనిచేసింది, ప్రతి రాష్ట్రంలో అలాంటి రైతుల యాజమాన్యంలోని డైరీ ఉండాలని ప్రభుత్వం కోరుకుంది. దీనిని సాధించడానికి 1965లో డాక్టర్ వర్గీస్ కురియన్ నాయకత్వంలో NDDB (జాతీయ డైరీ అభివృద్ధి బోర్డు) ఏర్పాటు చేయబడింది.",
+                  "அமுல் மிக நன்றாக செயல்பட்டதால், ஒவ்வொரு மாநிலத்திலும் அத்தகைய விவசாயி சொந்தமான பால் பண்ணை இருக்க வேண்டும் என அரசு விரும்பியது. இதை நிறைவேற்ற 1965ல் டாக்டர் வர்கீஸ் குரியனின் தலைமையில் NDDB (தேசிய பால் வளர்ச்சி வாரியம்) உருவாக்கப்பட்டது.",
+                  "ಅಮುಲ್ ಎಷ್ಟು ಚೆನ್ನಾಗಿ ಕೆಲಸ ಮಾಡಿತೆಂದರೆ, ಪ್ರತಿ ರಾಜ್ಯದಲ್ಲೂ ಅಂತಹ ರೈತರ ಒಡೆತನದ ಡೈರಿ ಇರಬೇಕೆಂದು ಸರ್ಕಾರ ಬಯಸಿತು. ಇದನ್ನು ಸಾಧಿಸಲು 1965 ರಲ್ಲಿ ಡಾ. ವರ್ಗೀಸ್ ಕುರಿಯನ್ ನೇತೃತ್ವದಲ್ಲಿ NDDB (ರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಅಭಿವೃದ್ಧಿ ಮಂಡಳಿ) ಸ್ಥಾಪಿಸಲಾಯಿತು."
+                ),
               },
               {
                 type: "timeline",
-                heading: "India's Dairy Journey",
+                heading: L(
+                  "India's Dairy Journey",
+                  "భారత డైరీ ప్రయాణం",
+                  "இந்தியாவின் பால் பயணம்",
+                  "ಭಾರತದ ಡೈರಿ ಪ್ರಯಾಣ"
+                ),
                 items: [
-                  { year: "1946", text: "Formation of Amul." },
-                  { year: "1965", text: "Establishment of NDDB, led by Dr. V. Kurien." },
-                  { year: "1970–80", text: "Operation Flood Phase I begins." },
-                  { year: "1974", text: "Formation of Mother Dairy in Delhi." },
-                  { year: "1981–85", text: "Operation Flood Phase II." },
-                  { year: "1985–96", text: "Operation Flood Phase III." },
-                  { year: "1991", text: "Private and multi-national dairy companies allowed to enter India." },
-                  { year: "1998", text: "India becomes the world's largest milk producer." },
-                  { year: "1999", text: "Dr. Alagh recommends setting up Producer Companies." },
-                  { year: "2002–03", text: "Companies Act amended to include Producer Companies." },
-                  { year: "2009", text: "NDDB Dairy Services is formed." },
-                  { year: "2011–19", text: "National Dairy Plan (NDP-1)." },
-                  { year: "2014", text: "National Programme for Dairy Development (NPDD)." },
-                  { year: "2021", text: "NPDD is restructured." },
+                  { year: "1946", text: L("Formation of Amul.", "అముల్ ఏర్పాటు.", "அமுல் உருவாக்கம்.", "ಅಮುಲ್ ಸ್ಥಾಪನೆ.") },
+                  {
+                    year: "1965",
+                    text: L(
+                      "Establishment of NDDB, led by Dr. V. Kurien.",
+                      "డాక్టర్ వి. కురియన్ నాయకత్వంలో NDDB స్థాపన.",
+                      "டாக்டர் வி. குரியனின் தலைமையில் NDDB நிறுவப்பட்டது.",
+                      "ಡಾ. ವಿ. ಕುರಿಯನ್ ನೇತೃತ್ವದಲ್ಲಿ NDDB ಸ್ಥಾಪನೆ."
+                    ),
+                  },
+                  {
+                    year: "1970–80",
+                    text: L(
+                      "Operation Flood Phase I begins.",
+                      "ఆపరేషన్ ఫ్లడ్ దశ I ప్రారంభం.",
+                      "ஆபரேஷன் ஃப்ளட் கட்டம் I தொடங்குகிறது.",
+                      "ಆಪರೇಷನ್ ಫ್ಲಡ್ ಹಂತ I ಆರಂಭ."
+                    ),
+                  },
+                  {
+                    year: "1974",
+                    text: L(
+                      "Formation of Mother Dairy in Delhi.",
+                      "ఢిల్లీలో మదర్ డైరీ ఏర్పాటు.",
+                      "டெல்லியில் மதர் டெய்ரி உருவாக்கம்.",
+                      "ದೆಹಲಿಯಲ್ಲಿ ಮದರ್ ಡೈರಿ ಸ್ಥಾಪನೆ."
+                    ),
+                  },
+                  { year: "1981–85", text: L("Operation Flood Phase II.", "ఆపరేషన్ ఫ్లడ్ దశ II.", "ஆபரேஷன் ஃப்ளட் கட்டம் II.", "ಆಪರೇಷನ್ ಫ್ಲಡ್ ಹಂತ II.") },
+                  { year: "1985–96", text: L("Operation Flood Phase III.", "ఆపరేషన్ ఫ్లడ్ దశ III.", "ஆபரேஷன் ஃப்ளட் கட்டம் III.", "ಆಪರೇಷನ್ ಫ್ಲಡ್ ಹಂತ III.") },
+                  {
+                    year: "1991",
+                    text: L(
+                      "Private and multi-national dairy companies allowed to enter India.",
+                      "ప్రైవేట్ మరియు బహుళజాతి డైరీ కంపెనీలకు భారతదేశంలోకి ప్రవేశానికి అనుమతి.",
+                      "தனியார் மற்றும் பன்னாட்டு பால் நிறுவனங்கள் இந்தியாவில் நுழைய அனுமதி.",
+                      "ಖಾಸಗಿ ಮತ್ತು ಬಹುರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಕಂಪನಿಗಳಿಗೆ ಭಾರತ ಪ್ರವೇಶಕ್ಕೆ ಅನುಮತಿ."
+                    ),
+                  },
+                  {
+                    year: "1998",
+                    text: L(
+                      "India becomes the world's largest milk producer.",
+                      "భారతదేశం ప్రపంచంలోనే అతిపెద్ద పాల ఉత్పత్తిదారుగా మారింది.",
+                      "இந்தியா உலகின் மிகப்பெரிய பால் உற்பத்தியாளராக மாறுகிறது.",
+                      "ಭಾರತ ಜಗತ್ತಿನ ಅತಿದೊಡ್ಡ ಹಾಲು ಉತ್ಪಾದಕವಾಯಿತು."
+                    ),
+                  },
+                  {
+                    year: "1999",
+                    text: L(
+                      "Dr. Alagh recommends setting up Producer Companies.",
+                      "ఉత్పత్తిదారుల కంపెనీలను ఏర్పాటు చేయాలని డాక్టర్ అలగ్ సిఫార్సు చేశారు.",
+                      "தயாரிப்பாளர் நிறுவனங்களை அமைக்க டாக்டர் அலக் பரிந்துரைத்தார்.",
+                      "ಉತ್ಪಾದಕ ಕಂಪನಿಗಳನ್ನು ಸ್ಥಾಪಿಸಲು ಡಾ. ಅಲಘ್ ಶಿಫಾರಸು ಮಾಡಿದರು."
+                    ),
+                  },
+                  {
+                    year: "2002–03",
+                    text: L(
+                      "Companies Act amended to include Producer Companies.",
+                      "ఉత్పత్తిదారుల కంపెనీలను చేర్చడానికి కంపెనీల చట్టం సవరించబడింది.",
+                      "தயாரிப்பாளர் நிறுவனங்களை சேர்க்க நிறுவனங்கள் சட்டம் திருத்தப்பட்டது.",
+                      "ಉತ್ಪಾದಕ ಕಂಪನಿಗಳನ್ನು ಸೇರಿಸಲು ಕಂಪನಿಗಳ ಕಾಯ್ದೆ ತಿದ್ದುಪಡಿ."
+                    ),
+                  },
+                  {
+                    year: "2009",
+                    text: L(
+                      "NDDB Dairy Services is formed.",
+                      "NDDB డైరీ సర్వీసెస్ ఏర్పాటు.",
+                      "NDDB பால் சேவைகள் உருவாக்கம்.",
+                      "NDDB ಡೈರಿ ಸೇವೆಗಳ ಸ್ಥಾಪನೆ."
+                    ),
+                  },
+                  {
+                    year: "2011–19",
+                    text: L("National Dairy Plan (NDP-1).", "జాతీయ డైరీ ప్రణాళిక (NDP-1).", "தேசிய பால் திட்டம் (NDP-1).", "ರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಯೋಜನೆ (NDP-1)."),
+                  },
+                  {
+                    year: "2014",
+                    text: L(
+                      "National Programme for Dairy Development (NPDD).",
+                      "జాతీయ డైరీ అభివృద్ధి కార్యక్రమం (NPDD).",
+                      "தேசிய பால் மேம்பாட்டு திட்டம் (NPDD).",
+                      "ರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಅಭಿವೃದ್ಧಿ ಕಾರ್ಯಕ್ರಮ (NPDD)."
+                    ),
+                  },
+                  { year: "2021", text: L("NPDD is restructured.", "NPDD పునర్వ్యవస్థీకరించబడింది.", "NPDD மறுசீரமைக்கப்பட்டது.", "NPDD ಪುನರ್ರಚನೆ.") },
                 ],
-                result: "India: Milk Surplus Nation",
+                result: L(
+                  "India: Milk Surplus Nation",
+                  "భారతదేశం: పాల మిగులు దేశం",
+                  "இந்தியா: பால் உபரி நாடு",
+                  "ಭಾರತ: ಹಾಲಿನ ಹೆಚ್ಚುವರಿ ರಾಷ್ಟ್ರ"
+                ),
               },
               {
                 type: "callout",
                 style: "tip",
-                heading: "From Deficit to Surplus",
-                text: "Deficit means not having enough — India used to import milk powder from other countries. Surplus means having more than enough. By 1998, India made more milk than any other country in the world.",
+                heading: L("From Deficit to Surplus", "లోటు నుండి మిగులుకు", "பற்றாக்குறையிலிருந்து உபரிக்கு", "ಕೊರತೆಯಿಂದ ಹೆಚ್ಚುವರಿಗೆ"),
+                text: L(
+                  "Deficit means not having enough — India used to import milk powder from other countries. Surplus means having more than enough. By 1998, India made more milk than any other country in the world.",
+                  "లోటు అంటే సరిపడా లేకపోవడం — భారతదేశం ఇతర దేశాల నుండి పాల పొడిని దిగుమతి చేసుకునేది. మిగులు అంటే అవసరానికి మించి ఉండటం. 1998 నాటికి, ప్రపంచంలోని ఏ ఇతర దేశం కంటే భారతదేశం ఎక్కువ పాలు ఉత్పత్తి చేసింది.",
+                  "பற்றாக்குறை என்றால் போதுமானதாக இல்லாதது — இந்தியா மற்ற நாடுகளிலிருந்து பால் தூள் இறக்குமதி செய்தது. உபரி என்றால் தேவைக்கு அதிகமாக இருப்பது. 1998க்குள், உலகின் வேறு எந்த நாட்டையும் விட இந்தியா அதிக பால் தயாரித்தது.",
+                  "ಕೊರತೆ ಎಂದರೆ ಸಾಕಷ್ಟು ಇಲ್ಲದಿರುವುದು — ಭಾರತ ಇತರ ದೇಶಗಳಿಂದ ಹಾಲಿನ ಪುಡಿಯನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳುತ್ತಿತ್ತು. ಹೆಚ್ಚುವರಿ ಎಂದರೆ ಅಗತ್ಯಕ್ಕಿಂತ ಹೆಚ್ಚು ಇರುವುದು. 1998 ರ ವೇಳೆಗೆ, ಜಗತ್ತಿನ ಬೇರೆ ಯಾವುದೇ ದೇಶಕ್ಕಿಂತ ಭಾರತ ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದಿಸಿತು."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "What does NDDB stand for?",
+                q: L(
+                  "What does NDDB stand for?",
+                  "NDDB అంటే ఏమిటి?",
+                  "NDDB என்பதன் விரிவாக்கம் என்ன?",
+                  "NDDB ಎಂದರೆ ಏನು?"
+                ),
                 options: [
-                  "National Dairy Development Board",
-                  "New Delhi Dairy Board",
-                  "National Development Bank",
-                  "North Dairy District Board",
+                  L(
+                    "National Dairy Development Board",
+                    "నేషనల్ డైరీ డెవలప్‌మెంట్ బోర్డు",
+                    "தேசிய பால் வளர்ச்சி வாரியம்",
+                    "ರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಅಭಿವೃದ್ಧಿ ಮಂಡಳಿ"
+                  ),
+                  L("New Delhi Dairy Board", "న్యూఢిల్లీ డైరీ బోర్డు", "நியூ டெல்லி பால் வாரியம்", "ನ್ಯೂ ದೆಹಲಿ ಡೈರಿ ಮಂಡಳಿ"),
+                  L("National Development Bank", "నేషనల్ డెవలప్‌మెంట్ బ్యాంక్", "தேசிய வளர்ச்சி வங்கி", "ರಾಷ್ಟ್ರೀಯ ಅಭಿವೃದ್ಧಿ ಬ್ಯಾಂಕ್"),
+                  L("North Dairy District Board", "నార్త్ డైరీ డిస్ట్రిక్ట్ బోర్డు", "வட பால் மாவட்ட வாரியம்", "ಉತ್ತರ ಡೈರಿ ಜಿಲ್ಲಾ ಮಂಡಳಿ"),
                 ],
                 answer: 0,
-                explain: "NDDB = National Dairy Development Board, formed in 1965.",
+                explain: L(
+                  "NDDB = National Dairy Development Board, formed in 1965.",
+                  "NDDB = నేషనల్ డైరీ డెవలప్‌మెంట్ బోర్డు, 1965లో స్థాపించబడింది.",
+                  "NDDB = தேசிய பால் வளர்ச்சி வாரியம், 1965ல் உருவாக்கப்பட்டது.",
+                  "NDDB = ರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಅಭಿವೃದ್ಧಿ ಮಂಡಳಿ, 1965 ರಲ್ಲಿ ಸ್ಥಾಪನೆಯಾಯಿತು."
+                ),
               },
               {
                 type: "mcq",
-                q: "In which year did India become the world's largest milk producer?",
-                options: ["1965", "1985", "1998", "2014"],
+                q: L(
+                  "In which year did India become the world's largest milk producer?",
+                  "భారతదేశం ఏ సంవత్సరంలో ప్రపంచంలోనే అతిపెద్ద పాల ఉత్పత్తిదారుగా మారింది?",
+                  "இந்தியா எந்த ஆண்டில் உலகின் மிகப்பெரிய பால் உற்பத்தியாளராக மாறியது?",
+                  "ಭಾರತ ಯಾವ ವರ್ಷ ಜಗತ್ತಿನ ಅತಿದೊಡ್ಡ ಹಾಲು ಉತ್ಪಾದಕವಾಯಿತು?"
+                ),
+                options: [L("1965", "1965", "1965", "1965"), L("1985", "1985", "1985", "1985"), L("1998", "1998", "1998", "1998"), L("2014", "2014", "2014", "2014")],
                 answer: 2,
-                explain: "India reached the top spot in 1998.",
+                explain: L(
+                  "India reached the top spot in 1998.",
+                  "భారతదేశం 1998లో అగ్రస్థానానికి చేరుకుంది.",
+                  "இந்தியா 1998ல் முதலிடத்தை அடைந்தது.",
+                  "ಭಾರತ 1998 ರಲ್ಲಿ ಅಗ್ರಸ್ಥಾನ ತಲುಪಿತು."
+                ),
               },
             ],
           },
@@ -640,30 +1359,70 @@ export const MODULES = [
             {
               topicId: "t-problem",
               type: "truefalse",
-              q: "Before Amul, one private trader alone decided the price farmers got for milk.",
+              q: L(
+                "Before Amul, one private trader alone decided the price farmers got for milk.",
+                "అముల్‌కు ముందు, ఒకే ప్రైవేట్ వ్యాపారి రైతులకు పాలకు లభించే ధరను నిర్ణయించేవాడు.",
+                "அமுலுக்கு முன், ஒரே தனியார் வர்த்தகர் மட்டும் விவசாயிகள் பாலுக்கு பெறும் விலையை முடிவு செய்தார்.",
+                "ಅಮುಲ್‌ಗಿಂತ ಮೊದಲು, ಒಬ್ಬ ಖಾಸಗಿ ವ್ಯಾಪಾರಿ ಮಾತ್ರ ರೈತರಿಗೆ ಹಾಲಿಗೆ ಸಿಗುವ ಬೆಲೆಯನ್ನು ನಿರ್ಧರಿಸುತ್ತಿದ್ದನು."
+              ),
               answer: true,
-              explain: "Yes — a single trader controlled the price, which was unfair to farmers.",
+              explain: L(
+                "Yes — a single trader controlled the price, which was unfair to farmers.",
+                "అవును — ఒకే వ్యాపారి ధరను నియంత్రించేవాడు, ఇది రైతులకు అన్యాయం.",
+                "ஆம் — ஒரே வர்த்தகர் விலையை கட்டுப்படுத்தினார், இது விவசாயிகளுக்கு நியாயமற்றது.",
+                "ಹೌದು — ಒಬ್ಬ ವ್ಯಾಪಾರಿ ಬೆಲೆಯನ್ನು ನಿಯಂತ್ರಿಸುತ್ತಿದ್ದನು, ಇದು ರೈತರಿಗೆ ಅನ್ಯಾಯವಾಗಿತ್ತು."
+              ),
             },
             {
               topicId: "t-amul",
               type: "mcq",
-              q: "The biggest benefit of a cooperative like Amul is that:",
+              q: L(
+                "The biggest benefit of a cooperative like Amul is that:",
+                "అముల్ వంటి సహకార సంఘం యొక్క అతిపెద్ద ప్రయోజనం ఏమిటంటే:",
+                "அமுல் போன்ற கூட்டுறவின் மிகப்பெரிய நன்மை என்னவென்றால்:",
+                "ಅಮುಲ್‌ನಂತಹ ಸಹಕಾರ ಸಂಘದ ದೊಡ್ಡ ಪ್ರಯೋಜನವೆಂದರೆ:"
+              ),
               options: [
-                "A trader still controls the price",
-                "Farmers own the business and share the profit",
-                "Only the government profits",
-                "Milk becomes free",
+                L("A trader still controls the price", "వ్యాపారి ఇప్పటికీ ధరను నియంత్రిస్తాడు", "வர்த்தகர் இன்னும் விலையை கட்டுப்படுத்துகிறார்", "ವ್ಯಾಪಾರಿ ಇನ್ನೂ ಬೆಲೆ ನಿಯಂತ್ರಿಸುತ್ತಾನೆ"),
+                L(
+                  "Farmers own the business and share the profit",
+                  "రైతులు వ్యాపారానికి యజమానులై లాభాన్ని పంచుకుంటారు",
+                  "விவசாயிகள் வணிகத்திற்கு சொந்தக்காரர்களாகி லாபத்தை பகிர்கிறார்கள்",
+                  "ರೈತರು ವ್ಯಾಪಾರದ ಮಾಲೀಕರಾಗಿ ಲಾಭವನ್ನು ಹಂಚಿಕೊಳ್ಳುತ್ತಾರೆ"
+                ),
+                L("Only the government profits", "ప్రభుత్వం మాత్రమే లాభపడుతుంది", "அரசு மட்டும் லாபம் அடைகிறது", "ಸರ್ಕಾರ ಮಾತ್ರ ಲಾಭ ಪಡೆಯುತ್ತದೆ"),
+                L("Milk becomes free", "పాలు ఉచితంగా మారతాయి", "பால் இலவசமாகிறது", "ಹಾಲು ಉಚಿತವಾಗುತ್ತದೆ"),
               ],
               answer: 1,
-              explain: "In a cooperative, the farmers themselves are the owners and share the profit.",
+              explain: L(
+                "In a cooperative, the farmers themselves are the owners and share the profit.",
+                "సహకార సంఘంలో, రైతులే యజమానులు, లాభాన్ని పంచుకుంటారు.",
+                "கூட்டுறவில், விவசாயிகளே சொந்தக்காரர்கள், லாபத்தை பகிர்கிறார்கள்.",
+                "ಸಹಕಾರ ಸಂಘದಲ್ಲಿ, ರೈತರೇ ಮಾಲೀಕರು, ಲಾಭವನ್ನು ಹಂಚಿಕೊಳ್ಳುತ್ತಾರೆ."
+              ),
             },
             {
               topicId: "t-operation-flood",
               type: "mcq",
-              q: "Who led NDDB and is known as the 'Father of the White Revolution'?",
-              options: ["Sardar Patel", "Dr. Verghese Kurien", "Dr. Y.K. Alagh", "Mahatma Gandhi"],
+              q: L(
+                "Who led NDDB and is known as the 'Father of the White Revolution'?",
+                "NDDBకి నాయకత్వం వహించి 'శ్వేత విప్లవ పితామహుడు' అని పిలువబడేవారు ఎవరు?",
+                "NDDBவை வழிநடத்தி 'வெள்ளைப் புரட்சியின் தந்தை' என்று அழைக்கப்படுபவர் யார்?",
+                "NDDB ಅನ್ನು ಮುನ್ನಡೆಸಿ 'ಶ್ವೇತ ಕ್ರಾಂತಿಯ ಪಿತಾಮಹ' ಎಂದು ಕರೆಯಲ್ಪಡುವವರು ಯಾರು?"
+              ),
+              options: [
+                L("Sardar Patel", "సర్దార్ పటేల్", "சர்தார் படேல்", "ಸರ್ದಾರ್ ಪಟೇಲ್"),
+                L("Dr. Verghese Kurien", "డాక్టర్ వర్గీస్ కురియన్", "டாக்டர் வர்கீஸ் குரியன்", "ಡಾ. ವರ್ಗೀಸ್ ಕುರಿಯನ್"),
+                L("Dr. Y.K. Alagh", "డాక్టర్ వై.కె. అలగ్", "டாக்டர் ஒய்.கே. அலக்", "ಡಾ. ವೈ.ಕೆ. ಅಲಘ್"),
+                L("Mahatma Gandhi", "మహాత్మా గాంధీ", "மகாத்மா காந்தி", "ಮಹಾತ್ಮ ಗಾಂಧಿ"),
+              ],
               answer: 1,
-              explain: "Dr. Verghese Kurien led NDDB and is called the Father of the White Revolution.",
+              explain: L(
+                "Dr. Verghese Kurien led NDDB and is called the Father of the White Revolution.",
+                "డాక్టర్ వర్గీస్ కురియన్ NDDBకి నాయకత్వం వహించారు, శ్వేత విప్లవ పితామహుడు అని పిలుస్తారు.",
+                "டாக்டர் வர்கீஸ் குரியன் NDDBவை வழிநடத்தினார், வெள்ளைப் புரட்சியின் தந்தை என்று அழைக்கப்படுகிறார்.",
+                "ಡಾ. ವರ್ಗೀಸ್ ಕುರಿಯನ್ NDDB ಅನ್ನು ಮುನ್ನಡೆಸಿದರು, ಶ್ವೇತ ಕ್ರಾಂತಿಯ ಪಿತಾಮಹ ಎಂದು ಕರೆಯಲ್ಪಡುತ್ತಾರೆ."
+              ),
             },
           ],
         },
@@ -673,100 +1432,220 @@ export const MODULES = [
       // ==================================================================
       {
         id: "m1-l5",
-        title: "NDDB and How a Cooperative Works",
+        title: L(
+          "NDDB and How a Cooperative Works",
+          "NDDB మరియు సహకార సంఘం ఎలా పనిచేస్తుంది",
+          "NDDB மற்றும் கூட்டுறவு எப்படி செயல்படுகிறது",
+          "NDDB ಮತ್ತು ಸಹಕಾರ ಸಂಘ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ"
+        ),
         estMinutes: 7,
         hook: [
           {
             type: "hero",
-            heading: "How the Cooperative Family Works",
-            text: "You've heard about NDDB and Amul. Now let's see exactly how a cooperative is organised, from your village up to the whole state.",
+            heading: L(
+              "How the Cooperative Family Works",
+              "సహకార కుటుంబం ఎలా పనిచేస్తుంది",
+              "கூட்டுறவு குடும்பம் எப்படி செயல்படுகிறது",
+              "ಸಹಕಾರ ಕುಟುಂಬ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ"
+            ),
+            text: L(
+              "You've heard about NDDB and Amul. Now let's see exactly how a cooperative is organised, from your village up to the whole state.",
+              "మీరు NDDB మరియు అముల్ గురించి విన్నారు. ఇప్పుడు మీ గ్రామం నుండి రాష్ట్రం మొత్తం వరకు సహకార సంఘం ఎలా వ్యవస్థీకృతమవుతుందో చూద్దాం.",
+              "NDDB மற்றும் அமுல் பற்றி நீங்கள் கேள்விப்பட்டிருக்கிறீர்கள். இப்போது உங்கள் கிராமத்திலிருந்து முழு மாநிலம் வரை கூட்டுறவு எப்படி ஒழுங்கமைக்கப்பட்டுள்ளது என்று பார்ப்போம்.",
+              "NDDB ಮತ್ತು ಅಮುಲ್ ಬಗ್ಗೆ ನೀವು ಕೇಳಿದ್ದೀರಿ. ಈಗ ನಿಮ್ಮ ಗ್ರಾಮದಿಂದ ಇಡೀ ರಾಜ್ಯದವರೆಗೆ ಸಹಕಾರ ಸಂಘ ಹೇಗೆ ಸಂಘಟಿತವಾಗಿದೆ ಎಂದು ನೋಡೋಣ."
+            ),
           },
         ],
         topics: [
           {
             id: "t-nddb",
-            title: "What is NDDB?",
+            title: L("What is NDDB?", "NDDB అంటే ఏమిటి?", "NDDB என்றால் என்ன?", "NDDB ಎಂದರೇನು?"),
             teach: [
               {
                 type: "text",
-                heading: "NDDB — The Organisation Behind the Movement",
-                html: "NDDB (National Dairy Development Board) was started in 1965 to help farmers all over India build cooperatives like Amul. It is based in Anand, Gujarat — the same town where Amul began.",
+                heading: L(
+                  "NDDB — The Organisation Behind the Movement",
+                  "NDDB — ఉద్యమం వెనుక ఉన్న సంస్థ",
+                  "NDDB — இயக்கத்தின் பின்னணி நிறுவனம்",
+                  "NDDB — ಚಳುವಳಿಯ ಹಿಂದಿನ ಸಂಸ್ಥೆ"
+                ),
+                html: L(
+                  "NDDB (National Dairy Development Board) was started in 1965 to help farmers all over India build cooperatives like Amul. It is based in Anand, Gujarat — the same town where Amul began.",
+                  "భారతదేశం అంతటా రైతులు అముల్ వంటి సహకార సంఘాలను నిర్మించడంలో సహాయపడటానికి 1965లో NDDB (జాతీయ డైరీ అభివృద్ధి బోర్డు) ప్రారంభించబడింది. ఇది గుజరాత్‌లోని ఆనంద్‌లో ఉంది — అముల్ ప్రారంభమైన అదే పట్టణం.",
+                  "இந்தியா முழுவதும் உள்ள விவசாயிகள் அமுல் போன்ற கூட்டுறவுகளை உருவாக்க உதவ 1965ல் NDDB (தேசிய பால் வளர்ச்சி வாரியம்) தொடங்கப்பட்டது. இது குஜராத்தில் உள்ள ஆனந்தில் அமைந்துள்ளது — அமுல் தொடங்கிய அதே நகரம்.",
+                  "ಭಾರತದಾದ್ಯಂತ ರೈತರು ಅಮುಲ್‌ನಂತಹ ಸಹಕಾರ ಸಂಘಗಳನ್ನು ನಿರ್ಮಿಸಲು ಸಹಾಯ ಮಾಡಲು 1965 ರಲ್ಲಿ NDDB (ರಾಷ್ಟ್ರೀಯ ಡೈರಿ ಅಭಿವೃದ್ಧಿ ಮಂಡಳಿ) ಪ್ರಾರಂಭಿಸಲಾಯಿತು. ಇದು ಗುಜರಾತ್‌ನ ಆನಂದ್‌ನಲ್ಲಿದೆ — ಅಮುಲ್ ಪ್ರಾರಂಭವಾದ ಅದೇ ಪಟ್ಟಣ."
+                ),
               },
               {
                 type: "text",
-                heading: "Dr. Verghese Kurien",
-                html: "Dr. Kurien led NDDB for many years. People call him the <b>'Milkman of India'</b> because of everything he did to help farmers earn a fair, steady income from milk.",
+                heading: L(
+                  "Dr. Verghese Kurien",
+                  "డాక్టర్ వర్గీస్ కురియన్",
+                  "டாக்டர் வர்கீஸ் குரியன்",
+                  "ಡಾ. ವರ್ಗೀಸ್ ಕುರಿಯನ್"
+                ),
+                html: L(
+                  "Dr. Kurien led NDDB for many years. People call him the <b>'Milkman of India'</b> because of everything he did to help farmers earn a fair, steady income from milk.",
+                  "డాక్టర్ కురియన్ చాలా సంవత్సరాలు NDDBకి నాయకత్వం వహించారు. రైతులు పాల నుండి న్యాయమైన, స్థిరమైన ఆదాయం సంపాదించడంలో ఆయన చేసిన కృషికి గుర్తుగా ఆయనను <b>'భారత పాల మనిషి'</b> అని పిలుస్తారు.",
+                  "டாக்டர் குரியன் பல ஆண்டுகள் NDDBவை வழிநடத்தினார். விவசாயிகள் பாலிலிருந்து நியாயமான, நிலையான வருமானம் ஈட்ட உதவிய அனைத்திற்காகவும் மக்கள் அவரை <b>'இந்தியாவின் பால்காரர்'</b> என்று அழைக்கிறார்கள்.",
+                  "ಡಾ. ಕುರಿಯನ್ ಹಲವಾರು ವರ್ಷಗಳ ಕಾಲ NDDB ಅನ್ನು ಮುನ್ನಡೆಸಿದರು. ರೈತರು ಹಾಲಿನಿಂದ ನ್ಯಾಯಯುತ, ಸ್ಥಿರ ಆದಾಯ ಗಳಿಸಲು ಸಹಾಯ ಮಾಡಿದ್ದಕ್ಕಾಗಿ ಜನರು ಅವರನ್ನು <b>'ಭಾರತದ ಹಾಲಿನ ಮನುಷ್ಯ'</b> ಎಂದು ಕರೆಯುತ್ತಾರೆ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "Where is NDDB based?",
-                options: ["New Delhi", "Mumbai", "Anand, Gujarat", "Chennai"],
+                q: L("Where is NDDB based?", "NDDB ఎక్కడ ఉంది?", "NDDB எங்கு அமைந்துள்ளது?", "NDDB ಎಲ್ಲಿದೆ?"),
+                options: [
+                  L("New Delhi", "న్యూఢిల్లీ", "புது தில்லி", "ನವದೆಹಲಿ"),
+                  L("Mumbai", "ముంబై", "மும்பை", "ಮುಂಬೈ"),
+                  L("Anand, Gujarat", "ఆనంద్, గుజరాత్", "ஆனந்த், குஜராத்", "ಆನಂದ್, ಗುಜರಾತ್"),
+                  L("Chennai", "చెన్నై", "சென்னை", "ಚೆನ್ನೈ"),
+                ],
                 answer: 2,
-                explain: "NDDB is headquartered in Anand, Gujarat.",
+                explain: L(
+                  "NDDB is headquartered in Anand, Gujarat.",
+                  "NDDB ప్రధాన కార్యాలయం గుజరాత్‌లోని ఆనంద్‌లో ఉంది.",
+                  "NDDBவின் தலைமையகம் குஜராத்தில் உள்ள ஆனந்தில் உள்ளது.",
+                  "NDDB ಪ್ರಧಾನ ಕಚೇರಿ ಗುಜರಾತ್‌ನ ಆನಂದ್‌ನಲ್ಲಿದೆ."
+                ),
               },
               {
                 type: "mcq",
-                q: "Dr. Verghese Kurien is known as:",
-                options: ["The Milkman of India", "The first Prime Minister", "A private milk trader", "A bank manager"],
+                q: L(
+                  "Dr. Verghese Kurien is known as:",
+                  "డాక్టర్ వర్గీస్ కురియన్ దీనితో ప్రసిద్ధి చెందారు:",
+                  "டாக்டர் வர்கீஸ் குரியன் அறியப்படுவது:",
+                  "ಡಾ. ವರ್ಗೀಸ್ ಕುರಿಯನ್ ಇದರಿಂದ ಪ್ರಸಿದ್ಧರು:"
+                ),
+                options: [
+                  L("The Milkman of India", "భారత పాల మనిషి", "இந்தியாவின் பால்காரர்", "ಭಾರತದ ಹಾಲಿನ ಮನುಷ್ಯ"),
+                  L("The first Prime Minister", "మొదటి ప్రధాన మంత్రి", "முதல் பிரதமர்", "ಮೊದಲ ಪ್ರಧಾನ ಮಂತ್ರಿ"),
+                  L("A private milk trader", "ఒక ప్రైవేట్ పాల వ్యాపారి", "ஒரு தனியார் பால் வர்த்தகர்", "ಒಬ್ಬ ಖಾಸಗಿ ಹಾಲಿನ ವ್ಯಾಪಾರಿ"),
+                  L("A bank manager", "బ్యాంకు మేనేజర్", "வங்கி மேலாளர்", "ಬ್ಯಾಂಕ್ ಮ್ಯಾನೇಜರ್"),
+                ],
                 answer: 0,
-                explain: "Dr. Kurien is known as the 'Milkman of India'.",
+                explain: L(
+                  "Dr. Kurien is known as the 'Milkman of India'.",
+                  "డాక్టర్ కురియన్‌ను 'భారత పాల మనిషి' అని పిలుస్తారు.",
+                  "டாக்டர் குரியன் 'இந்தியாவின் பால்காரர்' என்று அழைக்கப்படுகிறார்.",
+                  "ಡಾ. ಕುರಿಯನ್ ಅವರನ್ನು 'ಭಾರತದ ಹಾಲಿನ ಮನುಷ್ಯ' ಎಂದು ಕರೆಯಲಾಗುತ್ತದೆ."
+                ),
               },
             ],
           },
           {
             id: "t-structure",
-            title: "The Three Steps of a Cooperative",
+            title: L(
+              "The Three Steps of a Cooperative",
+              "సహకార సంఘం యొక్క మూడు దశలు",
+              "கூட்டுறவின் மூன்று படிகள்",
+              "ಸಹಕಾರ ಸಂಘದ ಮೂರು ಹಂತಗಳು"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "From Your Village to the Whole State",
-                html: "A dairy cooperative works in 3 simple steps — like 3 floors of a building.",
+                heading: L(
+                  "From Your Village to the Whole State",
+                  "మీ గ్రామం నుండి రాష్ట్రం మొత్తం వరకు",
+                  "உங்கள் கிராமத்திலிருந்து முழு மாநிலம் வரை",
+                  "ನಿಮ್ಮ ಗ್ರಾಮದಿಂದ ಇಡೀ ರಾಜ್ಯದವರೆಗೆ"
+                ),
+                html: L(
+                  "A dairy cooperative works in 3 simple steps — like 3 floors of a building.",
+                  "ఒక డైరీ సహకార సంఘం 3 సాధారణ దశల్లో పనిచేస్తుంది — ఒక భవనానికి 3 అంతస్తుల్లా.",
+                  "ஒரு பால் கூட்டுறவு 3 எளிய படிகளில் செயல்படுகிறது — ஒரு கட்டிடத்தின் 3 மாடிகள் போல.",
+                  "ಒಂದು ಡೈರಿ ಸಹಕಾರ ಸಂಘ 3 ಸರಳ ಹಂತಗಳಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ — ಒಂದು ಕಟ್ಟಡದ 3 ಮಹಡಿಗಳಂತೆ."
+                ),
               },
               {
                 type: "stat-grid",
                 items: [
                   {
-                    label: "1. Village Society",
-                    text: "Farmers in one village bring their milk here every day. The ground floor — closest to the farmer.",
+                    label: L("1. Village Society", "1. గ్రామ సంఘం", "1. கிராம சங்கம்", "1. ಗ್ರಾಮ ಸಂಘ"),
+                    text: L(
+                      "Farmers in one village bring their milk here every day. The ground floor — closest to the farmer.",
+                      "ఒక గ్రామంలోని రైతులు ప్రతిరోజూ తమ పాలను ఇక్కడికి తీసుకువస్తారు. గ్రౌండ్ ఫ్లోర్ — రైతుకు అత్యంత సమీపంగా ఉంటుంది.",
+                      "ஒரு கிராமத்தில் உள்ள விவசாயிகள் தினமும் தங்கள் பாலை இங்கு கொண்டு வருகிறார்கள். தரைத்தளம் — விவசாயிக்கு மிக அருகில்.",
+                      "ಒಂದು ಗ್ರಾಮದ ರೈತರು ಪ್ರತಿದಿನ ತಮ್ಮ ಹಾಲನ್ನು ಇಲ್ಲಿಗೆ ತರುತ್ತಾರೆ. ನೆಲ ಮಹಡಿ — ರೈತನಿಗೆ ಹತ್ತಿರವಾದದ್ದು."
+                    ),
                   },
                   {
-                    label: "2. District Union",
-                    text: "Many Village Societies in a district join together here. Milk from many villages is collected and processed.",
+                    label: L("2. District Union", "2. జిల్లా యూనియన్", "2. மாவட்ட சங்கம்", "2. ಜಿಲ್ಲಾ ಒಕ್ಕೂಟ"),
+                    text: L(
+                      "Many Village Societies in a district join together here. Milk from many villages is collected and processed.",
+                      "ఒక జిల్లాలోని అనేక గ్రామ సంఘాలు ఇక్కడ కలిసిపోతాయి. అనేక గ్రామాల నుండి పాలు సేకరించి ప్రాసెస్ చేస్తారు.",
+                      "ஒரு மாவட்டத்தில் உள்ள பல கிராம சங்கங்கள் இங்கு இணைகின்றன. பல கிராமங்களிலிருந்து பால் சேகரிக்கப்பட்டு பதப்படுத்தப்படுகிறது.",
+                      "ಒಂದು ಜಿಲ್ಲೆಯ ಅನೇಕ ಗ್ರಾಮ ಸಂಘಗಳು ಇಲ್ಲಿ ಸೇರುತ್ತವೆ. ಅನೇಕ ಗ್ರಾಮಗಳಿಂದ ಹಾಲನ್ನು ಸಂಗ್ರಹಿಸಿ ಸಂಸ್ಕರಿಸಲಾಗುತ್ತದೆ."
+                    ),
                   },
                   {
-                    label: "3. State Federation",
-                    text: "All the District Unions in a state join together here, and sell milk and milk products (like Amul does) to customers everywhere.",
+                    label: L("3. State Federation", "3. రాష్ట్ర సమాఖ్య", "3. மாநில கூட்டமைப்பு", "3. ರಾಜ್ಯ ಒಕ್ಕೂಟ"),
+                    text: L(
+                      "All the District Unions in a state join together here, and sell milk and milk products (like Amul does) to customers everywhere.",
+                      "ఒక రాష్ట్రంలోని అన్ని జిల్లా యూనియన్లు ఇక్కడ కలిసిపోతాయి, పాలు మరియు పాల ఉత్పత్తులను (అముల్ చేసినట్లు) ప్రతిచోటా వినియోగదారులకు అమ్ముతాయి.",
+                      "ஒரு மாநிலத்தில் உள்ள அனைத்து மாவட்ட சங்கங்களும் இங்கு இணைந்து, பால் மற்றும் பால் பொருட்களை (அமுல் செய்வது போல்) எல்லா இடங்களிலும் உள்ள வாடிக்கையாளர்களுக்கு விற்கின்றன.",
+                      "ಒಂದು ರಾಜ್ಯದ ಎಲ್ಲಾ ಜಿಲ್ಲಾ ಒಕ್ಕೂಟಗಳು ಇಲ್ಲಿ ಸೇರಿ, ಹಾಲು ಮತ್ತು ಹಾಲಿನ ಉತ್ಪನ್ನಗಳನ್ನು (ಅಮುಲ್ ಮಾಡುವಂತೆ) ಎಲ್ಲೆಡೆ ಗ್ರಾಹಕರಿಗೆ ಮಾರಾಟ ಮಾಡುತ್ತವೆ."
+                    ),
                   },
                 ],
               },
               {
                 type: "callout",
                 style: "info",
-                heading: "Why This Matters to You",
-                text: "This is the same three-step model behind the MPPs (Milk Pooling Points) you will help form and run in later training. You are joining a system that has worked for over 75 years.",
+                heading: L("Why This Matters to You", "ఇది మీకు ఎందుకు ముఖ్యం", "இது உங்களுக்கு ஏன் முக்கியம்", "ಇದು ನಿಮಗೆ ಏಕೆ ಮುಖ್ಯ"),
+                text: L(
+                  "This is the same three-step model behind the MPPs (Milk Pooling Points) you will help form and run in later training. You are joining a system that has worked for over 75 years.",
+                  "ఇది తర్వాతి శిక్షణలో మీరు ఏర్పాటు చేసి నడపడంలో సహాయపడే MPPల (మిల్క్ పూలింగ్ పాయింట్లు) వెనుక ఉన్న అదే మూడు దశల నమూనా. మీరు 75 సంవత్సరాలకు పైగా పనిచేస్తున్న వ్యవస్థలో చేరుతున్నారు.",
+                  "இது பின்னர் பயிற்சியில் நீங்கள் உருவாக்கி இயக்க உதவும் MPP களின் (பால் சேகரிப்பு புள்ளிகள்) பின்னணியில் உள்ள அதே மூன்று படி மாதிரி. 75 ஆண்டுகளுக்கும் மேலாக செயல்பட்டு வரும் ஒரு அமைப்பில் நீங்கள் இணைகிறீர்கள்.",
+                  "ಇದು ನಂತರದ ತರಬೇತಿಯಲ್ಲಿ ನೀವು ರೂಪಿಸಿ ನಡೆಸಲು ಸಹಾಯ ಮಾಡುವ MPP ಗಳ (ಹಾಲು ಸಂಗ್ರಹ ಕೇಂದ್ರಗಳು) ಹಿಂದಿನ ಅದೇ ಮೂರು ಹಂತದ ಮಾದರಿ. 75 ವರ್ಷಗಳಿಗಿಂತ ಹೆಚ್ಚು ಕಾಲ ಕೆಲಸ ಮಾಡಿದ ವ್ಯವಸ್ಥೆಗೆ ನೀವು ಸೇರುತ್ತಿದ್ದೀರಿ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "What is the first, ground-floor step of a dairy cooperative?",
-                options: ["State Federation", "District Union", "Village Society", "NDDB"],
+                q: L(
+                  "What is the first, ground-floor step of a dairy cooperative?",
+                  "డైరీ సహకార సంఘం యొక్క మొదటి, గ్రౌండ్ ఫ్లోర్ దశ ఏమిటి?",
+                  "பால் கூட்டுறவின் முதல், தரைத்தள படி என்ன?",
+                  "ಡೈರಿ ಸಹಕಾರ ಸಂಘದ ಮೊದಲ, ನೆಲ ಮಹಡಿ ಹಂತ ಯಾವುದು?"
+                ),
+                options: [
+                  L("State Federation", "రాష్ట్ర సమాఖ్య", "மாநில கூட்டமைப்பு", "ರಾಜ್ಯ ಒಕ್ಕೂಟ"),
+                  L("District Union", "జిల్లా యూనియన్", "மாவட்ட சங்கம்", "ಜಿಲ್ಲಾ ಒಕ್ಕೂಟ"),
+                  L("Village Society", "గ్రామ సంఘం", "கிராம சங்கம்", "ಗ್ರಾಮ ಸಂಘ"),
+                  L("NDDB", "NDDB", "NDDB", "NDDB"),
+                ],
                 answer: 2,
-                explain: "The Village Society is the first step, closest to the farmer.",
+                explain: L(
+                  "The Village Society is the first step, closest to the farmer.",
+                  "గ్రామ సంఘం మొదటి దశ, రైతుకు అత్యంత సమీపంగా ఉంటుంది.",
+                  "கிராம சங்கம் முதல் படி, விவசாயிக்கு மிக அருகில்.",
+                  "ಗ್ರಾಮ ಸಂಘ ಮೊದಲ ಹಂತ, ರೈತನಿಗೆ ಹತ್ತಿರವಾದದ್ದು."
+                ),
               },
               {
                 type: "mcq",
-                q: "Put these in the correct order, smallest to largest:",
+                q: L(
+                  "Which comes right after the Village Society in the cooperative structure?",
+                  "సహకార సంఘం నిర్మాణంలో గ్రామ సంఘం తర్వాత వచ్చేది ఏది?",
+                  "கூட்டுறவு அமைப்பில் கிராம சங்கத்திற்குப் பின் வருவது எது?",
+                  "ಸಹಕಾರ ಸಂಘ ರಚನೆಯಲ್ಲಿ ಗ್ರಾಮ ಸಂಘದ ನಂತರ ಬರುವುದು ಯಾವುದು?"
+                ),
                 options: [
-                  "State Federation → District Union → Village Society",
-                  "Village Society → District Union → State Federation",
-                  "District Union → Village Society → State Federation",
-                  "They are all the same size",
+                  L("State Federation", "రాష్ట్ర సమాఖ్య", "மாநில கூட்டமைப்பு", "ರಾಜ್ಯ ಒಕ್ಕೂಟ"),
+                  L("District Union", "జిల్లా యూనియన్", "மாவட்ட சங்கம்", "ಜಿಲ್ಲಾ ಒಕ್ಕೂಟ"),
+                  L("NDDB office", "NDDB కార్యాలయం", "NDDB அலுவலகம்", "NDDB ಕಚೇರಿ"),
+                  L("Nothing, it ends there", "ఏమీ లేదు, అక్కడితో ముగుస్తుంది", "எதுவும் இல்லை, அங்கே முடிகிறது", "ಏನೂ ಇಲ್ಲ, ಅಲ್ಲಿಗೆ ಮುಗಿಯುತ್ತದೆ"),
                 ],
                 answer: 1,
-                explain: "The order is Village Society → District Union → State Federation.",
+                explain: L(
+                  "District Union comes next, joining many village societies.",
+                  "జిల్లా యూనియన్ తర్వాత వస్తుంది, అనేక గ్రామ సంఘాలను కలుపుతుంది.",
+                  "மாவட்ட சங்கம் அடுத்து வருகிறது, பல கிராம சங்கங்களை இணைக்கிறது.",
+                  "ಜಿಲ್ಲಾ ಒಕ್ಕೂಟ ಮುಂದೆ ಬರುತ್ತದೆ, ಅನೇಕ ಗ್ರಾಮ ಸಂಘಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ."
+                ),
               },
             ],
           },
@@ -777,18 +1656,43 @@ export const MODULES = [
             {
               topicId: "t-nddb",
               type: "mcq",
-              q: "NDDB was formed in which year?",
-              options: ["1946", "1965", "1991", "2009"],
+              q: L(
+                "NDDB was formed in which year?",
+                "NDDB ఏ సంవత్సరంలో స్థాపించబడింది?",
+                "NDDB எந்த ஆண்டில் உருவாக்கப்பட்டது?",
+                "NDDB ಯಾವ ವರ್ಷ ಸ್ಥಾಪನೆಯಾಯಿತು?"
+              ),
+              options: [L("1946", "1946", "1946", "1946"), L("1965", "1965", "1965", "1965"), L("1991", "1991", "1991", "1991"), L("2009", "2009", "2009", "2009")],
               answer: 1,
-              explain: "NDDB was formed in 1965.",
+              explain: L(
+                "NDDB was formed in 1965.",
+                "NDDB 1965లో స్థాపించబడింది.",
+                "NDDB 1965ல் உருவாக்கப்பட்டது.",
+                "NDDB 1965 ರಲ್ಲಿ ಸ್ಥಾಪನೆಯಾಯಿತು."
+              ),
             },
             {
               topicId: "t-structure",
               type: "mcq",
-              q: "Which comes right after the Village Society in the cooperative structure?",
-              options: ["State Federation", "District Union", "NDDB office", "Nothing, it ends there"],
+              q: L(
+                "Which comes right after the Village Society in the cooperative structure?",
+                "సహకార సంఘం నిర్మాణంలో గ్రామ సంఘం తర్వాత వచ్చేది ఏది?",
+                "கூட்டுறவு அமைப்பில் கிராம சங்கத்திற்குப் பின் வருவது எது?",
+                "ಸಹಕಾರ ಸಂಘ ರಚನೆಯಲ್ಲಿ ಗ್ರಾಮ ಸಂಘದ ನಂತರ ಬರುವುದು ಯಾವುದು?"
+              ),
+              options: [
+                L("State Federation", "రాష్ట్ర సమాఖ్య", "மாநில கூட்டமைப்பு", "ರಾಜ್ಯ ಒಕ್ಕೂಟ"),
+                L("District Union", "జిల్లా యూనియన్", "மாவட்ட சங்கம்", "ಜಿಲ್ಲಾ ಒಕ್ಕೂಟ"),
+                L("NDDB office", "NDDB కార్యాలయం", "NDDB அலுவலகம்", "NDDB ಕಚೇರಿ"),
+                L("Nothing, it ends there", "ఏమీ లేదు, అక్కడితో ముగుస్తుంది", "எதுவும் இல்லை, அங்கே முடிகிறது", "ಏನೂ ಇಲ್ಲ, ಅಲ್ಲಿಗೆ ಮುಗಿಯುತ್ತದೆ"),
+              ],
               answer: 1,
-              explain: "District Union comes next, joining many village societies.",
+              explain: L(
+                "District Union comes next, joining many village societies.",
+                "జిల్లా యూనియన్ తర్వాత వస్తుంది, అనేక గ్రామ సంఘాలను కలుపుతుంది.",
+                "மாவட்ட சங்கம் அடுத்து வருகிறது, பல கிராம சங்கங்களை இணைக்கிறது.",
+                "ಜಿಲ್ಲಾ ಒಕ್ಕೂಟ ಮುಂದೆ ಬರುತ್ತದೆ, ಅನೇಕ ಗ್ರಾಮ ಸಂಘಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ."
+              ),
             },
           ],
         },
@@ -798,34 +1702,67 @@ export const MODULES = [
       // ==================================================================
       {
         id: "m1-l6",
-        title: "Real Story: Ramesh and Sita's Dairy Journey",
+        title: L(
+          "Real Story: Ramesh and Sita's Dairy Journey",
+          "నిజ కథ: రమేష్ మరియు సీత డైరీ ప్రయాణం",
+          "உண்மைக் கதை: ரமேஷ் மற்றும் சீதாவின் பால் பயணம்",
+          "ನಿಜ ಕಥೆ: ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಅವರ ಡೈರಿ ಪ್ರಯಾಣ"
+        ),
         estMinutes: 12,
         hook: [
           {
             type: "hero",
-            heading: "Real Story: Ramesh & Sita",
-            text: "Everything you've learned so far comes to life in this real story of one family. Let's follow their journey step by step.",
+            heading: L(
+              "Real Story: Ramesh & Sita",
+              "నిజ కథ: రమేష్ & సీత",
+              "உண்மைக் கதை: ரமேஷ் & சீதா",
+              "ನಿಜ ಕಥೆ: ರಮೇಶ್ & ಸೀತಾ"
+            ),
+            text: L(
+              "Everything you've learned so far comes to life in this real story of one family. Let's follow their journey step by step.",
+              "ఇప్పటివరకు మీరు నేర్చుకున్నదంతా ఈ ఒక కుటుంబం యొక్క నిజ కథలో ప్రాణం పోసుకుంటుంది. వారి ప్రయాణాన్ని అడుగడుగునా అనుసరిద్దాం.",
+              "இதுவரை நீங்கள் கற்றுக்கொண்ட அனைத்தும் இந்த ஒரு குடும்பத்தின் உண்மைக் கதையில் உயிர் பெறுகிறது. அவர்களின் பயணத்தை படிப்படியாக பின்தொடர்வோம்.",
+              "ಇಲ್ಲಿಯವರೆಗೆ ನೀವು ಕಲಿತದ್ದೆಲ್ಲಾ ಈ ಒಂದು ಕುಟುಂಬದ ನಿಜ ಕಥೆಯಲ್ಲಿ ಜೀವ ಪಡೆಯುತ್ತದೆ. ಅವರ ಪ್ರಯಾಣವನ್ನು ಹಂತ ಹಂತವಾಗಿ ಅನುಸರಿಸೋಣ."
+            ),
           },
         ],
         topics: [
           {
             id: "t-city-struggle",
-            title: "Life in the City",
+            title: L("Life in the City", "నగరంలో జీవితం", "நகரத்தில் வாழ்க்கை", "ನಗರದಲ್ಲಿ ಜೀವನ"),
             teach: [
               {
                 type: "text",
-                heading: "Meet Ramesh and Sita",
-                html: "Ramesh and Sita lived in a small village called Rampur in Uttar Pradesh. About five years ago, they moved to a big city looking for better work. Ramesh worked as a daily-wage labourer on construction sites. Sita worked cleaning houses. They lived in one small rented room with their 2-year-old son, Chintu.",
+                heading: L("Meet Ramesh and Sita", "రమేష్ మరియు సీతను పరిచయం చేసుకుందాం", "ரமேஷ் மற்றும் சீதாவை சந்திப்போம்", "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಅವರನ್ನು ಭೇಟಿಯಾಗಿ"),
+                html: L(
+                  "Ramesh and Sita lived in a small village called Rampur in Uttar Pradesh. About five years ago, they moved to a big city looking for better work. Ramesh worked as a daily-wage labourer on construction sites. Sita worked cleaning houses. They lived in one small rented room with their 2-year-old son, Chintu.",
+                  "రమేష్ మరియు సీత ఉత్తర ప్రదేశ్‌లోని రాంపూర్ అనే చిన్న గ్రామంలో నివసించేవారు. దాదాపు ఐదేళ్ల క్రితం, మంచి పని కోసం వారు పెద్ద నగరానికి వెళ్లారు. రమేష్ నిర్మాణ స్థలాల్లో రోజువారీ కూలీగా పనిచేసేవాడు. సీత ఇళ్లు శుభ్రం చేసేది. వారు తమ 2 ఏళ్ల కొడుకు చింటూతో కలిసి ఒక చిన్న అద్దె గదిలో నివసించేవారు.",
+                  "ரமேஷ் மற்றும் சீதா உத்தரப் பிரதேசத்தில் ராம்பூர் என்ற சிறிய கிராமத்தில் வாழ்ந்தனர். சுமார் ஐந்து ஆண்டுகளுக்கு முன், சிறந்த வேலை தேடி ஒரு பெரிய நகரத்திற்கு சென்றனர். ரமேஷ் கட்டுமான தளங்களில் தினக்கூலி தொழிலாளியாக பணிபுரிந்தார். சீதா வீடுகளை சுத்தம் செய்யும் வேலை செய்தார். அவர்கள் தங்கள் 2 வயது மகன் சிண்டுவுடன் ஒரு சிறிய வாடகை அறையில் வாழ்ந்தனர்.",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಉತ್ತರ ಪ್ರದೇಶದ ರಾಮ್‌ಪುರ ಎಂಬ ಸಣ್ಣ ಗ್ರಾಮದಲ್ಲಿ ವಾಸಿಸುತ್ತಿದ್ದರು. ಸುಮಾರು ಐದು ವರ್ಷಗಳ ಹಿಂದೆ, ಉತ್ತಮ ಕೆಲಸಕ್ಕಾಗಿ ಅವರು ದೊಡ್ಡ ನಗರಕ್ಕೆ ಹೋದರು. ರಮೇಶ್ ನಿರ್ಮಾಣ ಸ್ಥಳಗಳಲ್ಲಿ ದಿನಗೂಲಿ ಕಾರ್ಮಿಕನಾಗಿ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದನು. ಸೀತಾ ಮನೆಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸುವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದಳು. ಅವರು ತಮ್ಮ 2 ವರ್ಷದ ಮಗ ಚಿಂಟುವಿನೊಂದಿಗೆ ಒಂದು ಸಣ್ಣ ಬಾಡಿಗೆ ಕೋಣೆಯಲ್ಲಿ ವಾಸಿಸುತ್ತಿದ್ದರು."
+                ),
               },
               {
                 type: "poll",
-                heading: "What Do You Think?",
+                heading: L("What Do You Think?", "మీరు ఏమనుకుంటున్నారు?", "நீங்கள் என்ன நினைக்கிறீர்கள்?", "ನೀವು ಏನು ಯೋಚಿಸುತ್ತೀರಿ?"),
                 questions: [
                   {
-                    q: "Do you think Ramesh and Sita found it easy to save money in the city?",
-                    options: ["Yes, easily", "No, it was hard"],
+                    q: L(
+                      "Do you think Ramesh and Sita found it easy to save money in the city?",
+                      "రమేష్ మరియు సీత నగరంలో డబ్బు పొదుపు చేయడం సులభమని మీరు అనుకుంటున్నారా?",
+                      "நகரத்தில் பணம் சேமிப்பது ரமேஷ் மற்றும் சீதாவுக்கு எளிதாக இருந்தது என்று நீங்கள் நினைக்கிறீர்களா?",
+                      "ನಗರದಲ್ಲಿ ಹಣ ಉಳಿಸುವುದು ರಮೇಶ್ ಮತ್ತು ಸೀತಾಗೆ ಸುಲಭವಾಗಿತ್ತು ಎಂದು ನೀವು ಭಾವಿಸುತ್ತೀರಾ?"
+                    ),
+                    options: [
+                      L("Yes, easily", "అవును, సులభంగా", "ஆம், எளிதாக", "ಹೌದು, ಸುಲಭವಾಗಿ"),
+                      L("No, it was hard", "కాదు, కష్టంగా ఉండేది", "இல்லை, கடினமாக இருந்தது", "ಇಲ್ಲ, ಕಷ್ಟವಾಗಿತ್ತು"),
+                    ],
                     answer: 1,
-                    reveal: "Let's find out exactly why, in the numbers below.",
+                    reveal: L(
+                      "Let's find out exactly why, in the numbers below.",
+                      "కింద ఉన్న సంఖ్యలలో ఎందుకో సరిగ్గా తెలుసుకుందాం.",
+                      "கீழே உள்ள எண்களில் ஏன் என்பதை சரியாக கண்டுபிடிப்போம்.",
+                      "ಕೆಳಗಿನ ಸಂಖ್ಯೆಗಳಲ್ಲಿ ಏಕೆ ಎಂದು ನಿಖರವಾಗಿ ತಿಳಿದುಕೊಳ್ಳೋಣ."
+                    ),
                   },
                 ],
               },
@@ -833,91 +1770,195 @@ export const MODULES = [
                 type: "stat-grid",
                 items: [
                   {
-                    label: "Their income",
-                    text: "Together they earned about ₹18,000 to ₹22,000 a month — but only on days they found work.",
+                    label: L("Their income", "వారి ఆదాయం", "அவர்களின் வருமானம்", "ಅವರ ಆದಾಯ"),
+                    text: L(
+                      "Together they earned about ₹18,000 to ₹22,000 a month — but only on days they found work.",
+                      "కలిసి వారు నెలకు సుమారు ₹18,000 నుండి ₹22,000 సంపాదించేవారు — కానీ పని దొరికిన రోజుల్లో మాత్రమే.",
+                      "சேர்ந்து அவர்கள் மாதத்திற்கு சுமார் ₹18,000 முதல் ₹22,000 வரை சம்பாதித்தனர் — ஆனால் வேலை கிடைத்த நாட்களில் மட்டும்.",
+                      "ಒಟ್ಟಿಗೆ ಅವರು ತಿಂಗಳಿಗೆ ಸುಮಾರು ₹18,000 ರಿಂದ ₹22,000 ಗಳಿಸುತ್ತಿದ್ದರು — ಆದರೆ ಕೆಲಸ ಸಿಕ್ಕ ದಿನಗಳಲ್ಲಿ ಮಾತ್ರ."
+                    ),
                   },
                   {
-                    label: "Their expenses",
-                    text: "Most of that money went to room rent, electricity, travel and doctor visits — leaving almost nothing to save.",
+                    label: L("Their expenses", "వారి ఖర్చులు", "அவர்களின் செலவுகள்", "ಅವರ ಖರ್ಚುಗಳು"),
+                    text: L(
+                      "Most of that money went to room rent, electricity, travel and doctor visits — leaving almost nothing to save.",
+                      "ఆ డబ్బులో ఎక్కువ భాగం గది అద్దె, విద్యుత్, ప్రయాణం మరియు వైద్యుల సందర్శనలకు వెళ్లేది — పొదుపు చేయడానికి దాదాపు ఏమీ మిగిలేది కాదు.",
+                      "அந்த பணத்தில் பெரும்பகுதி அறை வாடகை, மின்சாரம், பயணம் மற்றும் மருத்துவர் வருகைகளுக்கு சென்றது — சேமிக்க ஏதும் மிச்சமிருக்கவில்லை.",
+                      "ಆ ಹಣದಲ್ಲಿ ಹೆಚ್ಚಿನವು ಕೊಠಡಿ ಬಾಡಿಗೆ, ವಿದ್ಯುತ್, ಪ್ರಯಾಣ ಮತ್ತು ವೈದ್ಯರ ಭೇಟಿಗಳಿಗೆ ಹೋಗುತ್ತಿತ್ತು — ಉಳಿಸಲು ಬಹುತೇಕ ಏನೂ ಉಳಿಯುತ್ತಿರಲಿಲ್ಲ."
+                    ),
                   },
                   {
-                    label: "Their struggle",
-                    text: "Little Chintu often fell sick because of the crowded, polluted place they lived in.",
+                    label: L("Their struggle", "వారి కష్టం", "அவர்களின் போராட்டம்", "ಅವರ ಹೋರಾಟ"),
+                    text: L(
+                      "Little Chintu often fell sick because of the crowded, polluted place they lived in.",
+                      "వారు నివసించే రద్దీగా, కాలుష్యంగా ఉండే ప్రదేశం వల్ల చిన్న చింటూ తరచుగా అనారోగ్యానికి గురయ్యేవాడు.",
+                      "அவர்கள் வாழ்ந்த நெரிசலான, மாசுபட்ட இடத்தால் சிறு சிண்டு அடிக்கடி நோய்வாய்ப்பட்டான்.",
+                      "ಅವರು ವಾಸಿಸುತ್ತಿದ್ದ ಜನದಟ್ಟಣೆ, ಮಾಲಿನ್ಯದ ಸ್ಥಳದಿಂದಾಗಿ ಪುಟ್ಟ ಚಿಂಟು ಆಗಾಗ್ಗೆ ಅನಾರೋಗ್ಯಕ್ಕೆ ಒಳಗಾಗುತ್ತಿದ್ದನು."
+                    ),
                   },
                 ],
               },
               {
                 type: "callout",
                 style: "warning",
-                heading: "A Hard Truth",
-                text: "Even though Ramesh and Sita worked hard every single day, they could not save money or improve their life. This is a common story for many families who leave their villages for city work.",
+                heading: L("A Hard Truth", "కఠినమైన నిజం", "ஒரு கடின உண்மை", "ಕಠಿಣ ಸತ್ಯ"),
+                text: L(
+                  "Even though Ramesh and Sita worked hard every single day, they could not save money or improve their life. This is a common story for many families who leave their villages for city work.",
+                  "రమేష్ మరియు సీత ప్రతిరోజూ కష్టపడి పనిచేసినప్పటికీ, వారు డబ్బు పొదుపు చేయలేకపోయారు లేదా తమ జీవితాన్ని మెరుగుపరచుకోలేకపోయారు. నగర పనుల కోసం తమ గ్రామాలను వదిలిపెట్టే చాలా కుటుంబాలకు ఇది సాధారణ కథ.",
+                  "ரமேஷ் மற்றும் சீதா ஒவ்வொரு நாளும் கடினமாக உழைத்தாலும், அவர்களால் பணத்தை சேமிக்கவோ தங்கள் வாழ்க்கையை மேம்படுத்தவோ முடியவில்லை. நகர வேலைக்காக தங்கள் கிராமங்களை விட்டு வெளியேறும் பல குடும்பங்களுக்கு இது பொதுவான கதை.",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಪ್ರತಿದಿನ ಕಷ್ಟಪಟ್ಟು ಕೆಲಸ ಮಾಡಿದರೂ, ಅವರು ಹಣ ಉಳಿಸಲು ಅಥವಾ ತಮ್ಮ ಜೀವನವನ್ನು ಸುಧಾರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ನಗರ ಕೆಲಸಕ್ಕಾಗಿ ತಮ್ಮ ಗ್ರಾಮಗಳನ್ನು ತೊರೆಯುವ ಅನೇಕ ಕುಟುಂಬಗಳಿಗೆ ಇದು ಸಾಮಾನ್ಯ ಕಥೆ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "Why couldn't Ramesh and Sita save money in the city?",
+                q: L(
+                  "Why couldn't Ramesh and Sita save money in the city?",
+                  "రమేష్ మరియు సీత నగరంలో డబ్బు ఎందుకు పొదుపు చేయలేకపోయారు?",
+                  "நகரத்தில் ரமேஷ் மற்றும் சீதாவால் ஏன் பணம் சேமிக்க முடியவில்லை?",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ನಗರದಲ್ಲಿ ಹಣ ಏಕೆ ಉಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ?"
+                ),
                 options: [
-                  "They didn't want to save",
-                  "Most of their income went to rent, bills and daily costs",
-                  "They earned too much money",
-                  "They didn't work hard",
+                  L("They didn't want to save", "వారికి పొదుపు చేయాలని లేదు", "அவர்கள் சேமிக்க விரும்பவில்லை", "ಅವರಿಗೆ ಉಳಿಸಲು ಇಷ್ಟವಿರಲಿಲ್ಲ"),
+                  L(
+                    "Most of their income went to rent, bills and daily costs",
+                    "వారి ఆదాయంలో ఎక్కువ భాగం అద్దె, బిల్లులు మరియు రోజువారీ ఖర్చులకు వెళ్లింది",
+                    "அவர்களின் வருமானத்தில் பெரும்பகுதி வாடகை, பில்கள் மற்றும் தினசரி செலவுகளுக்கு சென்றது",
+                    "ಅವರ ಆದಾಯದಲ್ಲಿ ಹೆಚ್ಚಿನವು ಬಾಡಿಗೆ, ಬಿಲ್‌ಗಳು ಮತ್ತು ದೈನಂದಿನ ವೆಚ್ಚಗಳಿಗೆ ಹೋಯಿತು"
+                  ),
+                  L("They earned too much money", "వారు చాలా ఎక్కువ డబ్బు సంపాదించారు", "அவர்கள் அதிக பணம் சம்பாதித்தனர்", "ಅವರು ತುಂಬಾ ಹೆಚ್ಚು ಹಣ ಗಳಿಸಿದರು"),
+                  L("They didn't work hard", "వారు కష్టపడి పనిచేయలేదు", "அவர்கள் கடினமாக உழைக்கவில்லை", "ಅವರು ಕಷ್ಟಪಟ್ಟು ಕೆಲಸ ಮಾಡಲಿಲ್ಲ"),
                 ],
                 answer: 1,
-                explain: "Rent, bills, travel and healthcare costs used up almost all of their income, leaving little to save.",
+                explain: L(
+                  "Rent, bills, travel and healthcare costs used up almost all of their income, leaving little to save.",
+                  "అద్దె, బిల్లులు, ప్రయాణం మరియు ఆరోగ్య సంరక్షణ ఖర్చులు వారి ఆదాయాన్ని దాదాపు మొత్తం వాడేసుకున్నాయి, పొదుపు చేయడానికి తక్కువే మిగిలింది.",
+                  "வாடகை, பில்கள், பயணம் மற்றும் சுகாதார செலவுகள் அவர்களின் வருமானத்தில் கிட்டத்தட்ட அனைத்தையும் பயன்படுத்திக்கொண்டன, சேமிக்க கொஞ்சமே மிச்சமிருந்தது.",
+                  "ಬಾಡಿಗೆ, ಬಿಲ್‌ಗಳು, ಪ್ರಯಾಣ ಮತ್ತು ಆರೋಗ್ಯ ವೆಚ್ಚಗಳು ಅವರ ಆದಾಯದ ಬಹುತೇಕವನ್ನು ಬಳಸಿಕೊಂಡವು, ಉಳಿಸಲು ಸ್ವಲ್ಪವೇ ಉಳಿಯಿತು."
+                ),
               },
               {
                 type: "truefalse",
-                q: "Ramesh and Sita were financially comfortable and stress-free in the city.",
+                q: L(
+                  "Ramesh and Sita were financially comfortable and stress-free in the city.",
+                  "రమేష్ మరియు సీత నగరంలో ఆర్థికంగా సౌకర్యంగా, ఒత్తిడి లేకుండా ఉన్నారు.",
+                  "ரமேஷ் மற்றும் சீதா நகரத்தில் நிதி ரீதியாக வசதியாகவும் மன அழுத்தமின்றியும் இருந்தனர்.",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ನಗರದಲ್ಲಿ ಆರ್ಥಿಕವಾಗಿ ಆರಾಮದಾಯಕವಾಗಿ ಮತ್ತು ಒತ್ತಡ ಮುಕ್ತರಾಗಿದ್ದರು."
+                ),
                 answer: false,
-                explain: "They were always under money stress, and their son was often sick.",
+                explain: L(
+                  "They were always under money stress, and their son was often sick.",
+                  "వారు ఎల్లప్పుడూ డబ్బు ఒత్తిడిలో ఉండేవారు, వారి కొడుకు తరచుగా అనారోగ్యానికి గురయ్యేవాడు.",
+                  "அவர்கள் எப்போதும் பண மன அழுத்தத்தில் இருந்தனர், அவர்களின் மகன் அடிக்கடி நோய்வாய்ப்பட்டான்.",
+                  "ಅವರು ಯಾವಾಗಲೂ ಹಣದ ಒತ್ತಡದಲ್ಲಿದ್ದರು, ಅವರ ಮಗ ಆಗಾಗ್ಗೆ ಅನಾರೋಗ್ಯಕ್ಕೆ ಒಳಗಾಗುತ್ತಿದ್ದನು."
+                ),
               },
             ],
           },
           {
             id: "t-coming-home",
-            title: "A New Chance Back Home",
+            title: L("A New Chance Back Home", "ఇంటికి తిరిగి రావడం ఒక కొత్త అవకాశం", "வீட்டிற்குத் திரும்பியதில் ஒரு புதிய வாய்ப்பு", "ಮನೆಗೆ ಹಿಂತಿರುಗಿದ ಹೊಸ ಅವಕಾಶ"),
             teach: [
               {
                 type: "text",
-                heading: "A Visit That Changed Everything",
-                html: "In 2026, Ramesh and Sita went back to Rampur for a family wedding. They noticed something new — their village now had a Milk Pooling Point (MPP), run by a Milk Producer Organisation (MPO).",
+                heading: L(
+                  "A Visit That Changed Everything",
+                  "అన్నింటినీ మార్చిన ఒక సందర్శన",
+                  "எல்லாவற்றையும் மாற்றிய ஒரு வருகை",
+                  "ಎಲ್ಲವನ್ನೂ ಬದಲಾಯಿಸಿದ ಭೇಟಿ"
+                ),
+                html: L(
+                  "In 2026, Ramesh and Sita went back to Rampur for a family wedding. They noticed something new — their village now had a Milk Pooling Point (MPP), run by a Milk Producer Organisation (MPO).",
+                  "2026లో, రమేష్ మరియు సీత ఒక కుటుంబ వివాహం కోసం రాంపూర్‌కు తిరిగి వెళ్లారు. వారు కొత్తగా ఏదో గమనించారు — వారి గ్రామంలో ఇప్పుడు మిల్క్ ప్రొడ్యూసర్ ఆర్గనైజేషన్ (MPO) నడుపుతున్న మిల్క్ పూలింగ్ పాయింట్ (MPP) ఉంది.",
+                  "2026ல், ரமேஷ் மற்றும் சீதா ஒரு குடும்ப திருமணத்திற்காக ராம்பூருக்குத் திரும்பினர். அவர்கள் ஏதோ புதியதைக் கவனித்தனர் — அவர்களின் கிராமத்தில் இப்போது ஒரு பால் உற்பத்தியாளர் அமைப்பு (MPO) நடத்தும் பால் சேகரிப்பு புள்ளி (MPP) இருந்தது.",
+                  "2026 ರಲ್ಲಿ, ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಒಂದು ಕುಟುಂಬದ ಮದುವೆಗಾಗಿ ರಾಮ್‌ಪುರಕ್ಕೆ ಹಿಂತಿರುಗಿದರು. ಅವರು ಹೊಸದೇನನ್ನೋ ಗಮನಿಸಿದರು — ಅವರ ಗ್ರಾಮದಲ್ಲಿ ಈಗ ಹಾಲು ಉತ್ಪಾದಕ ಸಂಸ್ಥೆ (MPO) ನಡೆಸುವ ಹಾಲು ಸಂಗ್ರಹ ಕೇಂದ್ರ (MPP) ಇತ್ತು."
+                ),
               },
               {
                 type: "glossary",
-                term: "MPP (Milk Pooling Point)",
-                meaning:
+                term: L("MPP (Milk Pooling Point)", "MPP (మిల్క్ పూలింగ్ పాయింట్)", "MPP (பால் சேகரிப்பு புள்ளி)", "MPP (ಹಾಲು ಸಂಗ್ರಹ ಕೇಂದ್ರ)"),
+                meaning: L(
                   "A place in the village where farmers bring their milk every day. It is checked for quality and farmers get paid a fair price, on time.",
+                  "గ్రామంలో రైతులు ప్రతిరోజూ తమ పాలను తీసుకువచ్చే ప్రదేశం. దాని నాణ్యతను పరిశీలిస్తారు, రైతులకు న్యాయమైన ధర సకాలంలో చెల్లిస్తారు.",
+                  "கிராமத்தில் விவசாயிகள் தினமும் தங்கள் பாலைக் கொண்டு வரும் இடம். அதன் தரம் சரிபார்க்கப்பட்டு, விவசாயிகளுக்கு நியாயமான விலை சரியான நேரத்தில் வழங்கப்படுகிறது.",
+                  "ಗ್ರಾಮದಲ್ಲಿ ರೈತರು ಪ್ರತಿದಿನ ತಮ್ಮ ಹಾಲನ್ನು ತರುವ ಸ್ಥಳ. ಅದರ ಗುಣಮಟ್ಟವನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ, ರೈತರಿಗೆ ನ್ಯಾಯಯುತ ಬೆಲೆಯನ್ನು ಸಮಯಕ್ಕೆ ಪಾವತಿಸಲಾಗುತ್ತದೆ."
+                ),
               },
               {
                 type: "text",
-                heading: "What the MPP Offered",
-                html: "The MPP collected milk twice a day. It tested milk quality fairly, in front of the farmer. And most importantly — it paid farmers on time, every time. Several farmers told Ramesh that dairy had become their most reliable source of income.",
+                heading: L("What the MPP Offered", "MPP ఏమి అందించింది", "MPP வழங்கியது என்ன", "MPP ಏನು ನೀಡಿತು"),
+                html: L(
+                  "The MPP collected milk twice a day. It tested milk quality fairly, in front of the farmer. And most importantly — it paid farmers on time, every time. Several farmers told Ramesh that dairy had become their most reliable source of income.",
+                  "MPP రోజుకు రెండుసార్లు పాలు సేకరించేది. రైతు ముందు నిష్పక్షపాతంగా పాల నాణ్యతను పరీక్షించేది. మరీ ముఖ్యంగా — ఇది రైతులకు ప్రతిసారీ సకాలంలో చెల్లించేది. చాలా మంది రైతులు రమేష్‌తో డైరీ తమకు అత్యంత నమ్మదగిన ఆదాయ వనరుగా మారిందని చెప్పారు.",
+                  "MPP நாளொன்றுக்கு இருமுறை பால் சேகரித்தது. விவசாயி முன்னிலையில் நியாயமாக பாலின் தரத்தை சோதித்தது. மிக முக்கியமாக — இது ஒவ்வொரு முறையும் விவசாயிகளுக்கு சரியான நேரத்தில் பணம் கொடுத்தது. பல விவசாயிகள் ரமேஷிடம் பால் பண்ணை தங்கள் மிக நம்பகமான வருமான ஆதாரமாக மாறியதாகக் கூறினர்.",
+                  "MPP ದಿನಕ್ಕೆ ಎರಡು ಬಾರಿ ಹಾಲು ಸಂಗ್ರಹಿಸುತ್ತಿತ್ತು. ರೈತನ ಮುಂದೆಯೇ ನ್ಯಾಯಯುತವಾಗಿ ಹಾಲಿನ ಗುಣಮಟ್ಟವನ್ನು ಪರೀಕ್ಷಿಸುತ್ತಿತ್ತು. ಅತಿ ಮುಖ್ಯವಾಗಿ — ಇದು ಪ್ರತಿ ಬಾರಿಯೂ ರೈತರಿಗೆ ಸಮಯಕ್ಕೆ ಪಾವತಿಸುತ್ತಿತ್ತು. ಅನೇಕ ರೈತರು ರಮೇಶ್‌ಗೆ ಡೈರಿ ತಮ್ಮ ಅತ್ಯಂತ ವಿಶ್ವಾಸಾರ್ಹ ಆದಾಯದ ಮೂಲವಾಗಿದೆ ಎಂದು ಹೇಳಿದರು."
+                ),
               },
               {
                 type: "text",
-                heading: "Getting Expert Advice",
-                html: "Ramesh and Sita owned 1.5 acres of land. Before jumping in, they visited the local Krishi Vigyan Kendra (KVK) — a government farm-advice centre — and met dairy expert Dr. Anil Sharma.",
+                heading: L("Getting Expert Advice", "నిపుణుల సలహా పొందడం", "நிபுணர் ஆலோசனை பெறுதல்", "ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯುವುದು"),
+                html: L(
+                  "Ramesh and Sita owned 1.5 acres of land. Before jumping in, they visited the local Krishi Vigyan Kendra (KVK) — a government farm-advice centre — and met dairy expert Dr. Anil Sharma.",
+                  "రమేష్ మరియు సీతకు 1.5 ఎకరాల భూమి ఉంది. ముందుకు వెళ్ళే ముందు, వారు స్థానిక కృషి విజ్ఞాన కేంద్రం (KVK) — ఒక ప్రభుత్వ వ్యవసాయ సలహా కేంద్రం — సందర్శించి, డైరీ నిపుణుడు డాక్టర్ అనిల్ శర్మను కలిశారు.",
+                  "ரமேஷ் மற்றும் சீதாவுக்கு 1.5 ஏக்கர் நிலம் இருந்தது. இதில் இறங்குவதற்கு முன், அவர்கள் உள்ளூர் கிருஷி விஞ்ஞான் கேந்திரா (KVK) — ஒரு அரசு விவசாய ஆலோசனை மையம் — சென்று, பால் பண்ணை நிபுணர் டாக்டர் அனில் சர்மாவை சந்தித்தனர்.",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ 1.5 ಎಕರೆ ಭೂಮಿ ಹೊಂದಿದ್ದರು. ಇಳಿಯುವ ಮೊದಲು, ಅವರು ಸ್ಥಳೀಯ ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರ (KVK) — ಒಂದು ಸರ್ಕಾರಿ ಕೃಷಿ ಸಲಹಾ ಕೇಂದ್ರ — ಗೆ ಭೇಟಿ ನೀಡಿ, ಡೈರಿ ತಜ್ಞ ಡಾ. ಅನಿಲ್ ಶರ್ಮಾ ಅವರನ್ನು ಭೇಟಿಯಾದರು."
+                ),
               },
               {
                 type: "glossary",
-                term: "KVK (Krishi Vigyan Kendra)",
-                meaning: "A government centre in most districts where farmers can get free expert advice on farming and animal care.",
+                term: L("KVK (Krishi Vigyan Kendra)", "KVK (కృషి విజ్ఞాన కేంద్రం)", "KVK (கிருஷி விஞ்ஞான் கேந்திரா)", "KVK (ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರ)"),
+                meaning: L(
+                  "A government centre in most districts where farmers can get free expert advice on farming and animal care.",
+                  "చాలా జిల్లాల్లో ఉన్న ప్రభుత్వ కేంద్రం, ఇక్కడ రైతులు వ్యవసాయం మరియు పశు సంరక్షణపై ఉచిత నిపుణుల సలహా పొందవచ్చు.",
+                  "பெரும்பாலான மாவட்டங்களில் உள்ள அரசு மையம், இங்கு விவசாயிகள் விவசாயம் மற்றும் கால்நடை பராமரிப்பு குறித்து இலவச நிபுணர் ஆலோசனை பெறலாம்.",
+                  "ಬಹುತೇಕ ಜಿಲ್ಲೆಗಳಲ್ಲಿನ ಸರ್ಕಾರಿ ಕೇಂದ್ರ, ಇಲ್ಲಿ ರೈತರು ಕೃಷಿ ಮತ್ತು ಪ್ರಾಣಿ ಆರೈಕೆಯ ಬಗ್ಗೆ ಉಚಿತ ತಜ್ಞರ ಸಲಹೆ ಪಡೆಯಬಹುದು."
+                ),
               },
               {
                 type: "stat-grid",
                 items: [
                   {
-                    label: "Treat it as a business",
-                    text: "Dr. Sharma's first advice: don't treat dairy as just a household chore — treat it like a real business, with planning.",
+                    label: L(
+                      "Treat it as a business",
+                      "దీన్ని ఒక వ్యాపారంగా చూడండి",
+                      "இதை ஒரு வணிகமாக நடத்துங்கள்",
+                      "ಇದನ್ನು ವ್ಯಾಪಾರವಾಗಿ ಪರಿಗಣಿಸಿ"
+                    ),
+                    text: L(
+                      "Dr. Sharma's first advice: don't treat dairy as just a household chore — treat it like a real business, with planning.",
+                      "డాక్టర్ శర్మ మొదటి సలహా: డైరీని కేవలం ఇంటి పనిగా చూడకుండా — ప్రణాళికతో నిజమైన వ్యాపారంగా చూడండి.",
+                      "டாக்டர் சர்மாவின் முதல் ஆலோசனை: பால் பண்ணையை வெறும் வீட்டு வேலையாக நடத்தாதீர்கள் — திட்டமிடலுடன் உண்மையான வணிகமாக நடத்துங்கள்.",
+                      "ಡಾ. ಶರ್ಮಾ ಅವರ ಮೊದಲ ಸಲಹೆ: ಡೈರಿಯನ್ನು ಕೇವಲ ಮನೆಕೆಲಸವಾಗಿ ಪರಿಗಣಿಸಬೇಡಿ — ಯೋಜನೆಯೊಂದಿಗೆ ನಿಜವಾದ ವ್ಯಾಪಾರದಂತೆ ಪರಿಗಣಿಸಿ."
+                    ),
                   },
                   {
-                    label: "Choose the right animal",
-                    text: "He suggested local breeds like Gir or Sahiwal cows — they handle local weather well and resist disease better.",
+                    label: L(
+                      "Choose the right animal",
+                      "సరైన పశువును ఎంచుకోండి",
+                      "சரியான கால்நடையை தேர்வு செய்யுங்கள்",
+                      "ಸರಿಯಾದ ಪ್ರಾಣಿಯನ್ನು ಆರಿಸಿ"
+                    ),
+                    text: L(
+                      "He suggested local breeds like Gir or Sahiwal cows — they handle local weather well and resist disease better.",
+                      "గిర్ లేదా సాహివాల్ వంటి స్థానిక జాతుల ఆవులను ఆయన సూచించారు — అవి స్థానిక వాతావరణాన్ని బాగా తట్టుకుంటాయి, వ్యాధులను బాగా నిరోధిస్తాయి.",
+                      "கிர் அல்லது சாஹிவால் போன்ற உள்ளூர் இனங்களை அவர் பரிந்துரைத்தார் — அவை உள்ளூர் காலநிலையை நன்கு தாங்கும், நோய்களை சிறப்பாக எதிர்க்கும்.",
+                      "ಗಿರ್ ಅಥವಾ ಸಾಹಿವಾಲ್‌ನಂತಹ ಸ್ಥಳೀಯ ತಳಿಗಳನ್ನು ಅವರು ಸೂಚಿಸಿದರು — ಅವು ಸ್ಥಳೀಯ ಹವಾಮಾನವನ್ನು ಚೆನ್ನಾಗಿ ನಿಭಾಯಿಸುತ್ತವೆ, ರೋಗಗಳನ್ನು ಉತ್ತಮವಾಗಿ ತಡೆಯುತ್ತವೆ."
+                    ),
                   },
                   {
-                    label: "Balanced feed = more milk",
-                    text: "He explained that giving animals a mix of feed, green fodder, dry fodder, minerals and calcium every day is the single biggest key to good milk production.",
+                    label: L(
+                      "Balanced feed = more milk",
+                      "సమతుల్య ఆహారం = ఎక్కువ పాలు",
+                      "சமச்சீர் தீவனம் = அதிக பால்",
+                      "ಸಮತೋಲಿತ ಆಹಾರ = ಹೆಚ್ಚು ಹಾಲು"
+                    ),
+                    text: L(
+                      "He explained that giving animals a mix of feed, green fodder, dry fodder, minerals and calcium every day is the single biggest key to good milk production.",
+                      "పశువులకు ప్రతిరోజూ దాణా, పచ్చి మేత, ఎండు మేత, ఖనిజాలు మరియు కాల్షియం మిశ్రమాన్ని ఇవ్వడం మంచి పాల ఉత్పత్తికి అతిపెద్ద కీలకమని ఆయన వివరించారు.",
+                      "விலங்குகளுக்கு தினமும் தீவனம், பச்சை தீவனம், உலர் தீவனம், தாதுக்கள் மற்றும் கால்சியம் கலவையை கொடுப்பது நல்ல பால் உற்பத்திக்கு மிக முக்கியமான திறவுகோல் என்று அவர் விளக்கினார்.",
+                      "ಪ್ರಾಣಿಗಳಿಗೆ ಪ್ರತಿದಿನ ಆಹಾರ, ಹಸಿರು ಮೇವು, ಒಣ ಮೇವು, ಖನಿಜಗಳು ಮತ್ತು ಕ್ಯಾಲ್ಸಿಯಂ ಮಿಶ್ರಣವನ್ನು ನೀಡುವುದು ಉತ್ತಮ ಹಾಲು ಉತ್ಪಾದನೆಗೆ ಅತಿದೊಡ್ಡ ಕೀಲಿ ಎಂದು ಅವರು ವಿವರಿಸಿದರು."
+                    ),
                   },
                 ],
               },
@@ -925,148 +1966,316 @@ export const MODULES = [
             check: [
               {
                 type: "mcq",
-                q: "What is an MPP?",
+                q: L(
+                  "What is an MPP?",
+                  "MPP అంటే ఏమిటి?",
+                  "MPP என்றால் என்ன?",
+                  "MPP ಎಂದರೇನು?"
+                ),
                 options: [
-                  "A bank",
-                  "A place in the village where farmers sell milk daily at a fair price",
-                  "A type of cow",
-                  "A government tax",
+                  L("A bank", "ఒక బ్యాంకు", "ஒரு வங்கி", "ಒಂದು ಬ್ಯಾಂಕ್"),
+                  L(
+                    "A place in the village where farmers sell milk daily at a fair price",
+                    "రైతులు ప్రతిరోజూ న్యాయమైన ధరకు పాలు అమ్మే గ్రామంలోని ప్రదేశం",
+                    "விவசாயிகள் தினமும் நியாயமான விலையில் பால் விற்கும் கிராமத்தில் உள்ள இடம்",
+                    "ರೈತರು ಪ್ರತಿದಿನ ನ್ಯಾಯಯುತ ಬೆಲೆಗೆ ಹಾಲು ಮಾರುವ ಗ್ರಾಮದಲ್ಲಿನ ಸ್ಥಳ"
+                  ),
+                  L("A type of cow", "ఒక రకమైన ఆవు", "ஒரு வகை மாடு", "ಒಂದು ಬಗೆಯ ಹಸು"),
+                  L("A government tax", "ప్రభుత్వ పన్ను", "அரசு வரி", "ಸರ್ಕಾರಿ ತೆರಿಗೆ"),
                 ],
                 answer: 1,
-                explain: "An MPP (Milk Pooling Point) is where farmers bring milk daily and get paid fairly and on time.",
+                explain: L(
+                  "An MPP (Milk Pooling Point) is where farmers bring milk daily and get paid fairly and on time.",
+                  "MPP (మిల్క్ పూలింగ్ పాయింట్) అంటే రైతులు ప్రతిరోజూ పాలు తీసుకువచ్చి న్యాయంగా, సకాలంలో చెల్లింపు పొందే ప్రదేశం.",
+                  "MPP (பால் சேகரிப்பு புள்ளி) என்பது விவசாயிகள் தினமும் பால் கொண்டு வந்து நியாயமாகவும் சரியான நேரத்திலும் பணம் பெறும் இடம்.",
+                  "MPP (ಹಾಲು ಸಂಗ್ರಹ ಕೇಂದ್ರ) ಎಂದರೆ ರೈತರು ಪ್ರತಿದಿನ ಹಾಲು ತಂದು ನ್ಯಾಯಯುತವಾಗಿ ಮತ್ತು ಸಮಯಕ್ಕೆ ಪಾವತಿ ಪಡೆಯುವ ಸ್ಥಳ."
+                ),
               },
               {
                 type: "mcq",
-                q: "According to Dr. Sharma, what is the biggest key to more milk production?",
-                options: ["Buying the most expensive cow", "Balanced, regular feed", "Never visiting the vet", "Keeping animals hungry"],
+                q: L(
+                  "According to Dr. Sharma, what is the biggest key to more milk production?",
+                  "డాక్టర్ శర్మ ప్రకారం, ఎక్కువ పాల ఉత్పత్తికి అతిపెద్ద కీలకం ఏమిటి?",
+                  "டாக்டர் சர்மாவின் கூற்றுப்படி, அதிக பால் உற்பத்திக்கு மிக முக்கியமான திறவுகோல் என்ன?",
+                  "ಡಾ. ಶರ್ಮಾ ಪ್ರಕಾರ, ಹೆಚ್ಚು ಹಾಲು ಉತ್ಪಾದನೆಗೆ ದೊಡ್ಡ ಕೀಲಿ ಯಾವುದು?"
+                ),
+                options: [
+                  L("Buying the most expensive cow", "అత్యంత ఖరీదైన ఆవును కొనడం", "மிக விலையுயர்ந்த மாட்டை வாங்குதல்", "ಅತ್ಯಂತ ದುಬಾರಿ ಹಸುವನ್ನು ಖರೀದಿಸುವುದು"),
+                  L("Balanced, regular feed", "సమతుల్య, క్రమమైన ఆహారం", "சமச்சீர், வழக்கமான தீவனம்", "ಸಮತೋಲಿತ, ನಿಯಮಿತ ಆಹಾರ"),
+                  L("Never visiting the vet", "ఎప్పుడూ వెటర్నరీకి వెళ్లకపోవడం", "மருத்துவரிடம் ஒருபோதும் செல்லாதது", "ಎಂದಿಗೂ ಪಶುವೈದ್ಯರ ಬಳಿ ಹೋಗದಿರುವುದು"),
+                  L("Keeping animals hungry", "పశువులను ఆకలితో ఉంచడం", "விலங்குகளை பசியுடன் வைத்திருத்தல்", "ಪ್ರಾಣಿಗಳನ್ನು ಹಸಿವಿನಿಂದ ಇಡುವುದು"),
+                ],
                 answer: 1,
-                explain: "A balanced diet — feed, fodder, minerals and calcium — is the biggest key to good milk production.",
+                explain: L(
+                  "A balanced diet — feed, fodder, minerals and calcium — is the biggest key to good milk production.",
+                  "సమతుల్య ఆహారం — దాణా, మేత, ఖనిజాలు, కాల్షియం — మంచి పాల ఉత్పత్తికి అతిపెద్ద కీలకం.",
+                  "சமச்சீர் உணவு — தீவனம், தீவனப்புல், தாதுக்கள் மற்றும் கால்சியம் — நல்ல பால் உற்பத்திக்கு மிக முக்கியமான திறவுகோல்.",
+                  "ಸಮತೋಲಿತ ಆಹಾರ — ಆಹಾರ, ಮೇವು, ಖನಿಜಗಳು ಮತ್ತು ಕ್ಯಾಲ್ಸಿಯಂ — ಉತ್ತಮ ಹಾಲು ಉತ್ಪಾದನೆಗೆ ದೊಡ್ಡ ಕೀಲಿ."
+                ),
               },
             ],
           },
           {
             id: "t-money-story",
-            title: "The Money Story — Year 1",
+            title: L("The Money Story — Year 1", "డబ్బు కథ — సంవత్సరం 1", "பணக் கதை — ஆண்டு 1", "ಹಣದ ಕಥೆ — ವರ್ಷ 1"),
             teach: [
               {
                 type: "text",
-                heading: "Starting the Business",
-                html: "Ramesh and Sita had saved ₹1,50,000 from their years of city work. They decided to use it to start their dairy business.",
+                heading: L("Starting the Business", "వ్యాపారాన్ని ప్రారంభించడం", "வணிகத்தைத் தொடங்குதல்", "ವ್ಯಾಪಾರ ಪ್ರಾರಂಭ"),
+                html: L(
+                  "Ramesh and Sita had saved ₹1,50,000 from their years of city work. They decided to use it to start their dairy business.",
+                  "రమేష్ మరియు సీత తమ నగర పని సంవత్సరాల నుండి ₹1,50,000 పొదుపు చేశారు. వారు తమ డైరీ వ్యాపారాన్ని ప్రారంభించడానికి దీనిని ఉపయోగించాలని నిర్ణయించుకున్నారు.",
+                  "ரமேஷ் மற்றும் சீதா தங்கள் நகர வேலை ஆண்டுகளிலிருந்து ₹1,50,000 சேமித்திருந்தனர். அதைப் பயன்படுத்தி தங்கள் பால் பண்ணை வணிகத்தைத் தொடங்க முடிவு செய்தனர்.",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ತಮ್ಮ ನಗರ ಕೆಲಸದ ವರ್ಷಗಳಿಂದ ₹1,50,000 ಉಳಿಸಿದ್ದರು. ಅದನ್ನು ಬಳಸಿ ತಮ್ಮ ಡೈರಿ ವ್ಯಾಪಾರ ಪ್ರಾರಂಭಿಸಲು ನಿರ್ಧರಿಸಿದರು."
+                ),
               },
               {
                 type: "ledger",
-                heading: "What It Cost to Start (Capital Expenditure)",
+                heading: L(
+                  "What It Cost to Start (Capital Expenditure)",
+                  "ప్రారంభించడానికి అయిన ఖర్చు (మూలధన వ్యయం)",
+                  "தொடங்குவதற்கான செலவு (மூலதனச் செலவு)",
+                  "ಪ್ರಾರಂಭಿಸಲು ಆದ ವೆಚ್ಚ (ಬಂಡವಾಳ ವೆಚ್ಚ)"
+                ),
                 rows: [
-                  { label: "One milking cow", amount: "₹60,000" },
-                  { label: "Shed for the animal", amount: "₹40,000" },
-                  { label: "Buckets, cans & equipment", amount: "₹20,000" },
-                  { label: "Starting working capital", amount: "₹20,000" },
+                  { label: L("One milking cow", "ఒక పాడి ఆవు", "ஒரு பால் மாடு", "ಒಂದು ಹಾಲುಕರೆಯುವ ಹಸು"), amount: "₹60,000" },
+                  { label: L("Shed for the animal", "పశువుల కోసం షెడ్", "விலங்குக்கான கொட்டகை", "ಪ್ರಾಣಿಗಾಗಿ ಕೊಟ್ಟಿಗೆ"), amount: "₹40,000" },
+                  { label: L("Buckets, cans & equipment", "బకెట్లు, డబ్బాలు & పరికరాలు", "வாளிகள், டப்பாக்கள் & உபகரணங்கள்", "ಬಕೆಟ್‌ಗಳು, ಕ್ಯಾನ್‌ಗಳು ಮತ್ತು ಉಪಕರಣಗಳು"), amount: "₹20,000" },
+                  { label: L("Starting working capital", "ప్రారంభ నిర్వహణ మూలధనం", "தொடக்க செயல்பாட்டு மூலதனம்", "ಆರಂಭಿಕ ಕಾರ್ಯಾಚರಣೆ ಬಂಡವಾಳ"), amount: "₹20,000" },
                 ],
-                total: { label: "Total needed", amount: "₹1,40,000" },
+                total: { label: L("Total needed", "మొత్తం అవసరం", "மொத்தம் தேவை", "ಒಟ್ಟು ಅಗತ್ಯ"), amount: "₹1,40,000" },
               },
               {
                 type: "callout",
                 style: "tip",
-                heading: "The Plan",
-                text: "They had ₹1,50,000 saved and needed ₹1,40,000 — leaving ₹10,000 spare. They decided to buy just ONE cow first, and buy a second cow later using the money the first cow earns.",
+                heading: L("The Plan", "ప్రణాళిక", "திட்டம்", "ಯೋಜನೆ"),
+                text: L(
+                  "They had ₹1,50,000 saved and needed ₹1,40,000 — leaving ₹10,000 spare. They decided to buy just ONE cow first, and buy a second cow later using the money the first cow earns.",
+                  "వారి వద్ద ₹1,50,000 పొదుపు ఉంది, ₹1,40,000 అవసరం — ₹10,000 మిగిలింది. మొదట ఒక్క ఆవును మాత్రమే కొనాలని, మొదటి ఆవు సంపాదించే డబ్బుతో తర్వాత రెండో ఆవును కొనాలని నిర్ణయించుకున్నారు.",
+                  "அவர்களிடம் ₹1,50,000 சேமிப்பு இருந்தது, ₹1,40,000 தேவைப்பட்டது — ₹10,000 மிச்சம். முதலில் ஒரே ஒரு மாட்டை மட்டும் வாங்கி, முதல் மாடு சம்பாதிக்கும் பணத்தில் பின்னர் இரண்டாவது மாட்டை வாங்க முடிவு செய்தனர்.",
+                  "ಅವರ ಬಳಿ ₹1,50,000 ಉಳಿತಾಯವಿತ್ತು, ₹1,40,000 ಅಗತ್ಯವಿತ್ತು — ₹10,000 ಉಳಿಯಿತು. ಮೊದಲು ಒಂದೇ ಹಸುವನ್ನು ಖರೀದಿಸಿ, ಮೊದಲ ಹಸು ಗಳಿಸುವ ಹಣದಿಂದ ನಂತರ ಎರಡನೇ ಹಸುವನ್ನು ಖರೀದಿಸಲು ನಿರ್ಧರಿಸಿದರು."
+                ),
               },
               {
                 type: "text",
-                heading: "Let's Do the Maths Together",
-                html: "Their cow gave 11 litres of milk a day. The MPP paid ₹42 for every litre. For the first 180 days: 11 litres × 180 days = 1,980 litres. Then, 1,980 litres × ₹42 = ₹83,160 earned!",
+                heading: L(
+                  "Let's Do the Maths Together",
+                  "కలిసి లెక్క చేద్దాం",
+                  "கணக்கை ஒன்றாக செய்வோம்",
+                  "ಲೆಕ್ಕವನ್ನು ಒಟ್ಟಿಗೆ ಮಾಡೋಣ"
+                ),
+                html: L(
+                  "Their cow gave 11 litres of milk a day. The MPP paid ₹42 for every litre. For the first 180 days: 11 litres × 180 days = 1,980 litres. Then, 1,980 litres × ₹42 = ₹83,160 earned!",
+                  "వారి ఆవు రోజుకు 11 లీటర్ల పాలు ఇచ్చేది. MPP ప్రతి లీటరుకు ₹42 చెల్లించేది. మొదటి 180 రోజులకు: 11 లీటర్లు × 180 రోజులు = 1,980 లీటర్లు. తర్వాత, 1,980 లీటర్లు × ₹42 = ₹83,160 సంపాదించారు!",
+                  "அவர்களின் மாடு நாளொன்றுக்கு 11 லிட்டர் பால் தந்தது. MPP ஒவ்வொரு லிட்டருக்கும் ₹42 கொடுத்தது. முதல் 180 நாட்களுக்கு: 11 லிட்டர் × 180 நாட்கள் = 1,980 லிட்டர். பின்னர், 1,980 லிட்டர் × ₹42 = ₹83,160 சம்பாதித்தனர்!",
+                  "ಅವರ ಹಸು ದಿನಕ್ಕೆ 11 ಲೀಟರ್ ಹಾಲು ನೀಡುತ್ತಿತ್ತು. MPP ಪ್ರತಿ ಲೀಟರ್‌ಗೆ ₹42 ಪಾವತಿಸುತ್ತಿತ್ತು. ಮೊದಲ 180 ದಿನಗಳಿಗೆ: 11 ಲೀಟರ್ × 180 ದಿನ = 1,980 ಲೀಟರ್. ನಂತರ, 1,980 ಲೀಟರ್ × ₹42 = ₹83,160 ಗಳಿಸಿದರು!"
+                ),
               },
               {
                 type: "example",
-                heading: "Try It Yourself",
-                text: "If the same cow gives milk for another 120 days at the same rate (11 litres/day), that's 11 × 120 = 1,320 litres, worth 1,320 × ₹42 = ₹55,440 more. Adding it up: ₹83,160 + ₹55,440 = ₹1,38,600 from ONE cow in a year!",
+                heading: L("Try It Yourself", "మీరే ప్రయత్నించండి", "நீங்களே முயற்சிக்கவும்", "ನೀವೇ ಪ್ರಯತ್ನಿಸಿ"),
+                text: L(
+                  "If the same cow gives milk for another 120 days at the same rate (11 litres/day), that's 11 × 120 = 1,320 litres, worth 1,320 × ₹42 = ₹55,440 more. Adding it up: ₹83,160 + ₹55,440 = ₹1,38,600 from ONE cow in a year!",
+                  "అదే ఆవు మరో 120 రోజులు అదే రేటుతో (11 లీటర్లు/రోజు) పాలు ఇస్తే, అది 11 × 120 = 1,320 లీటర్లు, విలువ 1,320 × ₹42 = ₹55,440 ఎక్కువ. మొత్తం కలిపితే: ₹83,160 + ₹55,440 = ₹1,38,600 ఒక్క ఆవు నుండి ఒక సంవత్సరంలో!",
+                  "அதே மாடு மேலும் 120 நாட்கள் அதே விகிதத்தில் (11 லிட்டர்/நாள்) பால் தந்தால், அது 11 × 120 = 1,320 லிட்டர், மதிப்பு 1,320 × ₹42 = ₹55,440 கூடுதல். மொத்தமாக: ₹83,160 + ₹55,440 = ₹1,38,600 ஒரே மாட்டிலிருந்து ஓராண்டில்!",
+                  "ಅದೇ ಹಸು ಇನ್ನೂ 120 ದಿನ ಅದೇ ದರದಲ್ಲಿ (11 ಲೀಟರ್/ದಿನ) ಹಾಲು ನೀಡಿದರೆ, ಅದು 11 × 120 = 1,320 ಲೀಟರ್, ಮೌಲ್ಯ 1,320 × ₹42 = ₹55,440 ಹೆಚ್ಚು. ಒಟ್ಟು ಸೇರಿಸಿದರೆ: ₹83,160 + ₹55,440 = ₹1,38,600 ಒಂದೇ ಹಸುವಿನಿಂದ ಒಂದು ವರ್ಷದಲ್ಲಿ!"
+                ),
               },
               {
                 type: "ledger",
-                heading: "Year 1: Full Result",
+                heading: L("Year 1: Full Result", "సంవత్సరం 1: పూర్తి ఫలితం", "ஆண்டு 1: முழு முடிவு", "ವರ್ಷ 1: ಪೂರ್ಣ ಫಲಿತಾಂಶ"),
                 rows: [
-                  { label: "Total income from milk sales", amount: "₹2,21,760" },
-                  { label: "Total yearly running costs (feed, health, etc.)", amount: "₹96,000" },
+                  { label: L("Total income from milk sales", "పాల విక్రయాల నుండి మొత్తం ఆదాయం", "பால் விற்பனையிலிருந்து மொத்த வருமானம்", "ಹಾಲು ಮಾರಾಟದಿಂದ ಒಟ್ಟು ಆದಾಯ"), amount: "₹2,21,760" },
+                  {
+                    label: L(
+                      "Total yearly running costs (feed, health, etc.)",
+                      "మొత్తం వార్షిక నిర్వహణ ఖర్చులు (దాణా, ఆరోగ్యం, మొదలైనవి)",
+                      "மொத்த ஆண்டு இயக்கச் செலவுகள் (தீவனம், சுகாதாரம் போன்றவை)",
+                      "ಒಟ್ಟು ವಾರ್ಷಿಕ ಚಾಲನಾ ವೆಚ್ಚಗಳು (ಆಹಾರ, ಆರೋಗ್ಯ, ಇತ್ಯಾದಿ)"
+                    ),
+                    amount: "₹96,000",
+                  },
                 ],
-                total: { label: "Net profit (savings)", amount: "₹1,25,760" },
+                total: { label: L("Net profit (savings)", "నికర లాభం (పొదుపు)", "நிகர லாபம் (சேமிப்பு)", "ನಿವ್ವಳ ಲಾಭ (ಉಳಿತಾಯ)"), amount: "₹1,25,760" },
               },
               {
                 type: "callout",
                 style: "info",
-                heading: "That's More Than Half!",
-                text: "Ramesh and Sita kept more than 56 out of every 100 rupees they earned as pure profit — because they did the daily care themselves and grew some of their own green fodder on their land.",
+                heading: L("That's More Than Half!", "అది సగానికి పైగా!", "இது பாதிக்கும் மேல்!", "ಅದು ಅರ್ಧಕ್ಕಿಂತ ಹೆಚ್ಚು!"),
+                text: L(
+                  "Ramesh and Sita kept more than 56 out of every 100 rupees they earned as pure profit — because they did the daily care themselves and grew some of their own green fodder on their land.",
+                  "రమేష్ మరియు సీత సంపాదించిన ప్రతి 100 రూపాయలలో 56 కి పైగా స్వచ్ఛమైన లాభంగా ఉంచుకున్నారు — ఎందుకంటే వారు రోజువారీ సంరక్షణను తామే చేసుకున్నారు, తమ భూమిపై కొంత పచ్చి మేతను పెంచుకున్నారు.",
+                  "ரமேஷ் மற்றும் சீதா சம்பாதித்த ஒவ்வொரு 100 ரூபாயிலும் 56 க்கும் மேலாக தூய லாபமாக வைத்திருந்தனர் — ஏனெனில் அவர்கள் தினசரி பராமரிப்பை தாங்களே செய்தனர், தங்கள் நிலத்தில் சில பச்சை தீவனத்தை வளர்த்தனர்.",
+                  "ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಗಳಿಸಿದ ಪ್ರತಿ 100 ರೂಪಾಯಿಗಳಲ್ಲಿ 56 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಶುದ್ಧ ಲಾಭವಾಗಿ ಉಳಿಸಿಕೊಂಡರು — ಏಕೆಂದರೆ ಅವರು ದೈನಂದಿನ ಆರೈಕೆಯನ್ನು ತಾವೇ ಮಾಡಿದರು, ತಮ್ಮ ಭೂಮಿಯಲ್ಲಿ ಸ್ವಲ್ಪ ಹಸಿರು ಮೇವು ಬೆಳೆಸಿದರು."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "If a cow gives 10 litres of milk a day for 10 days, and each litre sells for ₹42, how much money is that in total?",
-                options: ["₹420", "₹4,200", "₹42,000", "₹840"],
+                q: L(
+                  "If a cow gives 10 litres of milk a day for 10 days, and each litre sells for ₹42, how much money is that in total?",
+                  "ఒక ఆవు రోజుకు 10 లీటర్ల పాలు 10 రోజులు ఇస్తే, ప్రతి లీటరు ₹42 కి అమ్ముడైతే, మొత్తం ఎంత డబ్బు?",
+                  "ஒரு மாடு நாளொன்றுக்கு 10 லிட்டர் பால் 10 நாட்களுக்கு தந்தால், ஒவ்வொரு லிட்டரும் ₹42 க்கு விற்றால், மொத்தம் எவ்வளவு பணம்?",
+                  "ಒಂದು ಹಸು ದಿನಕ್ಕೆ 10 ಲೀಟರ್ ಹಾಲು 10 ದಿನ ನೀಡಿದರೆ, ಪ್ರತಿ ಲೀಟರ್ ₹42 ಕ್ಕೆ ಮಾರಿದರೆ, ಒಟ್ಟು ಎಷ್ಟು ಹಣ?"
+                ),
+                options: ["₹420", "₹4,200", "₹42,000", "₹840"].map((s) => L(s, s, s, s)),
                 answer: 1,
-                explain: "10 litres × 10 days = 100 litres. 100 litres × ₹42 = ₹4,200.",
+                explain: L(
+                  "10 litres × 10 days = 100 litres. 100 litres × ₹42 = ₹4,200.",
+                  "10 లీటర్లు × 10 రోజులు = 100 లీటర్లు. 100 లీటర్లు × ₹42 = ₹4,200.",
+                  "10 லிட்டர் × 10 நாட்கள் = 100 லிட்டர். 100 லிட்டர் × ₹42 = ₹4,200.",
+                  "10 ಲೀಟರ್ × 10 ದಿನ = 100 ಲೀಟರ್. 100 ಲೀಟರ್ × ₹42 = ₹4,200."
+                ),
               },
               {
                 type: "mcq",
-                q: "In Year 1, what share of Ramesh and Sita's milk income was kept as net profit?",
-                options: ["About 10%", "About 25%", "More than 56%", "100%"],
+                q: L(
+                  "In Year 1, what share of Ramesh and Sita's milk income was kept as net profit?",
+                  "సంవత్సరం 1లో, రమేష్ మరియు సీత పాల ఆదాయంలో ఎంత శాతం నికర లాభంగా ఉంచుకున్నారు?",
+                  "ஆண்டு 1ல், ரமேஷ் மற்றும் சீதாவின் பால் வருமானத்தில் எத்தனை பங்கு நிகர லாபமாக வைக்கப்பட்டது?",
+                  "ವರ್ಷ 1 ರಲ್ಲಿ, ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಅವರ ಹಾಲಿನ ಆದಾಯದಲ್ಲಿ ಎಷ್ಟು ಪಾಲು ನಿವ್ವಳ ಲಾಭವಾಗಿ ಉಳಿಸಲಾಯಿತು?"
+                ),
+                options: [
+                  L("About 10%", "సుమారు 10%", "சுமார் 10%", "ಸುಮಾರು 10%"),
+                  L("About 25%", "సుమారు 25%", "சுமார் 25%", "ಸುಮಾರು 25%"),
+                  L("More than 56%", "56% కంటే ఎక్కువ", "56% க்கும் அதிகம்", "56% ಕ್ಕಿಂತ ಹೆಚ್ಚು"),
+                  L("100%", "100%", "100%", "100%"),
+                ],
                 answer: 2,
-                explain: "They kept more than 56% of their income as profit — ₹1,25,760 out of ₹2,21,760.",
+                explain: L(
+                  "They kept more than 56% of their income as profit — ₹1,25,760 out of ₹2,21,760.",
+                  "వారు తమ ఆదాయంలో 56% కంటే ఎక్కువ లాభంగా ఉంచుకున్నారు — ₹2,21,760 లో ₹1,25,760.",
+                  "அவர்கள் தங்கள் வருமானத்தில் 56% க்கும் அதிகமாக லாபமாக வைத்திருந்தனர் — ₹2,21,760 இல் ₹1,25,760.",
+                  "ಅವರು ತಮ್ಮ ಆದಾಯದ 56% ಕ್ಕಿಂತ ಹೆಚ್ಚು ಲಾಭವಾಗಿ ಉಳಿಸಿಕೊಂಡರು — ₹2,21,760 ರಲ್ಲಿ ₹1,25,760."
+                ),
               },
             ],
           },
           {
             id: "t-expansion",
-            title: "A Big Decision — Should They Grow?",
+            title: L(
+              "A Big Decision — Should They Grow?",
+              "పెద్ద నిర్ణయం — వారు విస్తరించాలా?",
+              "ஒரு பெரிய முடிவு — அவர்கள் வளர வேண்டுமா?",
+              "ದೊಡ್ಡ ನಿರ್ಧಾರ — ಅವರು ಬೆಳೆಯಬೇಕೇ?"
+            ),
             teach: [
               {
                 type: "text",
-                heading: "Year 2: Thinking Bigger",
-                html: "After a successful first year, Ramesh and Sita considered buying 2 more cows — growing from 2 to 4 animals. Since they already had the shed and equipment, they would only need to spend on 2 new cows and some extra working capital: about ₹1,40,000 in total, paid fully from their Year 1 savings — no loan needed.",
+                heading: L(
+                  "Year 2: Thinking Bigger",
+                  "సంవత్సరం 2: పెద్దగా ఆలోచించడం",
+                  "ஆண்டு 2: பெரிதாக யோசித்தல்",
+                  "ವರ್ಷ 2: ದೊಡ್ಡದಾಗಿ ಯೋಚಿಸುವುದು"
+                ),
+                html: L(
+                  "After a successful first year, Ramesh and Sita considered buying 2 more cows — growing from 2 to 4 animals. Since they already had the shed and equipment, they would only need to spend on 2 new cows and some extra working capital: about ₹1,40,000 in total, paid fully from their Year 1 savings — no loan needed.",
+                  "విజయవంతమైన మొదటి సంవత్సరం తర్వాత, రమేష్ మరియు సీత మరో 2 ఆవులు కొనాలని ఆలోచించారు — 2 నుండి 4 పశువులకు విస్తరించడం. వారికి ఇప్పటికే షెడ్, పరికరాలు ఉన్నందున, 2 కొత్త ఆవులు మరియు కొంత అదనపు నిర్వహణ మూలధనంపై మాత్రమే ఖర్చు చేయాలి: మొత్తం సుమారు ₹1,40,000, పూర్తిగా వారి సంవత్సరం 1 పొదుపు నుండి చెల్లించారు — రుణం అవసరం లేదు.",
+                  "வெற்றிகரமான முதல் ஆண்டுக்குப் பிறகு, ரமேஷ் மற்றும் சீதா மேலும் 2 மாடுகளை வாங்க கருதினர் — 2 இலிருந்து 4 விலங்குகளுக்கு வளர்தல். ஏற்கனவே கொட்டகை, உபகரணங்கள் இருந்ததால், 2 புதிய மாடுகள் மற்றும் சில கூடுதல் செயல்பாட்டு மூலதனத்திற்கு மட்டுமே செலவிட வேண்டும்: மொத்தம் சுமார் ₹1,40,000, முழுவதுமாக அவர்களின் ஆண்டு 1 சேமிப்பிலிருந்து செலுத்தப்பட்டது — கடன் தேவையில்லை.",
+                  "ಯಶಸ್ವಿ ಮೊದಲ ವರ್ಷದ ನಂತರ, ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಇನ್ನೂ 2 ಹಸುಗಳನ್ನು ಖರೀದಿಸಲು ಪರಿಗಣಿಸಿದರು — 2 ರಿಂದ 4 ಪ್ರಾಣಿಗಳಿಗೆ ಬೆಳೆಯುವುದು. ಈಗಾಗಲೇ ಕೊಟ್ಟಿಗೆ, ಉಪಕರಣಗಳು ಇದ್ದುದರಿಂದ, 2 ಹೊಸ ಹಸುಗಳು ಮತ್ತು ಸ್ವಲ್ಪ ಹೆಚ್ಚುವರಿ ಕಾರ್ಯಾಚರಣೆ ಬಂಡವಾಳಕ್ಕೆ ಮಾತ್ರ ಖರ್ಚು ಮಾಡಬೇಕಿತ್ತು: ಒಟ್ಟು ಸುಮಾರು ₹1,40,000, ಸಂಪೂರ್ಣವಾಗಿ ಅವರ ವರ್ಷ 1 ಉಳಿತಾಯದಿಂದ ಪಾವತಿಸಲಾಯಿತು — ಸಾಲ ಅಗತ್ಯವಿಲ್ಲ."
+                ),
               },
               {
                 type: "ledger",
-                heading: "Year 2: The Projected Numbers",
+                heading: L(
+                  "Year 2: The Projected Numbers",
+                  "సంవత్సరం 2: అంచనా సంఖ్యలు",
+                  "ஆண்டு 2: மதிப்பிடப்பட்ட எண்கள்",
+                  "ವರ್ಷ 2: ಅಂದಾಜು ಸಂಖ್ಯೆಗಳು"
+                ),
                 rows: [
-                  { label: "Projected income (4 cows)", amount: "₹5,54,400" },
-                  { label: "Projected yearly running costs", amount: "₹2,25,000" },
+                  { label: L("Projected income (4 cows)", "అంచనా ఆదాయం (4 ఆవులు)", "மதிப்பிடப்பட்ட வருமானம் (4 மாடுகள்)", "ಅಂದಾಜು ಆದಾಯ (4 ಹಸುಗಳು)"), amount: "₹5,54,400" },
+                  { label: L("Projected yearly running costs", "అంచనా వార్షిక నిర్వహణ ఖర్చులు", "மதிப்பிடப்பட்ட ஆண்டு இயக்கச் செலவுகள்", "ಅಂದಾಜು ವಾರ್ಷಿಕ ಚಾಲನಾ ವೆಚ್ಚಗಳು"), amount: "₹2,25,000" },
                 ],
-                total: { label: "Projected net profit", amount: "₹3,29,400" },
+                total: { label: L("Projected net profit", "అంచనా నికర లాభం", "மதிப்பிடப்பட்ட நிகர லாபம்", "ಅಂದಾಜು ನಿವ್ವಳ ಲಾಭ"), amount: "₹3,29,400" },
               },
               {
                 type: "callout",
                 style: "tip",
-                heading: "That's About ₹27,450 Every Month",
-                text: "If things go as planned, this is more than the total combined income Ramesh and Sita earned doing daily-wage work in the city — and this time, they are their own boss, living at home with their family.",
+                heading: L(
+                  "That's About ₹27,450 Every Month",
+                  "అది ప్రతి నెలా సుమారు ₹27,450",
+                  "இது மாதம் ஒன்றுக்கு சுமார் ₹27,450",
+                  "ಅದು ಪ್ರತಿ ತಿಂಗಳು ಸುಮಾರು ₹27,450"
+                ),
+                text: L(
+                  "If things go as planned, this is more than the total combined income Ramesh and Sita earned doing daily-wage work in the city — and this time, they are their own boss, living at home with their family.",
+                  "అనుకున్నట్లు జరిగితే, ఇది రమేష్ మరియు సీత నగరంలో రోజువారీ కూలీ పని చేసి సంపాదించిన మొత్తం కంటే ఎక్కువ — ఈసారి, వారే తమకు యజమానులు, తమ కుటుంబంతో ఇంట్లో నివసిస్తున్నారు.",
+                  "திட்டமிட்டபடி நடந்தால், இது ரமேஷ் மற்றும் சீதா நகரத்தில் தினக்கூலி வேலை செய்து சம்பாதித்த மொத்த வருமானத்தை விட அதிகம் — இந்த முறை, அவர்களே தங்கள் முதலாளி, தங்கள் குடும்பத்துடன் வீட்டில் வாழ்கிறார்கள்.",
+                  "ಯೋಜಿಸಿದಂತೆ ನಡೆದರೆ, ಇದು ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ನಗರದಲ್ಲಿ ದಿನಗೂಲಿ ಕೆಲಸ ಮಾಡಿ ಗಳಿಸಿದ ಒಟ್ಟು ಆದಾಯಕ್ಕಿಂತ ಹೆಚ್ಚು — ಈ ಬಾರಿ, ಅವರೇ ತಮ್ಮ ಮಾಲೀಕರು, ತಮ್ಮ ಕುಟುಂಬದೊಂದಿಗೆ ಮನೆಯಲ್ಲಿ ವಾಸಿಸುತ್ತಿದ್ದಾರೆ."
+                ),
               },
               {
                 type: "text",
-                heading: "But Is It Risk-Free?",
-                html: "Before deciding, Ramesh and Sita thought about what could go wrong: What if the milk price drops? What if feed becomes more costly? What if an animal falls sick? More animals also means more daily work and care.",
+                heading: L("But Is It Risk-Free?", "కానీ ఇది రిస్క్ లేనిదా?", "ஆனால் இது ஆபத்து இல்லாததா?", "ಆದರೆ ಇದು ಅಪಾಯ ಮುಕ್ತವೇ?"),
+                html: L(
+                  "Before deciding, Ramesh and Sita thought about what could go wrong: What if the milk price drops? What if feed becomes more costly? What if an animal falls sick? More animals also means more daily work and care.",
+                  "నిర్ణయించే ముందు, ఏమి తప్పు జరగవచ్చో రమేష్ మరియు సీత ఆలోచించారు: పాల ధర పడిపోతే? దాణా ఖరీదు పెరిగితే? ఒక పశువు అనారోగ్యానికి గురైతే? ఎక్కువ పశువులు అంటే ఎక్కువ రోజువారీ పని, సంరక్షణ కూడా.",
+                  "முடிவெடுப்பதற்கு முன், என்ன தவறாக நடக்கலாம் என்று ரமேஷ் மற்றும் சீதா யோசித்தனர்: பால் விலை குறைந்தால் என்ன? தீவனம் விலை உயர்ந்தால் என்ன? ஒரு விலங்கு நோய்வாய்ப்பட்டால் என்ன? அதிக விலங்குகள் என்றால் அதிக தினசரி வேலை மற்றும் பராமரிப்பும் தேவை.",
+                  "ನಿರ್ಧರಿಸುವ ಮೊದಲು, ಏನು ತಪ್ಪಾಗಬಹುದು ಎಂದು ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಯೋಚಿಸಿದರು: ಹಾಲಿನ ಬೆಲೆ ಕುಸಿದರೆ? ಆಹಾರ ದುಬಾರಿಯಾದರೆ? ಒಂದು ಪ್ರಾಣಿ ಅನಾರೋಗ್ಯಕ್ಕೆ ಒಳಗಾದರೆ? ಹೆಚ್ಚು ಪ್ರಾಣಿಗಳು ಎಂದರೆ ಹೆಚ್ಚು ದೈನಂದಿನ ಕೆಲಸ ಮತ್ತು ಆರೈಕೆ ಕೂಡ."
+                ),
               },
               {
                 type: "callout",
                 style: "warning",
-                heading: "Growing a Business Always Has Risk",
-                text: "More cows can mean more profit — but only if feed costs stay reasonable, milk prices hold steady, and all animals stay healthy. A good farmer plans for these risks instead of ignoring them.",
+                heading: L(
+                  "Growing a Business Always Has Risk",
+                  "వ్యాపారాన్ని విస్తరించడంలో ఎప్పుడూ రిస్క్ ఉంటుంది",
+                  "வணிகத்தை வளர்ப்பதில் எப்போதும் ஆபத்து உள்ளது",
+                  "ವ್ಯಾಪಾರ ಬೆಳೆಸುವುದರಲ್ಲಿ ಯಾವಾಗಲೂ ಅಪಾಯವಿದೆ"
+                ),
+                text: L(
+                  "More cows can mean more profit — but only if feed costs stay reasonable, milk prices hold steady, and all animals stay healthy. A good farmer plans for these risks instead of ignoring them.",
+                  "ఎక్కువ ఆవులు ఎక్కువ లాభం అర్థం కావచ్చు — కానీ దాణా ఖర్చులు సహేతుకంగా ఉంటేనే, పాల ధరలు స్థిరంగా ఉంటేనే, అన్ని పశువులు ఆరోగ్యంగా ఉంటేనే. మంచి రైతు ఈ రిస్క్‌లను విస్మరించకుండా వాటికి ప్రణాళిక వేస్తాడు.",
+                  "அதிக மாடுகள் அதிக லாபத்தை குறிக்கலாம் — ஆனால் தீவன செலவுகள் நியாயமாக இருந்தால், பால் விலைகள் நிலையாக இருந்தால், அனைத்து விலங்குகளும் ஆரோக்கியமாக இருந்தால் மட்டுமே. ஒரு நல்ல விவசாயி இந்த ஆபத்துகளை புறக்கணிக்காமல் திட்டமிடுகிறார்.",
+                  "ಹೆಚ್ಚು ಹಸುಗಳು ಹೆಚ್ಚು ಲಾಭ ಎಂದರ್ಥವಾಗಬಹುದು — ಆದರೆ ಆಹಾರ ವೆಚ್ಚಗಳು ಸಮಂಜಸವಾಗಿದ್ದರೆ, ಹಾಲಿನ ಬೆಲೆಗಳು ಸ್ಥಿರವಾಗಿದ್ದರೆ, ಎಲ್ಲಾ ಪ್ರಾಣಿಗಳು ಆರೋಗ್ಯವಾಗಿದ್ದರೆ ಮಾತ್ರ. ಒಬ್ಬ ಒಳ್ಳೆಯ ರೈತ ಈ ಅಪಾಯಗಳನ್ನು ನಿರ್ಲಕ್ಷಿಸದೆ ಯೋಜಿಸುತ್ತಾನೆ."
+                ),
               },
             ],
             check: [
               {
                 type: "mcq",
-                q: "What is a real risk Ramesh and Sita should think about before adding 2 more cows?",
+                q: L(
+                  "What is a real risk Ramesh and Sita should think about before adding 2 more cows?",
+                  "మరో 2 ఆవులను చేర్చే ముందు రమేష్ మరియు సీత ఆలోచించాల్సిన నిజమైన రిస్క్ ఏమిటి?",
+                  "மேலும் 2 மாடுகளை சேர்ப்பதற்கு முன் ரமேஷ் மற்றும் சீதா யோசிக்க வேண்டிய உண்மையான ஆபத்து என்ன?",
+                  "ಇನ್ನೂ 2 ಹಸುಗಳನ್ನು ಸೇರಿಸುವ ಮೊದಲು ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಯೋಚಿಸಬೇಕಾದ ನಿಜವಾದ ಅಪಾಯ ಯಾವುದು?"
+                ),
                 options: [
-                  "Milk price and feed costs could change unfavourably",
-                  "There are absolutely no risks at all",
-                  "Cows never get sick",
-                  "More cows always cost less to keep",
+                  L(
+                    "Milk price and feed costs could change unfavourably",
+                    "పాల ధర, దాణా ఖర్చులు ప్రతికూలంగా మారవచ్చు",
+                    "பால் விலை மற்றும் தீவன செலவுகள் சாதகமற்ற முறையில் மாறலாம்",
+                    "ಹಾಲಿನ ಬೆಲೆ ಮತ್ತು ಆಹಾರ ವೆಚ್ಚಗಳು ಪ್ರತಿಕೂಲವಾಗಿ ಬದಲಾಗಬಹುದು"
+                  ),
+                  L("There are absolutely no risks at all", "ఎలాంటి రిస్క్ లేనే లేదు", "எந்த ஆபத்தும் இல்லவே இல்லை", "ಯಾವುದೇ ಅಪಾಯವೇ ಇಲ್ಲ"),
+                  L("Cows never get sick", "ఆవులు ఎప్పుడూ అనారోగ్యానికి గురికావు", "மாடுகள் ஒருபோதும் நோய்வாய்ப்படாது", "ಹಸುಗಳು ಎಂದಿಗೂ ಅನಾರೋಗ್ಯಕ್ಕೆ ಒಳಗಾಗುವುದಿಲ್ಲ"),
+                  L("More cows always cost less to keep", "ఎక్కువ ఆవులను పెంచడం ఎప్పుడూ తక్కువ ఖర్చు", "அதிக மாடுகளை வைத்திருப்பது எப்போதும் குறைவான செலவு", "ಹೆಚ್ಚು ಹಸುಗಳನ್ನು ಇಡುವುದು ಯಾವಾಗಲೂ ಕಡಿಮೆ ವೆಚ್ಚ"),
                 ],
                 answer: 0,
-                explain: "Milk prices could fall or feed costs could rise — real risks that could reduce the expected profit.",
+                explain: L(
+                  "Milk prices could fall or feed costs could rise — real risks that could reduce the expected profit.",
+                  "పాల ధరలు పడిపోవచ్చు లేదా దాణా ఖర్చులు పెరగవచ్చు — ఇవి అంచనా వేసిన లాభాన్ని తగ్గించే నిజమైన రిస్క్‌లు.",
+                  "பால் விலைகள் குறையலாம் அல்லது தீவன செலவுகள் அதிகரிக்கலாம் — இவை எதிர்பார்க்கப்படும் லாபத்தை குறைக்கக்கூடிய உண்மையான ஆபத்துகள்.",
+                  "ಹಾಲಿನ ಬೆಲೆಗಳು ಇಳಿಯಬಹುದು ಅಥವಾ ಆಹಾರ ವೆಚ್ಚಗಳು ಏರಬಹುದು — ನಿರೀಕ್ಷಿತ ಲಾಭವನ್ನು ಕಡಿಮೆ ಮಾಡಬಹುದಾದ ನಿಜವಾದ ಅಪಾಯಗಳು."
+                ),
               },
               {
                 type: "truefalse",
-                q: "Because Year 1 went well, expanding in Year 2 is completely guaranteed to succeed with no risk.",
+                q: L(
+                  "Because Year 1 went well, expanding in Year 2 is completely guaranteed to succeed with no risk.",
+                  "సంవత్సరం 1 బాగా జరిగింది కాబట్టి, సంవత్సరం 2లో విస్తరణ ఎలాంటి రిస్క్ లేకుండా విజయవంతమవుతుందని పూర్తిగా హామీ ఉంది.",
+                  "ஆண்டு 1 நன்றாக நடந்ததால், ஆண்டு 2ல் விரிவாக்கம் எந்த ஆபத்தும் இல்லாமல் முழுமையாக வெற்றி பெறும் என உத்தரவாதம்.",
+                  "ವರ್ಷ 1 ಚೆನ್ನಾಗಿ ನಡೆದಿದ್ದರಿಂದ, ವರ್ಷ 2 ರಲ್ಲಿ ವಿಸ್ತರಣೆ ಯಾವುದೇ ಅಪಾಯವಿಲ್ಲದೆ ಸಂಪೂರ್ಣವಾಗಿ ಯಶಸ್ವಿಯಾಗುತ್ತದೆ ಎಂದು ಖಾತ್ರಿ."
+                ),
                 answer: false,
-                explain: "Even a successful business has risks — prices, costs and animal health can all change. Good planning matters.",
+                explain: L(
+                  "Even a successful business has risks — prices, costs and animal health can all change. Good planning matters.",
+                  "విజయవంతమైన వ్యాపారంలో కూడా రిస్క్‌లు ఉంటాయి — ధరలు, ఖర్చులు, పశువుల ఆరోగ్యం అన్నీ మారవచ్చు. మంచి ప్రణాళిక ముఖ్యం.",
+                  "வெற்றிகரமான வணிகத்திலும் ஆபத்துகள் உள்ளன — விலைகள், செலவுகள் மற்றும் விலங்கு ஆரோக்கியம் அனைத்தும் மாறலாம். நல்ல திட்டமிடல் முக்கியம்.",
+                  "ಯಶಸ್ವಿ ವ್ಯಾಪಾರದಲ್ಲೂ ಅಪಾಯಗಳಿವೆ — ಬೆಲೆಗಳು, ವೆಚ್ಚಗಳು ಮತ್ತು ಪ್ರಾಣಿಗಳ ಆರೋಗ್ಯ ಎಲ್ಲವೂ ಬದಲಾಗಬಹುದು. ಉತ್ತಮ ಯೋಜನೆ ಮುಖ್ಯ."
+                ),
               },
             ],
           },
@@ -1078,44 +2287,104 @@ export const MODULES = [
             {
               topicId: "t-city-struggle",
               type: "mcq",
-              q: "What was the biggest problem with Ramesh and Sita's life in the city?",
+              q: L(
+                "What was the biggest problem with Ramesh and Sita's life in the city?",
+                "నగరంలో రమేష్ మరియు సీత జీవితంలో అతిపెద్ద సమస్య ఏమిటి?",
+                "நகரத்தில் ரமேஷ் மற்றும் சீதாவின் வாழ்க்கையின் மிகப்பெரிய பிரச்சனை என்ன?",
+                "ನಗರದಲ್ಲಿ ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಅವರ ಜೀವನದ ದೊಡ್ಡ ಸಮಸ್ಯೆ ಏನಾಗಿತ್ತು?"
+              ),
               options: [
-                "They earned too much money",
-                "Little to no savings despite hard work every day",
-                "They had too much free time",
-                "They didn't like their son",
+                L("They earned too much money", "వారు చాలా ఎక్కువ డబ్బు సంపాదించారు", "அவர்கள் அதிக பணம் சம்பாதித்தனர்", "ಅವರು ತುಂಬಾ ಹೆಚ್ಚು ಹಣ ಗಳಿಸಿದರು"),
+                L(
+                  "Little to no savings despite hard work every day",
+                  "ప్రతిరోజూ కష్టపడి పనిచేసినా, పొదుపు దాదాపు లేదు",
+                  "தினமும் கடினமாக உழைத்தும் சேமிப்பு இல்லை என்ற அளவுக்கு",
+                  "ಪ್ರತಿದಿನ ಕಷ್ಟಪಟ್ಟು ಕೆಲಸ ಮಾಡಿದರೂ ಉಳಿತಾಯ ಇಲ್ಲದಂತೆ"
+                ),
+                L("They had too much free time", "వారికి చాలా ఖాళీ సమయం ఉండేది", "அவர்களுக்கு அதிக ஓய்வு நேரம் இருந்தது", "ಅವರಿಗೆ ಬಹಳಷ್ಟು ಬಿಡುವಿನ ಸಮಯವಿತ್ತು"),
+                L("They didn't like their son", "వారికి తమ కొడుకు నచ్చలేదు", "அவர்களுக்கு தங்கள் மகன் பிடிக்கவில்லை", "ಅವರಿಗೆ ತಮ್ಮ ಮಗ ಇಷ್ಟವಿರಲಿಲ್ಲ"),
               ],
               answer: 1,
-              explain: "Despite working every day, they could barely save anything after rent, bills and other costs.",
+              explain: L(
+                "Despite working every day, they could barely save anything after rent, bills and other costs.",
+                "ప్రతిరోజూ పనిచేసినప్పటికీ, అద్దె, బిల్లులు, ఇతర ఖర్చుల తర్వాత వారు దాదాపు ఏమీ పొదుపు చేయలేకపోయారు.",
+                "தினமும் வேலை செய்தாலும், வாடகை, பில்கள் மற்றும் பிற செலவுகளுக்குப் பிறகு அவர்களால் எதையும் சேமிக்க முடியவில்லை.",
+                "ಪ್ರತಿದಿನ ಕೆಲಸ ಮಾಡಿದರೂ, ಬಾಡಿಗೆ, ಬಿಲ್‌ಗಳು ಮತ್ತು ಇತರ ವೆಚ್ಚಗಳ ನಂತರ ಅವರು ಏನನ್ನೂ ಉಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
+              ),
             },
             {
               topicId: "t-coming-home",
               type: "mcq",
-              q: "What made the MPP valuable to village farmers?",
-              options: ["It gave loans only", "It offered fair testing and reliable, on-time payment for milk", "It sold cows", "It replaced the KVK"],
+              q: L(
+                "What made the MPP valuable to village farmers?",
+                "గ్రామ రైతులకు MPP ఎందుకు విలువైనది?",
+                "கிராம விவசாயிகளுக்கு MPP எதனால் மதிப்புமிக்கதாக இருந்தது?",
+                "ಗ್ರಾಮ ರೈತರಿಗೆ MPP ಏಕೆ ಮೌಲ್ಯಯುತವಾಗಿತ್ತು?"
+              ),
+              options: [
+                L("It gave loans only", "ఇది రుణాలు మాత్రమే ఇచ్చింది", "இது கடன்களை மட்டும் கொடுத்தது", "ಇದು ಸಾಲಗಳನ್ನು ಮಾತ್ರ ನೀಡಿತು"),
+                L(
+                  "It offered fair testing and reliable, on-time payment for milk",
+                  "ఇది న్యాయమైన పరీక్ష మరియు నమ్మదగిన, సకాలంలో పాల చెల్లింపును అందించింది",
+                  "இது நியாயமான சோதனை மற்றும் நம்பகமான, சரியான நேரத்தில் பால் கட்டணத்தை வழங்கியது",
+                  "ಇದು ನ್ಯಾಯಯುತ ಪರೀಕ್ಷೆ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹ, ಸಮಯಕ್ಕೆ ಹಾಲಿನ ಪಾವತಿಯನ್ನು ನೀಡಿತು"
+                ),
+                L("It sold cows", "ఇది ఆవులను అమ్మింది", "இது மாடுகளை விற்றது", "ಇದು ಹಸುಗಳನ್ನು ಮಾರಿತು"),
+                L("It replaced the KVK", "ఇది KVK స్థానంలో వచ్చింది", "இது KVKவை மாற்றியது", "ಇದು KVK ಅನ್ನು ಬದಲಾಯಿಸಿತು"),
+              ],
               answer: 1,
-              explain: "The MPP tested milk fairly and paid farmers reliably and on time — a dependable market.",
+              explain: L(
+                "The MPP tested milk fairly and paid farmers reliably and on time — a dependable market.",
+                "MPP పాలను న్యాయంగా పరీక్షించి, రైతులకు నమ్మకంగా, సకాలంలో చెల్లించింది — ఒక నమ్మదగిన మార్కెట్.",
+                "MPP பாலை நியாயமாக சோதித்து, விவசாயிகளுக்கு நம்பகமாகவும் சரியான நேரத்திலும் கொடுத்தது — ஒரு நம்பகமான சந்தை.",
+                "MPP ಹಾಲನ್ನು ನ್ಯಾಯಯುತವಾಗಿ ಪರೀಕ್ಷಿಸಿ, ರೈತರಿಗೆ ವಿಶ್ವಾಸಾರ್ಹವಾಗಿ ಮತ್ತು ಸಮಯಕ್ಕೆ ಪಾವತಿಸಿತು — ಒಂದು ವಿಶ್ವಾಸಾರ್ಹ ಮಾರುಕಟ್ಟೆ."
+              ),
             },
             {
               topicId: "t-money-story",
               type: "mcq",
-              q: "In Year 1, what was Ramesh and Sita's net profit from their dairy business?",
-              options: ["₹10,000", "₹96,000", "₹1,25,760", "₹2,21,760"],
+              q: L(
+                "In Year 1, what was Ramesh and Sita's net profit from their dairy business?",
+                "సంవత్సరం 1లో, రమేష్ మరియు సీత డైరీ వ్యాపారం నుండి నికర లాభం ఎంత?",
+                "ஆண்டு 1ல், ரமேஷ் மற்றும் சீதாவின் பால் வணிகத்திலிருந்து நிகர லாபம் என்ன?",
+                "ವರ್ಷ 1 ರಲ್ಲಿ, ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಅವರ ಡೈರಿ ವ್ಯಾಪಾರದಿಂದ ನಿವ್ವಳ ಲಾಭ ಎಷ್ಟಿತ್ತು?"
+              ),
+              options: ["₹10,000", "₹96,000", "₹1,25,760", "₹2,21,760"].map((s) => L(s, s, s, s)),
               answer: 2,
-              explain: "Net profit = ₹2,21,760 income − ₹96,000 costs = ₹1,25,760.",
+              explain: L(
+                "Net profit = ₹2,21,760 income − ₹96,000 costs = ₹1,25,760.",
+                "నికర లాభం = ₹2,21,760 ఆదాయం − ₹96,000 ఖర్చులు = ₹1,25,760.",
+                "நிகர லாபம் = ₹2,21,760 வருமானம் − ₹96,000 செலவுகள் = ₹1,25,760.",
+                "ನಿವ್ವಳ ಲಾಭ = ₹2,21,760 ಆದಾಯ − ₹96,000 ವೆಚ್ಚಗಳು = ₹1,25,760."
+              ),
             },
             {
               topicId: "t-expansion",
               type: "mcq",
-              q: "Before expanding to 4 cows, what should Ramesh and Sita carefully plan for?",
+              q: L(
+                "Before expanding to 4 cows, what should Ramesh and Sita carefully plan for?",
+                "4 ఆవులకు విస్తరించే ముందు, రమేష్ మరియు సీత దేని కోసం జాగ్రత్తగా ప్రణాళిక వేయాలి?",
+                "4 மாடுகளுக்கு விரிவாக்கும் முன், ரமேஷ் மற்றும் சீதா எதற்காக கவனமாக திட்டமிட வேண்டும்?",
+                "4 ಹಸುಗಳಿಗೆ ವಿಸ್ತರಿಸುವ ಮೊದಲು, ರಮೇಶ್ ಮತ್ತು ಸೀತಾ ಯಾವುದಕ್ಕಾಗಿ ಎಚ್ಚರಿಕೆಯಿಂದ ಯೋಜಿಸಬೇಕು?"
+              ),
               options: [
-                "Nothing, expansion has no downside",
-                "Possible changes in milk price and feed cost",
-                "Selling their existing cow",
-                "Moving back to the city",
+                L("Nothing, expansion has no downside", "ఏమీ లేదు, విస్తరణలో ఎలాంటి లోపం లేదు", "எதுவும் இல்லை, விரிவாக்கத்தில் குறை இல்லை", "ಏನೂ ಇಲ್ಲ, ವಿಸ್ತರಣೆಗೆ ಅನಾನುಕೂಲವಿಲ್ಲ"),
+                L(
+                  "Possible changes in milk price and feed cost",
+                  "పాల ధర మరియు దాణా ఖర్చులో సాధ్యమైన మార్పులు",
+                  "பால் விலை மற்றும் தீவன செலவில் சாத்தியமான மாற்றங்கள்",
+                  "ಹಾಲಿನ ಬೆಲೆ ಮತ್ತು ಆಹಾರ ವೆಚ್ಚದಲ್ಲಿ ಸಾಧ್ಯವಾದ ಬದಲಾವಣೆಗಳು"
+                ),
+                L("Selling their existing cow", "వారి ప్రస్తుత ఆవును అమ్మడం", "இருக்கும் மாட்டை விற்றல்", "ಅವರ ಈಗಿನ ಹಸುವನ್ನು ಮಾರುವುದು"),
+                L("Moving back to the city", "నగరానికి తిరిగి వెళ్లడం", "நகரத்திற்குத் திரும்புதல்", "ನಗರಕ್ಕೆ ಹಿಂತಿರುಗುವುದು"),
               ],
               answer: 1,
-              explain: "Smart expansion means planning for risks like changing milk prices and feed costs.",
+              explain: L(
+                "Smart expansion means planning for risks like changing milk prices and feed costs.",
+                "తెలివైన విస్తరణ అంటే పాల ధరలు, దాణా ఖర్చుల మార్పు వంటి రిస్క్‌ల కోసం ప్రణాళిక వేయడం.",
+                "புத்திசாலித்தனமான விரிவாக்கம் என்பது பால் விலைகள் மற்றும் தீவன செலவுகள் மாறுவது போன்ற ஆபத்துகளுக்கு திட்டமிடுவது.",
+                "ಚಾಣಾಕ್ಷ ವಿಸ್ತರಣೆ ಎಂದರೆ ಹಾಲಿನ ಬೆಲೆ ಮತ್ತು ಆಹಾರ ವೆಚ್ಚ ಬದಲಾವಣೆಯಂತಹ ಅಪಾಯಗಳಿಗೆ ಯೋಜಿಸುವುದು."
+              ),
             },
           ],
         },
@@ -1123,17 +2392,117 @@ export const MODULES = [
     ],
   },
   // Placeholder modules — content coming soon, shown locked on the dashboard
-  { id: "m2", number: 2, title: "Rationale of MPO", available: false },
-  { id: "m3", number: 3, title: "Core Design Principle", available: false },
-  { id: "m4", number: 4, title: "Interaction with Farmers (One to One)", available: false },
-  { id: "m5", number: 5, title: "Designing a Need-Based Communication Content", available: false },
-  { id: "m6", number: 6, title: "Interaction with Sahayak (One to One)", available: false },
-  { id: "m7", number: 7, title: "Village Level Meeting for Small Groups", available: false },
-  { id: "m8", number: 8, title: "Formation of MPP & Milk Routes", available: false },
-  { id: "m9", number: 9, title: "Member Enrolment and Data Collection", available: false },
-  { id: "m10", number: 10, title: "Milk Rates, Its Parameters and Methodologies", available: false },
-  { id: "m11", number: 11, title: "CDA — Its Constituents and Calculation", available: false },
-  { id: "m12", number: 12, title: "Cost Associated with Milk Handling", available: false },
+  {
+    id: "m2",
+    number: 2,
+    title: L("Rationale of MPO", "MPO యొక్క హేతుబద్ధత", "MPO இன் நியாயம்", "MPO ನ ತರ್ಕ"),
+    available: false,
+  },
+  {
+    id: "m3",
+    number: 3,
+    title: L("Core Design Principle", "ప్రధాన రూపకల్పన సూత్రం", "முக்கிய வடிவமைப்புக் கொள்கை", "ಪ್ರಮುಖ ವಿನ್ಯಾಸ ತತ್ವ"),
+    available: false,
+  },
+  {
+    id: "m4",
+    number: 4,
+    title: L(
+      "Interaction with Farmers (One to One)",
+      "రైతులతో సంభాషణ (వ్యక్తిగతంగా)",
+      "விவசாயிகளுடன் தொடர்பு (தனிநபர்)",
+      "ರೈತರೊಂದಿಗೆ ಸಂವಹನ (ಒಬ್ಬರಿಗೊಬ್ಬರು)"
+    ),
+    available: false,
+  },
+  {
+    id: "m5",
+    number: 5,
+    title: L(
+      "Designing a Need-Based Communication Content",
+      "అవసరాల ఆధారిత సమాచార కంటెంట్ రూపకల్పన",
+      "தேவை அடிப்படையிலான தகவல் தொடர்பு உள்ளடக்க வடிவமைப்பு",
+      "ಅಗತ್ಯ ಆಧಾರಿತ ಸಂವಹನ ವಿಷಯ ವಿನ್ಯಾಸ"
+    ),
+    available: false,
+  },
+  {
+    id: "m6",
+    number: 6,
+    title: L(
+      "Interaction with Sahayak (One to One)",
+      "సహాయక్‌తో సంభాషణ (వ్యక్తిగతంగా)",
+      "சகாயக்குடன் தொடர்பு (தனிநபர்)",
+      "ಸಹಾಯಕ್‌ರೊಂದಿಗೆ ಸಂವಹನ (ಒಬ್ಬರಿಗೊಬ್ಬರು)"
+    ),
+    available: false,
+  },
+  {
+    id: "m7",
+    number: 7,
+    title: L(
+      "Village Level Meeting for Small Groups",
+      "చిన్న సమూహాల కోసం గ్రామ స్థాయి సమావేశం",
+      "சிறு குழுக்களுக்கான கிராம அளவிலான கூட்டம்",
+      "ಸಣ್ಣ ಗುಂಪುಗಳಿಗಾಗಿ ಗ್ರಾಮ ಮಟ್ಟದ ಸಭೆ"
+    ),
+    available: false,
+  },
+  {
+    id: "m8",
+    number: 8,
+    title: L(
+      "Formation of MPP & Milk Routes",
+      "MPP మరియు పాల మార్గాల ఏర్పాటు",
+      "MPP மற்றும் பால் வழித்தடங்கள் உருவாக்கம்",
+      "MPP ಮತ್ತು ಹಾಲು ಮಾರ್ಗಗಳ ರಚನೆ"
+    ),
+    available: false,
+  },
+  {
+    id: "m9",
+    number: 9,
+    title: L(
+      "Member Enrolment and Data Collection",
+      "సభ్యుల నమోదు మరియు డేటా సేకరణ",
+      "உறுப்பினர் சேர்க்கை மற்றும் தரவு சேகரிப்பு",
+      "ಸದಸ್ಯರ ನೋಂದಣಿ ಮತ್ತು ಡೇಟಾ ಸಂಗ್ರಹಣೆ"
+    ),
+    available: false,
+  },
+  {
+    id: "m10",
+    number: 10,
+    title: L(
+      "Milk Rates, Its Parameters and Methodologies",
+      "పాల ధరలు, దాని పరామితులు మరియు పద్ధతులు",
+      "பால் விலைகள், அதன் அளவுருக்கள் மற்றும் முறைகள்",
+      "ಹಾಲಿನ ದರಗಳು, ಅದರ ನಿಯತಾಂಕಗಳು ಮತ್ತು ವಿಧಾನಗಳು"
+    ),
+    available: false,
+  },
+  {
+    id: "m11",
+    number: 11,
+    title: L(
+      "CDA — Its Constituents and Calculation",
+      "CDA — దాని అంశాలు మరియు లెక్కింపు",
+      "CDA — அதன் கூறுகள் மற்றும் கணக்கீடு",
+      "CDA — ಅದರ ಅಂಶಗಳು ಮತ್ತು ಲೆಕ್ಕಾಚಾರ"
+    ),
+    available: false,
+  },
+  {
+    id: "m12",
+    number: 12,
+    title: L(
+      "Cost Associated with Milk Handling",
+      "పాల నిర్వహణతో ముడిపడిన ఖర్చు",
+      "பால் கையாளுதலுடன் தொடர்புடைய செலவு",
+      "ಹಾಲು ನಿರ್ವಹಣೆಗೆ ಸಂಬಂಧಿಸಿದ ವೆಚ್ಚ"
+    ),
+    available: false,
+  },
 ];
 
 export function getModule(moduleId) {
