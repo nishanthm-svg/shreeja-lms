@@ -73,7 +73,7 @@ function renderLandingPage() {
   return `
     <div class="landing-page">
       <div class="landing-hero">
-        <div class="landing-badge">🥛 ${escapeHtml(u("brandName"))}</div>
+        <div class="landing-logo"><img src="assets/shreeja-logo.png" alt="Shreeja Mahila Milk Producer Company" /></div>
         <h1>${escapeHtml(u("landingHeroTitle"))}</h1>
         <p>${escapeHtml(u("landingHeroSubtitle"))}</p>
         <button type="button" class="btn btn-primary landing-cta" id="landing-get-started">${escapeHtml(u("landingGetStartedButton"))}</button>
@@ -117,7 +117,7 @@ function renderLanguagePicker(isSwitcher) {
   return `
     <div class="lang-picker-page">
       <div class="lang-picker-box">
-        <div class="lang-picker-icon">🥛</div>
+        <div class="lang-picker-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="lang-picker-logo-img" /></div>
         <h1>${u("langPickerTitle")}</h1>
         <p>${u("langPickerSub")}</p>
         <div class="lang-grid">${cards}</div>
@@ -155,9 +155,9 @@ function renderTopbar(context) {
       ${
         showBack
           ? `<button class="back-btn" data-nav="${backHash}">${u("backButton")}</button>`
-          : `<div class="brand" data-nav="#/"><span class="brand-icon">🥛</span> ${escapeHtml(u("brandName"))}</div>`
+          : `<div class="brand" data-nav="#/"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(u("brandName"))}</div>`
       }
-      ${showBack ? `<div class="brand" data-nav="#/" style="margin-left:4px;"><span class="brand-icon">🥛</span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
+      ${showBack ? `<div class="brand" data-nav="#/" style="margin-left:4px;"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
       <div class="spacer"></div>
       <button class="lang-switch-btn" data-nav="#/language">🌐 ${escapeHtml((LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]).native)}</button>
     </div>
