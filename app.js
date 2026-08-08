@@ -362,7 +362,7 @@ function renderBlockHtml(block) {
         .map(
           (it) => `
         <div class="timeline-item">
-          <div class="year">${escapeHtml(it.year)}</div>
+          <div class="year">${escapeHtml(t(it.year))}</div>
           <div class="text">${escapeHtml(t(it.text))}</div>
         </div>`
         )
