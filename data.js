@@ -7572,6 +7572,7 @@ export const MODULES = [
   },
   {
     id: "m7",
+    number: 7,
     title: L(
       "Village Level Meeting for Small Groups",
       "చిన్న సమూహాల కోసం గ్రామ స్థాయి సమావేశం",
