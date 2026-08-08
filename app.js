@@ -20,6 +20,14 @@ const STAT_EMOJIS = ["🎯", "🌟", "🔑", "📌", "✨", "🌱"];
 
 let lang = getLang(); // null until the learner picks one
 
+const LANDING_SEEN_KEY = "shreeja_lms_seen_landing";
+function hasSeenLanding() {
+  return localStorage.getItem(LANDING_SEEN_KEY) === "1";
+}
+function markLandingSeen() {
+  localStorage.setItem(LANDING_SEEN_KEY, "1");
+}
+
 function t(field) {
   return tr(field, lang || "en");
 }
@@ -41,6 +49,57 @@ function navigate(hash) {
     location.hash = hash;
   }
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+}
+
+// ============================================================================
+// Landing page — the very first screen a learner sees.
+// ============================================================================
+function renderLandingPage() {
+  const features = [
+    { icon: "📚", title: u("landingFeature1Title"), text: u("landingFeature1Text") },
+    { icon: "🌐", title: u("landingFeature2Title"), text: u("landingFeature2Text") },
+    { icon: "🎓", title: u("landingFeature3Title"), text: u("landingFeature3Text") },
+  ]
+    .map(
+      (f) => `
+      <div class="landing-feature">
+        <div class="landing-feature-icon">${f.icon}</div>
+        <h3>${escapeHtml(f.title)}</h3>
+        <p>${escapeHtml(f.text)}</p>
+      </div>`
+    )
+    .join("");
+
+  return `
+    <div class="landing-page">
+      <div class="landing-hero">
+        <div class="landing-badge">🥛 ${escapeHtml(u("brandName"))}</div>
+        <h1>${escapeHtml(u("landingHeroTitle"))}</h1>
+        <p>${escapeHtml(u("landingHeroSubtitle"))}</p>
+        <button type="button" class="btn btn-primary landing-cta" id="landing-get-started">${escapeHtml(u("landingGetStartedButton"))}</button>
+      </div>
+      <div class="page landing-body">
+        <div class="landing-features">${features}</div>
+        <div class="landing-supported">
+          <div class="landing-supported-label">${escapeHtml(u("landingSupportedBy"))}</div>
+          <div class="landing-logos">
+            <img class="landing-logo-img" src="assets/nddb-logo.png" alt="National Dairy Development Board" />
+            <img class="landing-logo-img" src="assets/nddb-dairy-services-logo.png" alt="NDDB Dairy Services" />
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function wireLandingPage() {
+  const btn = document.getElementById("landing-get-started");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      markLandingSeen();
+      navigate("#/");
+    });
+  }
 }
 
 // ============================================================================
@@ -689,6 +748,7 @@ function parseHash() {
   const hash = location.hash || "#/";
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean);
   if (parts.length === 0) return { route: "dashboard" };
+  if (parts[0] === "welcome") return { route: "welcome" };
   if (parts[0] === "language") return { route: "language" };
   if (parts[0] === "module" && parts[1]) {
     if (parts[2] === "lesson" && parts[3]) {
@@ -706,6 +766,14 @@ let lastNonLanguageHash = "#/";
 
 function render() {
   const parsed = parseHash();
+
+  // Show the landing page once, before the language picker or dashboard,
+  // on a learner's very first visit. Also reachable directly at #/welcome.
+  if (parsed.route === "welcome" || (!hasSeenLanding() && parsed.route === "dashboard")) {
+    root.innerHTML = renderLandingPage();
+    wireLandingPage();
+    return;
+  }
 
   // Force the language picker on first visit, before anything else.
   if (!lang && parsed.route !== "language") {
