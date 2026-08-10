@@ -20,14 +20,6 @@ const STAT_EMOJIS = ["🎯", "🌟", "🔑", "📌", "✨", "🌱"];
 
 let lang = getLang(); // null until the learner picks one
 
-const LANDING_SEEN_KEY = "shreeja_lms_seen_landing";
-function hasSeenLanding() {
-  return localStorage.getItem(LANDING_SEEN_KEY) === "1";
-}
-function markLandingSeen() {
-  localStorage.setItem(LANDING_SEEN_KEY, "1");
-}
-
 function t(field) {
   return tr(field, lang || "en");
 }
@@ -96,8 +88,7 @@ function wireLandingPage() {
   const btn = document.getElementById("landing-get-started");
   if (btn) {
     btn.addEventListener("click", () => {
-      markLandingSeen();
-      navigate("#/");
+      navigate("#/dashboard");
     });
   }
 }
@@ -135,7 +126,7 @@ function wireLanguagePicker(isSwitcher, returnHash) {
       if (isSwitcher && returnHash) {
         navigate(returnHash);
       } else {
-        navigate("#/");
+        navigate("#/dashboard");
       }
     });
   });
@@ -155,9 +146,9 @@ function renderTopbar(context) {
       ${
         showBack
           ? `<button class="back-btn" data-nav="${backHash}">${u("backButton")}</button>`
-          : `<div class="brand" data-nav="#/"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(u("brandName"))}</div>`
+          : `<div class="brand" data-nav="#/dashboard"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(u("brandName"))}</div>`
       }
-      ${showBack ? `<div class="brand" data-nav="#/" style="margin-left:4px;"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
+      ${showBack ? `<div class="brand" data-nav="#/dashboard" style="margin-left:4px;"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
       <div class="spacer"></div>
       <button class="lang-switch-btn" data-nav="#/language">🌐 ${escapeHtml((LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]).native)}</button>
     </div>
@@ -231,7 +222,7 @@ function renderDashboard() {
 function renderModulePage(moduleId) {
   const mod = getModule(moduleId);
   if (!mod || !mod.available) {
-    navigate("#/");
+    navigate("#/dashboard");
     return "";
   }
   const progress = getModuleProgress(mod);
@@ -272,7 +263,7 @@ function renderModulePage(moduleId) {
     .join("");
 
   return `
-    ${renderTopbar({ showBack: true, backHash: "#/", title: t(mod.title) })}
+    ${renderTopbar({ showBack: true, backHash: "#/dashboard", title: t(mod.title) })}
     <div class="page">
       <div class="module-hero">
         <h1>${escapeHtml(t(mod.title))}</h1>
@@ -683,7 +674,7 @@ function renderLessonPage(moduleId, lessonId) {
   const mod = getModule(moduleId);
   const lesson = getLesson(moduleId, lessonId);
   if (!mod || !lesson) {
-    navigate("#/");
+    navigate("#/dashboard");
     return "";
   }
   if (!isLessonUnlocked(mod, lessonId)) {
@@ -719,7 +710,7 @@ function afterLessonRender(moduleId, lesson) {
 function renderCompletionPage(moduleId) {
   const mod = getModule(moduleId);
   if (!mod) {
-    navigate("#/");
+    navigate("#/dashboard");
     return "";
   }
   const nextMod = MODULES.find((m) => m.number === mod.number + 1);
@@ -732,7 +723,7 @@ function renderCompletionPage(moduleId) {
         <h2>${u("moduleCompleteTitle", { n: mod.number })}</h2>
         <p>${u("moduleCompleteText", { title: t(mod.title) })}</p>
         <div class="btn-row" style="justify-content:center;">
-          <button class="btn btn-outline" style="background:white;" data-nav="#/">${u("backToDashboard")}</button>
+          <button class="btn btn-outline" style="background:white;" data-nav="#/dashboard">${u("backToDashboard")}</button>
           <button class="btn btn-success" data-nav="#/module/${moduleId}">${u("reviewModule")}</button>
         </div>
       </div>
@@ -747,8 +738,9 @@ function renderCompletionPage(moduleId) {
 function parseHash() {
   const hash = location.hash || "#/";
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean);
-  if (parts.length === 0) return { route: "dashboard" };
+  if (parts.length === 0) return { route: "welcome" };
   if (parts[0] === "welcome") return { route: "welcome" };
+  if (parts[0] === "dashboard") return { route: "dashboard" };
   if (parts[0] === "language") return { route: "language" };
   if (parts[0] === "module" && parts[1]) {
     if (parts[2] === "lesson" && parts[3]) {
@@ -762,20 +754,20 @@ function parseHash() {
   return { route: "dashboard" };
 }
 
-let lastNonLanguageHash = "#/";
+let lastNonLanguageHash = "#/dashboard";
 
 function render() {
   const parsed = parseHash();
 
-  // Show the landing page once, before the language picker or dashboard,
-  // on a learner's very first visit. Also reachable directly at #/welcome.
-  if (parsed.route === "welcome" || (!hasSeenLanding() && parsed.route === "dashboard")) {
+  // The landing/home page: bare "#/" and "#/welcome" always render it,
+  // every visit — not just the first.
+  if (parsed.route === "welcome") {
     root.innerHTML = renderLandingPage();
     wireLandingPage();
     return;
   }
 
-  // Force the language picker on first visit, before anything else.
+  // Force the language picker before anything else, until a language is chosen.
   if (!lang && parsed.route !== "language") {
     root.innerHTML = renderLanguagePicker(false);
     wireLanguagePicker(false, null);
@@ -783,7 +775,7 @@ function render() {
   }
 
   if (parsed.route !== "language") {
-    lastNonLanguageHash = location.hash || "#/";
+    lastNonLanguageHash = location.hash || "#/dashboard";
   }
 
   let html = "";
