@@ -47,6 +47,30 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 
+// Learner-facing lessons/quizzes/certificates work offline (cached app shell +
+// Firestore's local persistence); this just keeps the learner informed while
+// disconnected so a stalled network doesn't look like a broken app.
+function updateOfflineBanner() {
+  let banner = document.getElementById("offline-banner");
+  if (navigator.onLine) {
+    if (banner) banner.hidden = true;
+    document.body.classList.remove("has-offline-banner");
+    return;
+  }
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "offline-banner";
+    banner.className = "offline-banner";
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+  banner.textContent = u("offlineBannerText");
+  banner.hidden = false;
+  document.body.classList.add("has-offline-banner");
+}
+
+window.addEventListener("online", updateOfflineBanner);
+window.addEventListener("offline", updateOfflineBanner);
+
 function navigate(hash) {
   if (location.hash === hash) {
     render();
@@ -969,6 +993,7 @@ function parseHash() {
 let lastNonLanguageHash = "#/dashboard";
 
 function render() {
+  updateOfflineBanner();
   const parsed = parseHash();
 
   // The public landing/home page: always renders, signed in or not.
