@@ -502,6 +502,68 @@ const UI = {
   certScoreLabel: L("Score: {score}%", "స్కోరు: {score}%", "மதிப்பெண்: {score}%", "ಅಂಕ: {score}%"),
   certDateLabel: L("Date: {date}", "తేదీ: {date}", "தேதி: {date}", "ದಿನಾಂಕ: {date}"),
   certIdLabel: L("Certificate ID: {id}", "సర్టిఫికెట్ ఐడీ: {id}", "சான்றிதழ் ஐடி: {id}", "ಪ್ರಮಾಣಪತ್ರ ಐಡಿ: {id}"),
+
+  // Bulk add employees
+  adminBulkAddButton: L("⬆ Bulk Add Employees", "⬆ ఉద్యోగులను బల్క్‌గా జోడించండి", "⬆ பணியாளர்களை மொத்தமாக சேர்க்கவும்", "⬆ ಉದ್ಯೋಗಿಗಳನ್ನು ಬಲ್ಕ್ ಆಗಿ ಸೇರಿಸಿ"),
+  adminBulkAddTitle: L("Bulk Add Employees", "ఉద్యోగులను బల్క్‌గా జోడించండి", "பணியாளர்களை மொத்தமாக சேர்க்கவும்", "ಉದ್ಯೋಗಿಗಳನ್ನು ಬಲ್ಕ್ ಆಗಿ ಸೇರಿಸಿ"),
+  adminBulkAddInstructions: L(
+    "Paste one employee per line, as Name,Email (a header row is fine and will be skipped). A temporary password is generated automatically for each account.",
+    "ప్రతి పంక్తికి ఒక ఉద్యోగిని, పేరు,ఇమెయిల్ రూపంలో పేస్ట్ చేయండి (హెడర్ పంక్తి ఉన్నా పర్వాలేదు, అది వదిలివేయబడుతుంది). ప్రతి ఖాతాకు తాత్కాలిక పాస్‌వర్డ్ స్వయంచాలకంగా సృష్టించబడుతుంది.",
+    "ஒவ்வொரு வரிக்கும் ஒரு பணியாளரை, பெயர்,மின்னஞ்சல் வடிவத்தில் ஒட்டவும் (தலைப்பு வரி இருந்தாலும் பரவாயில்லை, அது தவிர்க்கப்படும்). ஒவ்வொரு கணக்கிற்கும் தற்காலிக கடவுச்சொல் தானாக உருவாக்கப்படும்.",
+    "ಪ್ರತಿ ಸಾಲಿಗೆ ಒಬ್ಬ ಉದ್ಯೋಗಿಯನ್ನು, ಹೆಸರು,ಇಮೇಲ್ ರೂಪದಲ್ಲಿ ಅಂಟಿಸಿ (ಹೆಡರ್ ಸಾಲು ಇದ್ದರೂ ಪರವಾಗಿಲ್ಲ, ಅದನ್ನು ಬಿಟ್ಟುಬಿಡಲಾಗುತ್ತದೆ). ಪ್ರತಿ ಖಾತೆಗೆ ತಾತ್ಕಾಲಿಕ ಪಾಸ್‌ವರ್ಡ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರಚಿಸಲಾಗುತ್ತದೆ."
+  ),
+  adminBulkAddTextareaLabel: L("Employee list (CSV)", "ఉద్యోగుల జాబితా (CSV)", "பணியாளர் பட்டியல் (CSV)", "ಉದ್ಯೋಗಿಗಳ ಪಟ್ಟಿ (CSV)"),
+  adminBulkAddPreviewButton: L("Preview →", "ప్రివ్యూ →", "முன்னோட்டம் →", "ಪೂರ್ವವೀಕ್ಷಣೆ →"),
+  adminBulkAddPreviewTitle: L(
+    "Preview — {n} employees",
+    "ప్రివ్యూ — {n} మంది ఉద్యోగులు",
+    "முன்னோட்டம் — {n} பணியாளர்கள்",
+    "ಪೂರ್ವವೀಕ್ಷಣೆ — {n} ಉದ್ಯೋಗಿಗಳು"
+  ),
+  adminBulkAddPreviewHint: L(
+    "Check this list carefully — accounts are created for real, right away, once you continue.",
+    "ఈ జాబితాను జాగ్రత్తగా తనిఖీ చేయండి — మీరు కొనసాగించిన వెంటనే ఖాతాలు నిజంగా సృష్టించబడతాయి.",
+    "இந்த பட்டியலை கவனமாக சரிபார்க்கவும் — நீங்கள் தொடர்ந்தவுடன் கணக்குகள் உண்மையில் உருவாக்கப்படும்.",
+    "ಈ ಪಟ್ಟಿಯನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ಪರಿಶೀಲಿಸಿ — ನೀವು ಮುಂದುವರಿಸಿದ ತಕ್ಷಣ ಖಾತೆಗಳು ನಿಜವಾಗಿಯೂ ರಚಿಸಲ್ಪಡುತ್ತವೆ."
+  ),
+  adminBulkAddCreateButton: L("Create All Accounts", "అన్ని ఖాతాలను సృష్టించండి", "அனைத்து கணக்குகளையும் உருவாக்கு", "ಎಲ್ಲಾ ಖಾತೆಗಳನ್ನು ರಚಿಸಿ"),
+  adminBulkAddCreatingProgress: L(
+    "Creating accounts — {done}/{total}…",
+    "ఖాతాలు సృష్టిస్తోంది — {done}/{total}…",
+    "கணக்குகள் உருவாக்கப்படுகின்றன — {done}/{total}…",
+    "ಖಾತೆಗಳನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ — {done}/{total}…"
+  ),
+  adminBulkAddRowCreated: L("✓ Created", "✓ సృష్టించబడింది", "✓ உருவாக்கப்பட்டது", "✓ ರಚಿಸಲಾಗಿದೆ"),
+  adminBulkAddRowFailed: L("✕ Failed", "✕ విఫలమైంది", "✕ தோல்வி", "✕ ವಿಫಲವಾಗಿದೆ"),
+  adminBulkAddRowPending: L("Waiting…", "వేచి ఉంది…", "காத்திருக்கிறது…", "ಕಾಯುತ್ತಿದೆ…"),
+  adminBulkAddRowDuplicate: L("Duplicate — skipped", "నకిలీ — దాటవేయబడింది", "நகல் — தவிர்க்கப்பட்டது", "ನಕಲಿ — ಬಿಟ್ಟುಬಿಡಲಾಗಿದೆ"),
+  adminBulkAddInvalidRow: L(
+    "Some lines couldn't be read — each needs a name and a valid email, separated by a comma.",
+    "కొన్ని పంక్తులను చదవలేకపోయాము — ప్రతిదానికి పేరు మరియు సరైన ఇమెయిల్ కామాతో వేరు చేయబడి ఉండాలి.",
+    "சில வரிகளைப் படிக்க முடியவில்லை — ஒவ்வொன்றுக்கும் பெயரும் சரியான மின்னஞ்சலும் காற்புள்ளியால் பிரிக்கப்பட்டு இருக்க வேண்டும்.",
+    "ಕೆಲವು ಸಾಲುಗಳನ್ನು ಓದಲಾಗಲಿಲ್ಲ — ಪ್ರತಿಯೊಂದಕ್ಕೂ ಹೆಸರು ಮತ್ತು ಮಾನ್ಯ ಇಮೇಲ್ ಅಲ್ಪವಿರಾಮದಿಂದ ಬೇರ್ಪಟ್ಟಿರಬೇಕು."
+  ),
+  adminBulkAddNoRows: L(
+    "No valid rows found. Check the format and try again.",
+    "సరైన పంక్తులు కనుగొనబడలేదు. ఫార్మాట్‌ను తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.",
+    "சரியான வரிகள் எதுவும் கிடைக்கவில்லை. வடிவமைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+    "ಮಾನ್ಯ ಸಾಲುಗಳು ಕಂಡುಬಂದಿಲ್ಲ. ಸ್ವರೂಪವನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  ),
+  adminBulkAddDoneTitle: L(
+    "Done — {created} created, {failed} failed",
+    "పూర్తయింది — {created} సృష్టించబడ్డాయి, {failed} విఫలమయ్యాయి",
+    "முடிந்தது — {created} உருவாக்கப்பட்டன, {failed} தோல்வியடைந்தன",
+    "ಮುಗಿದಿದೆ — {created} ರಚಿಸಲಾಗಿದೆ, {failed} ವಿಫಲವಾಗಿದೆ"
+  ),
+  adminBulkAddDownloadButton: L(
+    "⬇ Download Results (with passwords)",
+    "⬇ ఫలితాలను డౌన్‌లోడ్ చేయండి (పాస్‌వర్డ్‌లతో)",
+    "⬇ முடிவுகளைப் பதிவிறக்கவும் (கடவுச்சொற்களுடன்)",
+    "⬇ ಫಲಿತಾಂಶಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ (ಪಾಸ್‌ವರ್ಡ್‌ಗಳೊಂದಿಗೆ)"
+  ),
+  adminBulkAddDoneBackButton: L("Back to Employees", "ఉద్యోగుల జాబితాకు తిరిగి వెళ్ళండి", "பணியாளர்களுக்குத் திரும்பு", "ಉದ್ಯೋಗಿಗಳಿಗೆ ಹಿಂತಿರುಗಿ"),
+  adminTableEmail: L("Email", "ఇమెయిల్", "மின்னஞ்சல்", "ಇಮೇಲ್"),
+  adminTablePassword: L("Temp Password", "తాత్కాలిక పాస్‌వర్డ్", "தற்காலிக கடவுச்சொல்", "ತಾತ್ಕಾಲಿಕ ಪಾಸ್‌ವರ್ಡ್"),
 };
 
 export function ui(key, lang, vars) {

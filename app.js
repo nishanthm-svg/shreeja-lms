@@ -951,6 +951,7 @@ function parseHash() {
   if (parts[0] === "admin") {
     if (parts[1] === "employee" && parts[2]) return { route: "admin-employee", employeeId: parts[2] };
     if (parts[1] === "new-employee") return { route: "admin-new-employee" };
+    if (parts[1] === "bulk-add-employees") return { route: "admin-bulk-add-employees" };
     return { route: "admin" };
   }
   if (parts[0] === "module" && parts[1]) {
@@ -1002,7 +1003,7 @@ function render() {
   }
 
   // Admin-only routes.
-  if ((parsed.route === "admin" || parsed.route === "admin-employee" || parsed.route === "admin-new-employee") && currentUser.role !== "admin") {
+  if ((parsed.route === "admin" || parsed.route === "admin-employee" || parsed.route === "admin-new-employee" || parsed.route === "admin-bulk-add-employees") && currentUser.role !== "admin") {
     navigate("#/dashboard");
     return;
   }
@@ -1069,6 +1070,10 @@ function render() {
     case "admin-new-employee":
       html = admin.renderNewEmployeeForm({ t, u, lang, escapeHtml, renderTopbar });
       afterRender = () => admin.wireNewEmployeeForm({ t, u, lang, escapeHtml, renderTopbar, navigate });
+      break;
+    case "admin-bulk-add-employees":
+      html = admin.renderBulkAddEmployees({ t, u, lang, escapeHtml, renderTopbar });
+      afterRender = () => admin.wireBulkAddEmployees({ t, u, lang, escapeHtml, renderTopbar, navigate });
       break;
     default:
       html = renderDashboard();

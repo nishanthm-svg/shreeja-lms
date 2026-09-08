@@ -43,6 +43,7 @@ export function renderAdminDashboard(ctx) {
       <div class="admin-toolbar">
         <input type="text" class="admin-search" id="admin-search" placeholder="${escapeHtml(u("adminSearchPlaceholder"))}" />
         <button type="button" class="btn btn-primary" id="admin-add-btn">${escapeHtml(u("adminAddEmployeeButton"))}</button>
+        <button type="button" class="btn btn-outline" id="admin-bulk-add-btn">${escapeHtml(u("adminBulkAddButton"))}</button>
         <button type="button" class="btn btn-outline" id="admin-export-btn">${escapeHtml(u("adminExportCsvButton"))}</button>
       </div>
       <div class="admin-table-wrap" id="admin-table-wrap">
@@ -123,6 +124,7 @@ export function wireAdminDashboard(ctx) {
   const wrap = document.getElementById("admin-table-wrap");
   const searchInput = document.getElementById("admin-search");
   const addBtn = document.getElementById("admin-add-btn");
+  const bulkAddBtn = document.getElementById("admin-bulk-add-btn");
   const exportBtn = document.getElementById("admin-export-btn");
   let lastLoaded = [];
 
@@ -148,6 +150,7 @@ export function wireAdminDashboard(ctx) {
     debounceTimer = setTimeout(() => loadEmployees(searchInput.value.trim()), 250);
   });
   addBtn.addEventListener("click", () => navigate("#/admin/new-employee"));
+  bulkAddBtn.addEventListener("click", () => navigate("#/admin/bulk-add-employees"));
   exportBtn.addEventListener("click", () => downloadCsv(lastLoaded));
 
   loadEmployees("");
@@ -363,4 +366,208 @@ export function wireNewEmployeeForm(ctx) {
       submitBtn.textContent = u("adminCreateButton");
     }
   });
+}
+
+// ============================================================================
+// Bulk add employees — paste a CSV of Name,Email (e.g. exported from a roster
+// spreadsheet) and create every account, one at a time, with live progress.
+// A temporary password is generated per account; the final results — every
+// name, email and generated password — can be downloaded as a CSV so the
+// admin can distribute credentials. Reuses api.adminCreateEmployee exactly
+// like the single Add Employee form, just looped.
+// ============================================================================
+function generateTempPassword() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  let pw = "";
+  for (let i = 0; i < 10; i++) {
+    pw += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return pw;
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function parseBulkCsv(text) {
+  const rows = [];
+  const seen = new Set();
+  text.split(/\r?\n/).forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    const parts = trimmed.split(",").map((p) => p.trim().replace(/^"|"$/g, ""));
+    if (parts.length < 2) return;
+    const [name, email] = parts;
+    if (!name || !email) return;
+    if (name.toLowerCase() === "name" && email.toLowerCase() === "email") return; // header row
+    if (!EMAIL_RE.test(email)) return;
+    const key = email.toLowerCase();
+    if (seen.has(key)) return; // duplicate within this batch
+    seen.add(key);
+    rows.push({ name, email });
+  });
+  return rows;
+}
+
+function renderBulkEntryFormHtml(ctx) {
+  const { u, escapeHtml } = ctx;
+  return `
+    <h2>${escapeHtml(u("adminBulkAddTitle"))}</h2>
+    <p class="sub">${escapeHtml(u("adminBulkAddInstructions"))}</p>
+    <div class="field">
+      <label for="bulk-add-textarea">${escapeHtml(u("adminBulkAddTextareaLabel"))}</label>
+      <textarea id="bulk-add-textarea" rows="12" style="width:100%; font-family:'Courier New',monospace; font-size:12.5px; padding:10px 12px; border:1.5px solid var(--gray-300); border-radius:9px;" placeholder="Name,Email"></textarea>
+    </div>
+    <div id="bulk-add-error"></div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="bulk-add-preview-btn">${escapeHtml(u("adminBulkAddPreviewButton"))}</button>
+      <button type="button" class="btn btn-outline" id="bulk-add-cancel-btn">${escapeHtml(u("adminCancelButton"))}</button>
+    </div>
+  `;
+}
+
+export function renderBulkAddEmployees(ctx) {
+  const { u, renderTopbar } = ctx;
+  return `
+    ${renderTopbar({ showBack: true, backHash: "#/admin", title: u("adminDashboardTitle") })}
+    <div class="page">
+      <div class="admin-form-box" style="max-width:640px;" id="bulk-add-container">
+        ${renderBulkEntryFormHtml(ctx)}
+      </div>
+    </div>
+  `;
+}
+
+export function wireBulkAddEmployees(ctx) {
+  const { u, escapeHtml, navigate } = ctx;
+  const container = document.getElementById("bulk-add-container");
+
+  function showEntryForm() {
+    container.innerHTML = renderBulkEntryFormHtml(ctx);
+    document.getElementById("bulk-add-cancel-btn").addEventListener("click", () => navigate("#/admin"));
+    document.getElementById("bulk-add-preview-btn").addEventListener("click", () => {
+      const text = document.getElementById("bulk-add-textarea").value;
+      const rows = parseBulkCsv(text);
+      const errorEl = document.getElementById("bulk-add-error");
+      if (rows.length === 0) {
+        errorEl.innerHTML = `<div class="auth-error">${escapeHtml(u("adminBulkAddNoRows"))}</div>`;
+        return;
+      }
+      showPreview(rows);
+    });
+  }
+
+  function showPreview(rows) {
+    const rowsHtml = rows
+      .map(
+        (r) => `
+        <div class="admin-lesson-row">
+          <div class="admin-lesson-title">${escapeHtml(r.name)}</div>
+          <div class="admin-lesson-extra">${escapeHtml(r.email)}</div>
+        </div>`
+      )
+      .join("");
+    container.innerHTML = `
+      <h2>${escapeHtml(u("adminBulkAddPreviewTitle", { n: rows.length }))}</h2>
+      <p class="sub">${escapeHtml(u("adminBulkAddPreviewHint"))}</p>
+      <div class="admin-lesson-list" style="max-height:340px; overflow-y:auto; padding-left:0;">${rowsHtml}</div>
+      <div class="btn-row" style="margin-top:16px;">
+        <button type="button" class="btn btn-primary" id="bulk-add-create-btn">${escapeHtml(u("adminBulkAddCreateButton"))}</button>
+        <button type="button" class="btn btn-outline" id="bulk-add-back-btn">${escapeHtml(u("adminCancelButton"))}</button>
+      </div>
+    `;
+    document.getElementById("bulk-add-back-btn").addEventListener("click", showEntryForm);
+    document.getElementById("bulk-add-create-btn").addEventListener("click", () => runCreation(rows));
+  }
+
+  async function runCreation(rows) {
+    const results = rows.map((r) => ({ ...r, password: generateTempPassword(), status: "pending" }));
+
+    function renderProgress(doneCount) {
+      const rowsHtml = results
+        .map((r) => {
+          const badgeClass = r.status === "created" ? "active" : "inactive";
+          const label =
+            r.status === "created"
+              ? u("adminBulkAddRowCreated")
+              : r.status === "failed"
+              ? u("adminBulkAddRowFailed")
+              : u("adminBulkAddRowPending");
+          return `
+          <div class="admin-lesson-row">
+            <div class="admin-lesson-title">${escapeHtml(r.name)} <span class="admin-lesson-extra">${escapeHtml(r.email)}</span></div>
+            <div class="admin-lesson-status"><span class="status-pill ${badgeClass}">${escapeHtml(label)}</span></div>
+          </div>`;
+        })
+        .join("");
+      container.innerHTML = `
+        <h2>${escapeHtml(u("adminBulkAddCreatingProgress", { done: doneCount, total: results.length }))}</h2>
+        <div class="mini-bar" style="margin-bottom:14px;"><div style="width:${Math.round((doneCount / results.length) * 100)}%"></div></div>
+        <div class="admin-lesson-list" style="max-height:400px; overflow-y:auto; padding-left:0;">${rowsHtml}</div>
+      `;
+    }
+
+    renderProgress(0);
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      try {
+        await api.adminCreateEmployee(r.email, r.name, r.password);
+        r.status = "created";
+      } catch (e) {
+        r.status = "failed";
+        r.error = e.message;
+      }
+      renderProgress(i + 1);
+    }
+    showDone(results);
+  }
+
+  function showDone(results) {
+    const created = results.filter((r) => r.status === "created").length;
+    const failed = results.length - created;
+    const rowsHtml = results
+      .map((r) => {
+        const badgeClass = r.status === "created" ? "active" : "inactive";
+        const label = r.status === "created" ? u("adminBulkAddRowCreated") : u("adminBulkAddRowFailed");
+        const extra = r.status === "created" ? r.password : r.error || "";
+        return `
+        <div class="admin-lesson-row">
+          <div class="admin-lesson-title">${escapeHtml(r.name)} <span class="admin-lesson-extra">${escapeHtml(r.email)} · ${escapeHtml(extra)}</span></div>
+          <div class="admin-lesson-status"><span class="status-pill ${badgeClass}">${escapeHtml(label)}</span></div>
+        </div>`;
+      })
+      .join("");
+    container.innerHTML = `
+      <h2>${escapeHtml(u("adminBulkAddDoneTitle", { created, failed }))}</h2>
+      <div class="admin-lesson-list" style="max-height:400px; overflow-y:auto; padding-left:0; margin-bottom:16px;">${rowsHtml}</div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-success" id="bulk-add-download-btn">${escapeHtml(u("adminBulkAddDownloadButton"))}</button>
+        <button type="button" class="btn btn-outline" id="bulk-add-done-back-btn">${escapeHtml(u("adminBulkAddDoneBackButton"))}</button>
+      </div>
+    `;
+    document.getElementById("bulk-add-done-back-btn").addEventListener("click", () => navigate("#/admin"));
+    document.getElementById("bulk-add-download-btn").addEventListener("click", () => downloadBulkResultsCsv(results, u));
+  }
+
+  showEntryForm();
+}
+
+function downloadBulkResultsCsv(results, u) {
+  const header = [u("adminTableName"), u("adminTableEmail"), u("adminTablePassword"), u("adminTableStatus")];
+  const rows = results.map((r) => [
+    r.name,
+    r.email,
+    r.status === "created" ? r.password : "",
+    r.status === "created" ? u("adminBulkAddRowCreated") : u("adminBulkAddRowFailed") + (r.error ? `: ${r.error}` : ""),
+  ]);
+  const csv = [header, ...rows]
+    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+    .join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shreeja-lms-bulk-employees.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
