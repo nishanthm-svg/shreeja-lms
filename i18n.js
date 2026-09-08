@@ -271,6 +271,237 @@ const UI = {
     "ಮೊದಲು ಉದಾಹರಣೆಗಳು ಮತ್ತು ಆಸಕ್ತಿದಾಯಕ ಪಾಠಗಳು, ಕೊನೆಯಲ್ಲಿ ತ್ವರಿತ ರಸಪ್ರಶ್ನೆ, ಮುಗಿಸಿದಾಗ ಪ್ರಮಾಣಪತ್ರ."
   ),
   landingSupportedBy: L("Supported by", "మద్దతు ఇస్తున్నవారు", "ஆதரவு அளிப்பவர்கள்", "ಬೆಂಬಲಿಸುವವರು"),
+
+  // ==========================================================================
+  // Accounts, admin portal and certificates — added alongside real employee
+  // logins. Everything below is new UI chrome; no existing key above this
+  // line was changed.
+  // ==========================================================================
+  moduleCompleteButton: L("View Module Summary →", "మాడ్యూల్ సారాంశం చూడండి →", "தொகுதி சுருக்கத்தைப் பார்க்கவும் →", "ಮಾಡ್ಯೂಲ್ ಸಾರಾಂಶ ವೀಕ್ಷಿಸಿ →"),
+
+  employeeLoginButton: L("👤 Employee Login →", "👤 ఉద్యోగి లాగిన్ →", "👤 பணியாளர் உள்நுழைவு →", "👤 ಉದ್ಯೋಗಿ ಲಾಗಿನ್ →"),
+  adminLoginButtonLabel: L("🧑‍💼 Admin Login →", "🧑‍💼 అడ్మిన్ లాగిన్ →", "🧑‍💼 நிர்வாகி உள்நுழைவு →", "🧑‍💼 ನಿರ್ವಾಹಕ ಲಾಗಿನ್ →"),
+
+  loginTitle: L("Sign In", "సైన్ ఇన్", "உள்நுழைவு", "ಸೈನ್ ಇನ್"),
+  employeeLoginTitle: L("👤 Employee Sign In", "👤 ఉద్యోగి సైన్ ఇన్", "👤 பணியாளர் உள்நுழைவு", "👤 ಉದ್ಯೋಗಿ ಸೈನ್ ಇನ್"),
+  adminLoginTitle: L("🧑‍💼 Admin Sign In", "🧑‍💼 అడ్మిన్ సైన్ ఇన్", "🧑‍💼 நிர்வாகி உள்நுழைவு", "🧑‍💼 ನಿರ್ವಾಹಕ ಸೈನ್ ಇನ್"),
+  loginSubtitle: L(
+    "Enter your email and password to continue.",
+    "కొనసాగించడానికి మీ ఇమెయిల్ మరియు పాస్‌వర్డ్ నమోదు చేయండి.",
+    "தொடர உங்கள் மின்னஞ்சல் மற்றும் கடவுச்சொல்லை உள்ளிடவும்.",
+    "ಮುಂದುವರಿಸಲು ನಿಮ್ಮ ಇಮೇಲ್ ಮತ್ತು ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ."
+  ),
+  loginIdLabel: L("Email Address", "ఇమెయిల్ చిరునామా", "மின்னஞ்சல் முகவரி", "ಇಮೇಲ್ ವಿಳಾಸ"),
+  adminUsernameLabel: L("Username", "యూజర్‌నేమ్", "பயனர்பெயர்", "ಬಳಕೆದಾರ ಹೆಸರು"),
+  passwordLabel: L("Password", "పాస్‌వర్డ్", "கடவுச்சொல்", "ಪಾಸ್‌ವರ್ಡ್"),
+  loginButton: L("Sign In", "సైన్ ఇన్ చేయండి", "உள்நுழையவும்", "ಸೈನ್ ಇನ್ ಮಾಡಿ"),
+  loginSigningIn: L("Signing in…", "సైన్ ఇన్ అవుతోంది…", "உள்நுழைகிறது…", "ಸೈನ್ ಇನ್ ಆಗುತ್ತಿದೆ…"),
+  loginErrorGeneric: L(
+    "Something went wrong. Please try again.",
+    "ఏదో పొరపాటు జరిగింది. దయచేసి మళ్ళీ ప్రయత్నించండి.",
+    "ஏதோ தவறு நடந்தது. மீண்டும் முயற்சிக்கவும்.",
+    "ಏನೋ ತಪ್ಪಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  ),
+  loginWrongPortalEmployee: L(
+    "This is an employee account. Please use Employee Login instead.",
+    "ఇది ఉద్యోగి ఖాతా. దయచేసి బదులుగా ఉద్యోగి లాగిన్ ఉపయోగించండి.",
+    "இது ஒரு பணியாளர் கணக்கு. தயவுசெய்து பணியாளர் உள்நுழைவைப் பயன்படுத்தவும்.",
+    "ಇದು ಉದ್ಯೋಗಿ ಖಾತೆ. ದಯವಿಟ್ಟು ಬದಲಿಗೆ ಉದ್ಯೋಗಿ ಲಾಗಿನ್ ಬಳಸಿ."
+  ),
+  loginWrongPortalAdmin: L(
+    "This is an admin account. Please use Admin Login instead.",
+    "ఇది అడ్మిన్ ఖాతా. దయచేసి బదులుగా అడ్మిన్ లాగిన్ ఉపయోగించండి.",
+    "இது ஒரு நிர்வாகி கணக்கு. தயவுசெய்து நிர்வாகி உள்நுழைவைப் பயன்படுத்தவும்.",
+    "ಇದು ನಿರ್ವಾಹಕ ಖಾತೆ. ದಯವಿಟ್ಟು ಬದಲಿಗೆ ನಿರ್ವಾಹಕ ಲಾಗಿನ್ ಬಳಸಿ."
+  ),
+  logoutButton: L("Log out", "లాగ్ అవుట్", "வெளியேறு", "ಲಾಗ್ ಔಟ್"),
+  adminNavLink: L("Admin", "అడ్మిన్", "நிர்வாகி", "ನಿರ್ವಾಹಕ"),
+
+  changePasswordTitle: L("Set a New Password", "కొత్త పాస్‌వర్డ్ సెట్ చేయండి", "புதிய கடவுச்சொல்லை அமைக்கவும்", "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ"),
+  changePasswordSubtitle: L(
+    "For your security, please set your own password before continuing.",
+    "మీ భద్రత కోసం, కొనసాగించే ముందు దయచేసి మీ స్వంత పాస్‌వర్డ్‌ను సెట్ చేయండి.",
+    "உங்கள் பாதுகாப்பிற்காக, தொடர்வதற்கு முன் உங்கள் சொந்த கடவுச்சொல்லை அமைக்கவும்.",
+    "ನಿಮ್ಮ ಸುರಕ್ಷತೆಗಾಗಿ, ಮುಂದುವರಿಸುವ ಮೊದಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ಸ್ವಂತ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ."
+  ),
+  currentPasswordLabel: L("Current password", "ప్రస్తుత పాస్‌వర్డ్", "தற்போதைய கடவுச்சொல்", "ಪ್ರಸ್ತುತ ಪಾಸ್‌ವರ್ಡ್"),
+  newPasswordLabel: L("New password", "కొత్త పాస్‌వర్డ్", "புதிய கடவுச்சொல்", "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್"),
+  newPasswordHint: L("At least 6 characters.", "కనీసం 6 అక్షరాలు.", "குறைந்தது 6 எழுத்துகள்.", "ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳು."),
+  changePasswordButton: L("Save New Password", "కొత్త పాస్‌వర్డ్ సేవ్ చేయండి", "புதிய கடவுச்சொல்லைச் சேமிக்கவும்", "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಉಳಿಸಿ"),
+  changePasswordSaving: L("Saving…", "సేవ్ అవుతోంది…", "சேமிக்கிறது…", "ಉಳಿಸಲಾಗುತ್ತಿದೆ…"),
+
+  // Admin portal
+  adminDashboardTitle: L("🧑‍💼 Admin Dashboard", "🧑‍💼 అడ్మిన్ డాష్‌బోర్డ్", "🧑‍💼 நிர்வாகி டாஷ்போர்டு", "🧑‍💼 ನಿರ್ವಾಹಕ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"),
+  adminDashboardTagline: L(
+    "See every employee's progress, and manage employee accounts.",
+    "ప్రతి ఉద్యోగి పురోగతిని చూడండి, ఉద్యోగి ఖాతాలను నిర్వహించండి.",
+    "ஒவ்வொரு பணியாளரின் முன்னேற்றத்தையும் காணுங்கள், பணியாளர் கணக்குகளை நிர்வகிக்கவும்.",
+    "ಪ್ರತಿ ಉದ್ಯೋಗಿಯ ಪ್ರಗತಿಯನ್ನು ನೋಡಿ, ಉದ್ಯೋಗಿ ಖಾತೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ."
+  ),
+  adminAddEmployeeButton: L("+ Add Employee", "+ ఉద్యోగిని జోడించండి", "+ பணியாளரைச் சேர்க்கவும்", "+ ಉದ್ಯೋಗಿಯನ್ನು ಸೇರಿಸಿ"),
+  adminExportCsvButton: L("⬇ Export CSV", "⬇ CSV డౌన్‌లోడ్ చేయండి", "⬇ CSV பதிவிறக்கவும்", "⬇ CSV ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ"),
+  adminSearchPlaceholder: L(
+    "Search by name or login ID…",
+    "పేరు లేదా లాగిన్ ఐడీ ద్వారా వెతకండి…",
+    "பெயர் அல்லது உள்நுழைவு ஐடி மூலம் தேடவும்…",
+    "ಹೆಸರು ಅಥವಾ ಲಾಗಿನ್ ಐಡಿ ಮೂಲಕ ಹುಡುಕಿ…"
+  ),
+  adminTableName: L("Name", "పేరు", "பெயர்", "ಹೆಸರು"),
+  adminTableLoginId: L("Login ID", "లాగిన్ ఐడీ", "உள்நுழைவு ஐடி", "ಲಾಗಿನ್ ಐಡಿ"),
+  adminTableProgress: L("Progress", "పురోగతి", "முன்னேற்றம்", "ಪ್ರಗತಿ"),
+  adminTableModules: L("Modules", "మాడ్యూళ్లు", "தொகுதிகள்", "ಮಾಡ್ಯೂಲ್‌ಗಳು"),
+  adminTableLastActive: L("Last Active", "చివరిసారి క్రియాశీలం", "கடைசியாக செயலில் இருந்தது", "ಕೊನೆಯ ಸಕ್ರಿಯ"),
+  adminTableStatus: L("Status", "స్థితి", "நிலை", "ಸ್ಥಿತಿ"),
+  adminStatusActive: L("Active", "సక్రియం", "செயலில்", "ಸಕ್ರಿಯ"),
+  adminStatusInactive: L("Inactive", "నిష్క్రియం", "செயலற்றது", "ನಿಷ್ಕ್ರಿಯ"),
+  adminNoEmployees: L(
+    "No employees yet. Add your first one to get started.",
+    "ఇంకా ఉద్యోగులు లేరు. ప్రారంభించడానికి మీ మొదటి వ్యక్తిని జోడించండి.",
+    "இதுவரை பணியாளர்கள் இல்லை. தொடங்குவதற்கு உங்கள் முதல் பணியாளரைச் சேர்க்கவும்.",
+    "ಇನ್ನೂ ಉದ್ಯೋಗಿಗಳಿಲ್ಲ. ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಮೊದಲ ಉದ್ಯೋಗಿಯನ್ನು ಸೇರಿಸಿ."
+  ),
+  adminNeverActive: L("Never", "ఎప్పుడూ లేదు", "ஒருபோதும் இல்லை", "ಎಂದಿಗೂ ಇಲ್ಲ"),
+
+  adminNewEmployeeTitle: L("Add Employee", "ఉద్యోగిని జోడించండి", "பணியாளரைச் சேர்க்கவும்", "ಉದ್ಯೋಗಿಯನ್ನು ಸೇರಿಸಿ"),
+  adminDisplayNameLabel: L("Full name", "పూర్తి పేరు", "முழுப் பெயர்", "ಪೂರ್ಣ ಹೆಸರು"),
+  adminLoginIdHint: L(
+    "Must be a real email address the employee can access.",
+    "ఉద్యోగి యాక్సెస్ చేయగల నిజమైన ఇమెయిల్ చిరునామా అయి ఉండాలి.",
+    "பணியாளர் அணுகக்கூடிய உண்மையான மின்னஞ்சல் முகவரியாக இருக்க வேண்டும்.",
+    "ಉದ್ಯೋಗಿ ಪ್ರವೇಶಿಸಬಹುದಾದ ನಿಜವಾದ ಇಮೇಲ್ ವಿಳಾಸವಾಗಿರಬೇಕು."
+  ),
+  adminTempPasswordLabel: L("Temporary password", "తాత్కాలిక పాస్‌వర్డ్", "தற்காலிக கடவுச்சொல்", "ತಾತ್ಕಾಲಿಕ ಪಾಸ್‌ವರ್ಡ್"),
+  adminTempPasswordHint: L(
+    "The employee will be asked to set their own password on first login.",
+    "మొదటి లాగిన్‌లో ఉద్యోగి తన స్వంత పాస్‌వర్డ్‌ను సెట్ చేయమని అడగబడతారు.",
+    "முதல் உள்நுழைவின்போது பணியாளர் தங்கள் சொந்த கடவுச்சொல்லை அமைக்கும்படி கேட்கப்படுவார்.",
+    "ಮೊದಲ ಲಾಗಿನ್‌ನಲ್ಲಿ ಉದ್ಯೋಗಿಗೆ ತಮ್ಮ ಸ್ವಂತ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಲು ಕೇಳಲಾಗುತ್ತದೆ."
+  ),
+  adminCreateButton: L("Create Account", "ఖాతా సృష్టించండి", "கணக்கை உருவாக்கவும்", "ಖಾತೆ ರಚಿಸಿ"),
+  adminCreating: L("Creating…", "సృష్టిస్తోంది…", "உருவாக்குகிறது…", "ರಚಿಸಲಾಗುತ್ತಿದೆ…"),
+  adminCancelButton: L("Cancel", "రద్దు చేయండి", "ரத்துசெய்", "ರದ್ದುಮಾಡಿ"),
+
+  adminResetPasswordButton: L("Reset Password", "పాస్‌వర్డ్ రీసెట్ చేయండి", "கடவுச்சொல்லை மீட்டமைக்கவும்", "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ"),
+  adminDeactivateButton: L("Deactivate", "నిష్క్రియం చేయండి", "செயலிழக்கச் செய்", "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ"),
+  adminReactivateButton: L("Reactivate", "మళ్ళీ సక్రియం చేయండి", "மீண்டும் செயல்படுத்து", "ಮತ್ತೆ ಸಕ್ರಿಯಗೊಳಿಸಿ"),
+  adminResetPasswordPromptTitle: L("Reset Password", "పాస్‌వర్డ్ రీసెట్ చేయండి", "கடவுச்சொல்லை மீட்டமைக்கவும்", "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ"),
+  adminResetPasswordPromptSub: L(
+    "We'll email the employee a link to set a new password themselves.",
+    "కొత్త పాస్‌వర్డ్‌ను తామే సెట్ చేసుకోవడానికి మేము ఉద్యోగికి ఒక లింక్‌ను ఇమెయిల్ చేస్తాము.",
+    "புதிய கடவுச்சொல்லை அவரே அமைத்துக்கொள்ள ஒரு இணைப்பை பணியாளருக்கு மின்னஞ்சல் செய்வோம்.",
+    "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ಅವರೇ ಹೊಂದಿಸಲು ನಾವು ಉದ್ಯೋಗಿಗೆ ಒಂದು ಲಿಂಕ್ ಅನ್ನು ಇಮೇಲ್ ಮಾಡುತ್ತೇವೆ."
+  ),
+  adminSendResetEmailButton: L("Send Reset Email", "రీసెట్ ఇమెయిల్ పంపండి", "மீட்டமைப்பு மின்னஞ்சலை அனுப்பவும்", "ಮರುಹೊಂದಿಸುವ ಇಮೇಲ್ ಕಳುಹಿಸಿ"),
+  adminResetEmailSentNote: L(
+    "Reset email sent to {email}.",
+    "{email}కు రీసెట్ ఇమెయిల్ పంపబడింది.",
+    "{email} க்கு மீட்டமைப்பு மின்னஞ்சல் அனுப்பப்பட்டது.",
+    "{email} ಗೆ ಮರುಹೊಂದಿಸುವ ಇಮೇಲ್ ಕಳುಹಿಸಲಾಗಿದೆ."
+  ),
+  adminModuleLabel: L("Module {n}", "మాడ్యూల్ {n}", "தொகுதி {n}", "ಮಾಡ್ಯೂಲ್ {n}"),
+  adminLessonsCompleteLabel: L("{completed}/{total} lessons", "{completed}/{total} పాఠాలు", "{completed}/{total} பாடங்கள்", "{completed}/{total} ಪಾಠಗಳು"),
+  adminOverallLabel: L("Overall completion", "మొత్తం పూర్తి", "மொத்த முடிவு", "ಒಟ್ಟು ಪೂರ್ಣಗೊಳಿಕೆ"),
+  adminLessonStatusComplete: L("✓ Completed", "✓ పూర్తయింది", "✓ முடிந்தது", "✓ ಪೂರ್ಣಗೊಂಡಿದೆ"),
+  adminLessonStatusNotStarted: L("Not started", "ప్రారంభించలేదు", "தொடங்கவில்லை", "ಪ್ರಾರಂಭಿಸಿಲ್ಲ"),
+  adminLessonStatusLocked: L("🔒 Locked", "🔒 లాక్ చేయబడింది", "🔒 பூட்டப்பட்டுள்ளது", "🔒 ಲಾಕ್ ಆಗಿದೆ"),
+  adminLessonScoreLabel: L("Best score {score}%", "ఉత్తమ స్కోరు {score}%", "சிறந்த மதிப்பெண் {score}%", "ಅತ್ಯುತ್ತಮ ಅಂಕ {score}%"),
+  adminLessonCompletedOnLabel: L("Completed {date}", "{date}న పూర్తయింది", "{date} அன்று முடிந்தது", "{date} ರಂದು ಪೂರ್ಣಗೊಂಡಿದೆ"),
+  adminExpandModuleHint: L(
+    "Click a module to see lesson-by-lesson progress",
+    "పాఠం వారీగా పురోగతిని చూడటానికి ఒక మాడ్యూల్‌పై క్లిక్ చేయండి",
+    "பாடம் வாரியான முன்னேற்றத்தைக் காண ஒரு தொகுதியைக் கிளிக் செய்யவும்",
+    "ಪಾಠವಾರು ಪ್ರಗತಿಯನ್ನು ನೋಡಲು ಒಂದು ಮಾಡ್ಯೂಲ್ ಕ್ಲಿಕ್ ಮಾಡಿ"
+  ),
+
+  // Certificates
+  myCertificatesNav: L("🎓 Certificates", "🎓 సర్టిఫికెట్లు", "🎓 சான்றிதழ்கள்", "🎓 ಪ್ರಮಾಣಪತ್ರಗಳು"),
+  certificatesPageTitle: L("🎓 My Certificates", "🎓 నా సర్టిఫికెట్లు", "🎓 எனது சான்றிதழ்கள்", "🎓 ನನ್ನ ಪ್ರಮಾಣಪತ್ರಗಳು"),
+  certificatesPageTagline: L(
+    "Every lesson you complete earns its own certificate. Finish all 12 modules to earn the full course certificate.",
+    "మీరు పూర్తి చేసే ప్రతి పాఠం దాని స్వంత సర్టిఫికెట్‌ను సంపాదిస్తుంది. పూర్తి కోర్సు సర్టిఫికెట్ పొందడానికి అన్ని 12 మాడ్యూళ్లను పూర్తి చేయండి.",
+    "நீங்கள் முடிக்கும் ஒவ்வொரு பாடமும் அதற்கான சான்றிதழைப் பெறும். முழு பாடநெறி சான்றிதழைப் பெற அனைத்து 12 தொகுதிகளையும் முடிக்கவும்.",
+    "ನೀವು ಪೂರ್ಣಗೊಳಿಸುವ ಪ್ರತಿ ಪಾಠವೂ ತನ್ನದೇ ಆದ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಗಳಿಸುತ್ತದೆ. ಪೂರ್ಣ ಕೋರ್ಸ್ ಪ್ರಮಾಣಪತ್ರ ಪಡೆಯಲು ಎಲ್ಲಾ 12 ಮಾಡ್ಯೂಲ್‌ಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ."
+  ),
+  certCourseCardTitle: L(
+    "Course Completion Certificate",
+    "కోర్సు పూర్తి సర్టిఫికెట్",
+    "பாடநெறி நிறைவு சான்றிதழ்",
+    "ಕೋರ್ಸ್ ಪೂರ್ಣಗೊಳಿಕೆ ಪ್ರಮಾಣಪತ್ರ"
+  ),
+  certCourseCardEarnedText: L(
+    "You've completed every lesson in every module. Congratulations! 🎉",
+    "మీరు ప్రతి మాడ్యూల్‌లోని ప్రతి పాఠాన్ని పూర్తి చేశారు. అభినందనలు! 🎉",
+    "நீங்கள் ஒவ்வொரு தொகுதியிலும் உள்ள ஒவ்வொரு பாடத்தையும் முடித்துவிட்டீர்கள். வாழ்த்துக்கள்! 🎉",
+    "ನೀವು ಪ್ರತಿ ಮಾಡ್ಯೂಲ್‌ನಲ್ಲಿನ ಪ್ರತಿ ಪಾಠವನ್ನೂ ಪೂರ್ಣಗೊಳಿಸಿದ್ದೀರಿ. ಅಭಿನಂದನೆಗಳು! 🎉"
+  ),
+  certCourseCardLockedText: L(
+    "{done}/{total} lessons completed — finish them all to earn this certificate.",
+    "{done}/{total} పాఠాలు పూర్తయ్యాయి — ఈ సర్టిఫికెట్ పొందడానికి అన్నింటినీ పూర్తి చేయండి.",
+    "{done}/{total} பாடங்கள் முடிந்தன — இந்த சான்றிதழைப் பெற அனைத்தையும் முடிக்கவும்.",
+    "{done}/{total} ಪಾಠಗಳು ಪೂರ್ಣಗೊಂಡಿವೆ — ಈ ಪ್ರಮಾಣಪತ್ರ ಪಡೆಯಲು ಎಲ್ಲವನ್ನೂ ಪೂರ್ಣಗೊಳಿಸಿ."
+  ),
+  certLessonLockedBadge: L("Not yet earned", "ఇంకా సంపాదించలేదు", "இன்னும் பெறப்படவில்லை", "ಇನ್ನೂ ಗಳಿಸಿಲ್ಲ"),
+  certViewButton: L("View Certificate", "సర్టిఫికెట్ చూడండి", "சான்றிதழைப் பார்க்கவும்", "ಪ್ರಮಾಣಪತ್ರ ವೀಕ್ಷಿಸಿ"),
+  certNotEarnedTitle: L(
+    "Certificate Not Yet Earned",
+    "సర్టిఫికెట్ ఇంకా సంపాదించలేదు",
+    "சான்றிதழ் இன்னும் பெறப்படவில்லை",
+    "ಪ್ರಮಾಣಪತ್ರ ಇನ್ನೂ ಗಳಿಸಿಲ್ಲ"
+  ),
+  certNotEarnedLessonText: L(
+    "Complete this lesson's quiz to earn its certificate.",
+    "దీని సర్టిఫికెట్ పొందడానికి ఈ పాఠం క్విజ్‌ను పూర్తి చేయండి.",
+    "இதற்கான சான்றிதழைப் பெற இந்த பாடத்தின் வினாடி வினாவை முடிக்கவும்.",
+    "ಇದರ ಪ್ರಮಾಣಪತ್ರ ಪಡೆಯಲು ಈ ಪಾಠದ ರಸಪ್ರಶ್ನೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ."
+  ),
+  certNotEarnedCourseText: L(
+    "Complete every lesson in every module to earn the full course completion certificate.",
+    "పూర్తి కోర్సు పూర్తి సర్టిఫికెట్ పొందడానికి ప్రతి మాడ్యూల్‌లోని ప్రతి పాఠాన్ని పూర్తి చేయండి.",
+    "முழு பாடநெறி நிறைவு சான்றிதழைப் பெற ஒவ்வொரு தொகுதியிலும் உள்ள ஒவ்வொரு பாடத்தையும் முடிக்கவும்.",
+    "ಪೂರ್ಣ ಕೋರ್ಸ್ ಪೂರ್ಣಗೊಳಿಕೆ ಪ್ರಮಾಣಪತ್ರ ಪಡೆಯಲು ಪ್ರತಿ ಮಾಡ್ಯೂಲ್‌ನಲ್ಲಿನ ಪ್ರತಿ ಪಾಠವನ್ನೂ ಪೂರ್ಣಗೊಳಿಸಿ."
+  ),
+  certPrintButton: L(
+    "🖨 Print / Save as PDF",
+    "🖨 ప్రింట్ చేయండి / PDFగా సేవ్ చేయండి",
+    "🖨 அச்சிடவும் / PDF ஆக சேமிக்கவும்",
+    "🖨 ಮುದ್ರಿಸಿ / PDF ಆಗಿ ಉಳಿಸಿ"
+  ),
+  certIssuerName: L(
+    "Shreeja Learning Academy",
+    "శ్రీజ లెర్నింగ్ అకాడమీ",
+    "ஷ்ரீஜா கற்றல் அகாடமி",
+    "ಶ್ರೀಜಾ ಕಲಿಕಾ ಅಕಾಡೆಮಿ"
+  ),
+  certTitleLesson: L("Certificate of Completion", "పూర్తి సర్టిఫికెట్", "நிறைவு சான்றிதழ்", "ಪೂರ್ಣಗೊಳಿಕೆ ಪ್ರಮಾಣಪತ್ರ"),
+  certTitleCourse: L("Certificate of Completion", "పూర్తి సర్టిఫికెట్", "நிறைவு சான்றிதழ்", "ಪೂರ್ಣಗೊಳಿಕೆ ಪ್ರಮಾಣಪತ್ರ"),
+  certPresentedTo: L(
+    "This certificate is proudly presented to",
+    "ఈ సర్టిఫికెట్ గర్వంగా ఇవ్వబడుతుంది",
+    "இந்த சான்றிதழ் பெருமையுடன் வழங்கப்படுகிறது",
+    "ಈ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಹೆಮ್ಮೆಯಿಂದ ನೀಡಲಾಗುತ್ತಿದೆ"
+  ),
+  certLessonBody: L(
+    "for successfully completing the lesson",
+    "పాఠాన్ని విజయవంతంగా పూర్తి చేసినందుకు",
+    "பாடத்தை வெற்றிகரமாக முடித்ததற்காக",
+    "ಪಾಠವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದಕ್ಕಾಗಿ"
+  ),
+  certModuleOfBody: L("in Module {n}: {title}", "మాడ్యూల్ {n}లో: {title}", "தொகுதி {n} இல்: {title}", "ಮಾಡ್ಯೂಲ್ {n} ರಲ್ಲಿ: {title}"),
+  certCourseBody: L(
+    "for successfully completing the full 12-module training program",
+    "పూర్తి 12-మాడ్యూళ్ల శిక్షణ కార్యక్రమాన్ని విజయవంతంగా పూర్తి చేసినందుకు",
+    "முழு 12-தொகுதி பயிற்சி நிரலை வெற்றிகரமாக முடித்ததற்காக",
+    "ಪೂರ್ಣ 12-ಮಾಡ್ಯೂಲ್ ತರಬೇತಿ ಕಾರ್ಯಕ್ರಮವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿದ್ದಕ್ಕಾಗಿ"
+  ),
+  certCourseProgram: L(
+    "Shreeja Mahila Milk Producer Company — Training Program",
+    "శ్రీజ మహిళా మిల్క్ ప్రొడ్యూసర్ కంపెనీ — శిక్షణ కార్యక్రమం",
+    "ஷ்ரீஜா மகிளா மில்க் புரொடியூசர் கம்பெனி — பயிற்சி நிரல்",
+    "ಶ್ರೀಜಾ ಮಹಿಳಾ ಮಿಲ್ಕ್ ಪ್ರೊಡ್ಯೂಸರ್ ಕಂಪನಿ — ತರಬೇತಿ ಕಾರ್ಯಕ್ರಮ"
+  ),
+  certScoreLabel: L("Score: {score}%", "స్కోరు: {score}%", "மதிப்பெண்: {score}%", "ಅಂಕ: {score}%"),
+  certDateLabel: L("Date: {date}", "తేదీ: {date}", "தேதி: {date}", "ದಿನಾಂಕ: {date}"),
+  certIdLabel: L("Certificate ID: {id}", "సర్టిఫికెట్ ఐడీ: {id}", "சான்றிதழ் ஐடி: {id}", "ಪ್ರಮಾಣಪತ್ರ ಐಡಿ: {id}"),
 };
 
 export function ui(key, lang, vars) {

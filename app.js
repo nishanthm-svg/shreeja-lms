@@ -4,8 +4,13 @@ import {
   recordQuizAttempt,
   isLessonUnlocked,
   getModuleProgress,
-} from "./progress.js";
+  getOverallProgress,
+  setProgressCache,
+} from "./progress-client.js";
 import { LANGUAGES, getLang, setLang, tr, ui } from "./i18n.js";
+import { api } from "./api.js";
+import * as admin from "./admin.js";
+import * as certificates from "./certificates.js";
 
 const root = document.getElementById("app");
 
@@ -14,11 +19,19 @@ const ICONS = {
   lock: "🔒",
 };
 
+// Lets the admin portal's login screen accept a short username instead of
+// a full email address — resolved client-side before calling Firebase Auth,
+// which itself only ever sees the real, registered email.
+const ADMIN_USERNAME_ALIASES = {
+  admin: "nishanth.m@shreejamilk.com",
+};
+
 const TOPIC_EMOJIS = ["🥛", "🐄", "🌍", "📈", "🤝", "🏆", "🌾", "💡"];
 const CALLOUT_EMOJIS = { info: "💡", tip: "✅", warning: "⚠️" };
 const STAT_EMOJIS = ["🎯", "🌟", "🔑", "📌", "✨", "🌱"];
 
 let lang = getLang(); // null until the learner picks one
+let currentUser = null; // null until session-checked or logged in
 
 function t(field) {
   return tr(field, lang || "en");
@@ -68,7 +81,10 @@ function renderLandingPage() {
         <div class="landing-logo"><img src="assets/shreeja-logo.png" alt="Shreeja Mahila Milk Producer Company" /></div>
         <h1>${escapeHtml(u("landingHeroTitle"))}</h1>
         <p>${escapeHtml(u("landingHeroSubtitle"))}</p>
-        <button type="button" class="btn btn-primary landing-cta" id="landing-get-started">${escapeHtml(u("landingGetStartedButton"))}</button>
+        <div class="landing-cta-row">
+          <button type="button" class="btn btn-primary landing-cta" id="landing-employee-login-btn">${escapeHtml(u("employeeLoginButton"))}</button>
+          <button type="button" class="btn btn-outline landing-cta" id="landing-admin-login-btn">${escapeHtml(u("adminLoginButtonLabel"))}</button>
+        </div>
       </div>
       <div class="page landing-body">
         <div class="landing-features">${features}</div>
@@ -85,12 +101,135 @@ function renderLandingPage() {
 }
 
 function wireLandingPage() {
-  const btn = document.getElementById("landing-get-started");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      navigate("#/dashboard");
-    });
-  }
+  const empBtn = document.getElementById("landing-employee-login-btn");
+  const adminBtn = document.getElementById("landing-admin-login-btn");
+  if (empBtn) empBtn.addEventListener("click", () => navigate("#/login/employee"));
+  if (adminBtn) adminBtn.addEventListener("click", () => navigate("#/login/admin"));
+}
+
+// ============================================================================
+// Login / auth pages
+// ============================================================================
+function renderLoginPage(loginAs) {
+  const title = loginAs === "admin" ? u("adminLoginTitle") : loginAs === "employee" ? u("employeeLoginTitle") : u("loginTitle");
+  return `
+    <div class="auth-page">
+      <div class="auth-box">
+        <div class="auth-logo"><img src="assets/shreeja-logo.png" alt="Shreeja" /></div>
+        <h1>${escapeHtml(title)}</h1>
+        <p class="sub">${escapeHtml(u("loginSubtitle"))}</p>
+        <div id="login-error"></div>
+        <form id="login-form">
+          <div class="field">
+            <label for="login-id">${escapeHtml(loginAs === "admin" ? u("adminUsernameLabel") : u("loginIdLabel"))}</label>
+            <input type="${loginAs === "admin" ? "text" : "email"}" id="login-id" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label for="login-password">${escapeHtml(u("passwordLabel"))}</label>
+            <input type="password" id="login-password" autocomplete="current-password" required />
+          </div>
+          <button type="submit" class="btn btn-primary" id="login-submit">${escapeHtml(u("loginButton"))}</button>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function wireLoginPage(loginAs) {
+  const form = document.getElementById("login-form");
+  const errorEl = document.getElementById("login-error");
+  const submitBtn = document.getElementById("login-submit");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.innerHTML = "";
+    const rawLoginId = document.getElementById("login-id").value.trim();
+    const loginId =
+      loginAs === "admin" ? ADMIN_USERNAME_ALIASES[rawLoginId.toLowerCase()] || rawLoginId : rawLoginId;
+    const password = document.getElementById("login-password").value;
+    submitBtn.disabled = true;
+    submitBtn.textContent = u("loginSigningIn");
+    try {
+      const res = await api.login(loginId, password);
+      const user = res.user;
+      if (loginAs && user.role !== loginAs) {
+        await api.logout();
+        errorEl.innerHTML = `<div class="auth-error">${escapeHtml(
+          user.role === "admin" ? u("loginWrongPortalAdmin") : u("loginWrongPortalEmployee")
+        )}</div>`;
+        submitBtn.disabled = false;
+        submitBtn.textContent = u("loginButton");
+        return;
+      }
+      currentUser = user;
+      if (currentUser.role !== "admin") {
+        try {
+          const p = await api.myProgress();
+          setProgressCache(p.progress);
+        } catch (e2) {
+          setProgressCache({});
+        }
+      }
+      navigate(currentUser.role === "admin" ? "#/admin" : "#/dashboard");
+    } catch (err) {
+      errorEl.innerHTML = `<div class="auth-error">${escapeHtml(err.message || u("loginErrorGeneric"))}</div>`;
+      submitBtn.disabled = false;
+      submitBtn.textContent = u("loginButton");
+    }
+  });
+}
+
+function renderChangePasswordPage() {
+  const showCurrent = !currentUser.mustChangePassword;
+  return `
+    <div class="auth-page">
+      <div class="auth-box">
+        <div class="auth-logo"><img src="assets/shreeja-logo.png" alt="Shreeja" /></div>
+        <h1>${escapeHtml(u("changePasswordTitle"))}</h1>
+        <p class="sub">${escapeHtml(u("changePasswordSubtitle"))}</p>
+        <div id="cp-error"></div>
+        <form id="cp-form">
+          ${
+            showCurrent
+              ? `<div class="field">
+                  <label for="cp-current">${escapeHtml(u("currentPasswordLabel"))}</label>
+                  <input type="password" id="cp-current" autocomplete="current-password" />
+                </div>`
+              : ""
+          }
+          <div class="field">
+            <label for="cp-new">${escapeHtml(u("newPasswordLabel"))}</label>
+            <input type="password" id="cp-new" autocomplete="new-password" required minlength="6" />
+            <div class="hint">${escapeHtml(u("newPasswordHint"))}</div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="cp-submit">${escapeHtml(u("changePasswordButton"))}</button>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function wireChangePasswordPage() {
+  const form = document.getElementById("cp-form");
+  const errorEl = document.getElementById("cp-error");
+  const submitBtn = document.getElementById("cp-submit");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.innerHTML = "";
+    const currentEl = document.getElementById("cp-current");
+    const oldPassword = currentEl ? currentEl.value : undefined;
+    const newPassword = document.getElementById("cp-new").value;
+    submitBtn.disabled = true;
+    submitBtn.textContent = u("changePasswordSaving");
+    try {
+      await api.changePassword(oldPassword, newPassword);
+      currentUser.mustChangePassword = false;
+      navigate(currentUser.role === "admin" ? "#/admin" : "#/dashboard");
+    } catch (err) {
+      errorEl.innerHTML = `<div class="auth-error">${escapeHtml(err.message || u("loginErrorGeneric"))}</div>`;
+      submitBtn.disabled = false;
+      submitBtn.textContent = u("changePasswordButton");
+    }
+  });
 }
 
 // ============================================================================
@@ -141,8 +280,16 @@ function wireLanguagePicker(isSwitcher, returnHash) {
 // ============================================================================
 function renderTopbar(context) {
   const { title, showBack, backHash } = context;
+  const adminLink =
+    currentUser && currentUser.role === "admin"
+      ? `<button class="admin-nav-btn" data-nav="#/admin">🧑‍💼 ${escapeHtml(u("adminNavLink"))}</button>`
+      : "";
+  const certLink =
+    currentUser && currentUser.role !== "admin"
+      ? `<button class="admin-nav-btn" data-nav="#/certificates">${escapeHtml(u("myCertificatesNav"))}</button>`
+      : "";
   return `
-    <div class="topbar">
+    <div class="topbar no-print">
       ${
         showBack
           ? `<button class="back-btn" data-nav="${backHash}">${u("backButton")}</button>`
@@ -150,9 +297,28 @@ function renderTopbar(context) {
       }
       ${showBack ? `<div class="brand" data-nav="#/dashboard" style="margin-left:4px;"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
       <div class="spacer"></div>
+      ${certLink}
+      ${adminLink}
       <button class="lang-switch-btn" data-nav="#/language">🌐 ${escapeHtml((LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]).native)}</button>
+      <button class="logout-btn" id="logout-btn">↪ ${escapeHtml(u("logoutButton"))}</button>
     </div>
   `;
+}
+
+function wireTopbarLogout() {
+  const btn = document.getElementById("logout-btn");
+  if (btn) {
+    btn.addEventListener("click", async () => {
+      try {
+        await api.logout();
+      } catch (e) {
+        // ignore — clearing local state regardless
+      }
+      currentUser = null;
+      setProgressCache({});
+      navigate("#/login");
+    });
+  }
 }
 
 // ============================================================================
@@ -191,10 +357,19 @@ function renderDashboard() {
     `;
   }).join("");
 
-  const activeModules = MODULES.filter((m) => m.available);
-  const totalLessons = activeModules.reduce((sum, m) => sum + (m.lessons?.length || 0), 0);
-  const totalDone = activeModules.reduce((sum, m) => sum + getModuleProgress(m).completed, 0);
-  const overallPct = totalLessons ? Math.round((totalDone / totalLessons) * 100) : 0;
+  const overall = getOverallProgress(MODULES);
+
+  const courseCertBanner = overall.isComplete
+    ? `
+    <div class="course-cert-banner" data-nav="#/certificate/course">
+      <div class="icon">🏆</div>
+      <div class="text">
+        <h3>${u("certCourseCardTitle")}</h3>
+        <p>${u("certCourseCardEarnedText")}</p>
+      </div>
+      <button type="button" class="btn btn-success" data-nav="#/certificate/course">${u("certViewButton")}</button>
+    </div>`
+    : "";
 
   return `
     ${renderTopbar({ showBack: false })}
@@ -204,12 +379,15 @@ function renderDashboard() {
         <p>${u("dashboardTagline")}</p>
       </div>
       <div class="overall-progress">
-        <div class="ring" style="--pct:${overallPct}" data-label="${overallPct}%"></div>
+        <div class="ring" style="--pct:${overall.percent}" data-label="${overall.percent}%"></div>
         <div>
-          <div style="font-weight:700; font-size:15px;">${u("lessonsCompletedCount", { done: totalDone, total: totalLessons })}</div>
+          <div style="font-weight:700; font-size:15px;">${u("lessonsCompletedCount", { done: overall.done, total: overall.total })}</div>
           <div style="font-size:13px; color:var(--gray-500);">${u("progressHint")}</div>
         </div>
+        <div class="spacer"></div>
+        <button type="button" class="btn btn-outline" data-nav="#/certificates">${u("myCertificatesNav")}</button>
       </div>
+      ${courseCertBanner}
       <div class="module-grid">${cards}</div>
       <div class="progress-note">${u("progressNote")}</div>
     </div>
@@ -641,14 +819,16 @@ function runLessonFlow(moduleId, lesson) {
     const nextLesson = mod.lessons[lessonIdx + 1];
     setDots(topics.length);
 
-    let actionsHtml;
+    let primaryHtml;
     if (lesson.finalQuiz.isFinal) {
-      actionsHtml = `<button class="btn btn-success" data-nav="#/module/${moduleId}/complete">${u("viewCertificate")}</button>`;
+      primaryHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}/complete">${u("moduleCompleteButton")}</button>`;
     } else if (nextLesson) {
-      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}/lesson/${nextLesson.id}">${u("continueNextLesson")}</button>`;
+      primaryHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}/lesson/${nextLesson.id}">${u("continueNextLesson")}</button>`;
     } else {
-      actionsHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}">${u("backToModule")}</button>`;
+      primaryHtml = `<button class="btn btn-primary" data-nav="#/module/${moduleId}">${u("backToModule")}</button>`;
     }
+    const certHtml = `<button class="btn btn-success" data-nav="#/certificate/${moduleId}/${lesson.id}">🎓 ${u("viewCertificate")}</button>`;
+    const actionsHtml = `${certHtml}${primaryHtml}`;
 
     flowEl.innerHTML = `
       <div class="quiz-section">
@@ -713,7 +893,8 @@ function renderCompletionPage(moduleId) {
     navigate("#/dashboard");
     return "";
   }
-  const nextMod = MODULES.find((m) => m.number === mod.number + 1);
+  const finalLesson = mod.lessons[mod.lessons.length - 1];
+  const overall = getOverallProgress(MODULES);
   return `
     ${renderTopbar({ showBack: true, backHash: `#/module/${moduleId}`, title: t(mod.title) })}
     <div class="page page-narrow">
@@ -723,11 +904,24 @@ function renderCompletionPage(moduleId) {
         <h2>${u("moduleCompleteTitle", { n: mod.number })}</h2>
         <p>${u("moduleCompleteText", { title: t(mod.title) })}</p>
         <div class="btn-row" style="justify-content:center;">
+          <button class="btn btn-success" data-nav="#/certificate/${moduleId}/${finalLesson.id}">🎓 ${u("viewCertificate")}</button>
           <button class="btn btn-outline" style="background:white;" data-nav="#/dashboard">${u("backToDashboard")}</button>
-          <button class="btn btn-success" data-nav="#/module/${moduleId}">${u("reviewModule")}</button>
+          <button class="btn btn-outline" style="background:white;" data-nav="#/module/${moduleId}">${u("reviewModule")}</button>
         </div>
       </div>
-      ${nextMod ? `<p style="text-align:center; color:var(--gray-500); margin-top:18px; font-size:14px;">${u("nextModuleComingSoon", { n: nextMod.number, title: t(nextMod.title) })}</p>` : ""}
+      ${
+        overall.isComplete
+          ? `
+      <div class="course-cert-banner" data-nav="#/certificate/course" style="margin-top:18px;">
+        <div class="icon">🏆</div>
+        <div class="text">
+          <h3>${u("certCourseCardTitle")}</h3>
+          <p>${u("certCourseCardEarnedText")}</p>
+        </div>
+        <button type="button" class="btn btn-success" data-nav="#/certificate/course">${u("certViewButton")}</button>
+      </div>`
+          : ""
+      }
     </div>
   `;
 }
@@ -740,8 +934,25 @@ function parseHash() {
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean);
   if (parts.length === 0) return { route: "welcome" };
   if (parts[0] === "welcome") return { route: "welcome" };
+  if (parts[0] === "login") {
+    if (parts[1] === "employee") return { route: "login", loginAs: "employee" };
+    if (parts[1] === "admin") return { route: "login", loginAs: "admin" };
+    return { route: "login", loginAs: null };
+  }
+  if (parts[0] === "change-password") return { route: "change-password" };
   if (parts[0] === "dashboard") return { route: "dashboard" };
   if (parts[0] === "language") return { route: "language" };
+  if (parts[0] === "certificates") return { route: "certificates" };
+  if (parts[0] === "certificate") {
+    if (parts[1] === "course") return { route: "certificate-course" };
+    if (parts[1] && parts[2]) return { route: "certificate-lesson", moduleId: parts[1], lessonId: parts[2] };
+    return { route: "certificates" };
+  }
+  if (parts[0] === "admin") {
+    if (parts[1] === "employee" && parts[2]) return { route: "admin-employee", employeeId: parts[2] };
+    if (parts[1] === "new-employee") return { route: "admin-new-employee" };
+    return { route: "admin" };
+  }
   if (parts[0] === "module" && parts[1]) {
     if (parts[2] === "lesson" && parts[3]) {
       return { route: "lesson", moduleId: parts[1], lessonId: parts[3] };
@@ -759,15 +970,50 @@ let lastNonLanguageHash = "#/dashboard";
 function render() {
   const parsed = parseHash();
 
-  // The landing/home page: bare "#/" and "#/welcome" always render it,
-  // every visit — not just the first.
+  // The public landing/home page: always renders, signed in or not.
   if (parsed.route === "welcome") {
     root.innerHTML = renderLandingPage();
     wireLandingPage();
     return;
   }
 
-  // Force the language picker before anything else, until a language is chosen.
+  // Login page: if already signed in, bounce to the right home instead.
+  if (parsed.route === "login") {
+    if (currentUser) {
+      navigate(currentUser.role === "admin" ? "#/admin" : "#/dashboard");
+      return;
+    }
+    root.innerHTML = renderLoginPage(parsed.loginAs);
+    wireLoginPage(parsed.loginAs);
+    return;
+  }
+
+  // Every other route requires a session.
+  if (!currentUser) {
+    navigate("#/login");
+    return;
+  }
+
+  // First login after provisioning/reset: force a real password before anything else.
+  if (currentUser.mustChangePassword || parsed.route === "change-password") {
+    root.innerHTML = renderChangePasswordPage();
+    wireChangePasswordPage();
+    return;
+  }
+
+  // Admin-only routes.
+  if ((parsed.route === "admin" || parsed.route === "admin-employee" || parsed.route === "admin-new-employee") && currentUser.role !== "admin") {
+    navigate("#/dashboard");
+    return;
+  }
+
+  // Certificate routes are employee-only (admins have no lesson progress of their own).
+  if ((parsed.route === "certificates" || parsed.route === "certificate-lesson" || parsed.route === "certificate-course") && currentUser.role === "admin") {
+    navigate("#/admin");
+    return;
+  }
+
+  // Force the language picker until a language is chosen.
   if (!lang && parsed.route !== "language") {
     root.innerHTML = renderLanguagePicker(false);
     wireLanguagePicker(false, null);
@@ -800,6 +1046,30 @@ function render() {
     case "complete":
       html = renderCompletionPage(parsed.moduleId);
       break;
+    case "certificates":
+      html = certificates.renderCertificatesList({ t, u, lang, escapeHtml, renderTopbar, navigate, currentUser });
+      afterRender = () => certificates.wireCertificatesList();
+      break;
+    case "certificate-lesson":
+      html = certificates.renderCertificateLesson(parsed.moduleId, parsed.lessonId, { t, u, lang, escapeHtml, renderTopbar, navigate, currentUser });
+      afterRender = () => certificates.wireCertificateLesson();
+      break;
+    case "certificate-course":
+      html = certificates.renderCertificateCourse({ t, u, lang, escapeHtml, renderTopbar, navigate, currentUser });
+      afterRender = () => certificates.wireCertificateCourse();
+      break;
+    case "admin":
+      html = admin.renderAdminDashboard({ t, u, lang, escapeHtml, renderTopbar });
+      afterRender = () => admin.wireAdminDashboard({ t, u, lang, escapeHtml, renderTopbar, navigate });
+      break;
+    case "admin-employee":
+      html = admin.renderEmployeeDetail(parsed.employeeId, { t, u, lang, escapeHtml, renderTopbar });
+      afterRender = () => admin.wireEmployeeDetail(parsed.employeeId, { t, u, lang, escapeHtml, renderTopbar, navigate });
+      break;
+    case "admin-new-employee":
+      html = admin.renderNewEmployeeForm({ t, u, lang, escapeHtml, renderTopbar });
+      afterRender = () => admin.wireNewEmployeeForm({ t, u, lang, escapeHtml, renderTopbar, navigate });
+      break;
     default:
       html = renderDashboard();
   }
@@ -809,6 +1079,7 @@ function render() {
     if (parsed.route === "language") {
       wireLanguagePicker(!!lang, lastNonLanguageHash);
     }
+    wireTopbarLogout();
     if (afterRender) afterRender();
   }
 }
@@ -822,6 +1093,29 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// ============================================================================
+// Boot: check for an existing session before the first render, since (unlike
+// the language choice) we can't know synchronously whether the visitor is
+// signed in.
+// ============================================================================
+async function bootstrap() {
+  try {
+    const res = await api.session();
+    currentUser = res.user;
+    if (currentUser.role !== "admin") {
+      try {
+        const p = await api.myProgress();
+        setProgressCache(p.progress);
+      } catch (e) {
+        setProgressCache({});
+      }
+    }
+  } catch (e) {
+    currentUser = null;
+  }
+  render();
+}
+
 window.addEventListener("hashchange", render);
-window.addEventListener("DOMContentLoaded", render);
-if (document.readyState !== "loading") render();
+window.addEventListener("DOMContentLoaded", bootstrap);
+if (document.readyState !== "loading") bootstrap();
