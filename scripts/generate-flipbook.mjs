@@ -259,7 +259,8 @@ function buildFlipbook(lang) {
 
   .topbar {
     flex: none; display: flex; align-items: center; gap: 14px; padding: 10px 18px;
-    background: rgba(15,45,99,0.85); backdrop-filter: blur(4px); color: white; z-index: 10;
+    background: #0f2d63; color: white; position: relative; z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     font-family: "Noto Sans", "Noto Sans Telugu", Arial, sans-serif;
   }
   .topbar .brand { font-weight: 700; font-size: 14px; white-space: nowrap; }
@@ -270,7 +271,7 @@ function buildFlipbook(lang) {
   .topbar .help-text { font-size: 11px; color: #93c5fd; display: none; }
   @media (min-width: 720px) { .topbar .help-text { display: inline; } }
 
-  .stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 18px; min-height: 0; position: relative; }
+  .stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 18px; min-height: 0; position: relative; overflow: hidden; }
   #book { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45)); }
 
   .navbtn {
