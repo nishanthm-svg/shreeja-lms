@@ -359,21 +359,34 @@ function buildFlipbook(lang) {
   .footer-note { margin-top: 20px; font-size: 9px; color: #9ca3af; text-align: center; }
 
   /* ---- Cover page ---- */
+  /* Flexbox column, not fixed pixel offsets against a percentage-height
+     plate — the book's rendered size varies with viewport, so nothing
+     here can be allowed to overlap regardless of how short the plate
+     ends up being. Content simply clips at the page's own edge (rare)
+     rather than colliding with itself. */
   .page-cover { position: relative; padding: 0; }
-  .cover-photo { position: absolute; inset: 0; }
-  .cover-photo img { width: 100%; height: 62%; object-fit: cover; object-position: center 30%; display: block; }
+  .cover-photo { position: absolute; inset: 0; height: 58%; }
+  .cover-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
   .cover-photo::after {
-    content: ""; position: absolute; left: 0; right: 0; top: 46%; height: 20%;
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 45%;
     background: linear-gradient(to bottom, rgba(15,45,99,0) 0%, #0f2d63 100%);
   }
-  .cover-plate { position: absolute; left: 0; right: 0; top: 62%; bottom: 0; background: #0f2d63; text-align: center; padding: 16px 14px 0; }
-  .cover-logo-badge { position: absolute; top: -34px; left: 50%; transform: translateX(-50%); width: 68px; height: 68px; border-radius: 50%; background: white; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; }
-  .cover-logo-badge img { width: 54px; }
-  .cover-title { color: white; font-size: 19px; margin: 36px 0 3px; font-family: "Noto Sans", "Noto Sans Telugu", Arial, sans-serif; font-weight: 700; }
-  .cover-subtitle { color: #93c5fd; font-size: 12px; margin: 0 0 10px; font-family: "Noto Sans", Arial, sans-serif; }
-  .cover-edition-pill { display: inline-block; background: #16a34a; color: white; font-size: 9.5px; font-weight: 700; padding: 3px 12px; border-radius: 999px; letter-spacing: 0.5px; font-family: "Noto Sans", Arial, sans-serif; }
-  .cover-tagline { color: #dbeafe; font-size: 10px; max-width: 260px; margin: 10px auto 0; }
-  .cover-org { position: absolute; bottom: 10px; left: 0; right: 0; color: #60a5fa; font-size: 9px; }
+  .cover-plate {
+    position: absolute; left: 0; right: 0; top: 58%; bottom: 0; background: #0f2d63;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 8% 12px 6%; overflow: hidden; min-height: 0;
+  }
+  .cover-logo-badge {
+    flex: none; margin-top: -15%; width: 22%; max-width: 68px; min-width: 40px; aspect-ratio: 1;
+    border-radius: 50%; background: white; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cover-logo-badge img { width: 78%; }
+  .cover-title { flex: none; color: white; font-size: 17px; margin: 8px 0 3px; font-family: "Noto Sans", "Noto Sans Telugu", Arial, sans-serif; font-weight: 700; line-height: 1.2; }
+  .cover-subtitle { flex: none; color: #93c5fd; font-size: 11px; margin: 0 0 8px; font-family: "Noto Sans", Arial, sans-serif; }
+  .cover-edition-pill { flex: none; display: inline-block; background: #16a34a; color: white; font-size: 9px; font-weight: 700; padding: 3px 12px; border-radius: 999px; letter-spacing: 0.5px; font-family: "Noto Sans", Arial, sans-serif; }
+  .cover-tagline { flex: none; color: #dbeafe; font-size: 9.5px; max-width: 260px; margin: 8px auto 0; }
+  .cover-org { flex: none; margin-top: auto; padding-top: 8px; color: #60a5fa; font-size: 8.5px; }
 </style>
 </head>
 <body>
@@ -397,27 +410,55 @@ function buildFlipbook(lang) {
 <script>${pageFlipLib}</script>
 <script>
   const book = document.getElementById("book");
-  const pageFlip = new St.PageFlip(book, {
-    width: 420,
-    height: 560,
-    size: "stretch",
-    minWidth: 260,
-    maxWidth: 560,
-    minHeight: 360,
-    maxHeight: 760,
-    maxShadowOpacity: 0.5,
-    showCover: true,
-    mobileScrollSupport: false,
-    useMouseEvents: true,
-  });
-  pageFlip.loadFromHTML(document.querySelectorAll("#book .page"));
-
+  const stageEl = document.querySelector(".stage");
   const pagecountEl = document.getElementById("pagecount");
+
+  // We size the book ourselves (rather than trusting the library's own
+  // "stretch" auto-fit) so it can never be taller/wider than the space
+  // actually available below the topbar — on a short window, "stretch"
+  // mode's minHeight floor could force the book past the visible area,
+  // clipping its top and bottom against the surrounding chrome.
+  // This computes the size of ONE page. The library itself decides whether
+  // the window is wide enough to show two such pages side by side (a
+  // spread) or just one at a time — we must not pre-halve the width for a
+  // spread ourselves, or a narrow window ends up with a needlessly tiny
+  // single page.
+  const PAGE_ASPECT = 420 / 560; // width / height of one page at its natural size
+  function computeSize() {
+    const availW = Math.max(220, stageEl.clientWidth - 24);
+    const availH = Math.max(220, stageEl.clientHeight - 24);
+    let h = availH;
+    let w = h * PAGE_ASPECT;
+    if (w > availW) {
+      w = availW;
+      h = w / PAGE_ASPECT;
+    }
+    w = Math.max(200, Math.min(480, w));
+    h = w / PAGE_ASPECT;
+    return { width: Math.round(w), height: Math.round(h) };
+  }
+
+  let pageFlip = null;
   function updateCount() {
     pagecountEl.textContent = (pageFlip.getCurrentPageIndex() + 1) + " / " + pageFlip.getPageCount();
   }
-  updateCount();
-  pageFlip.on("flip", updateCount);
+  function initPageFlip(startIndex) {
+    const size = computeSize();
+    pageFlip = new St.PageFlip(book, {
+      width: size.width,
+      height: size.height,
+      size: "fixed",
+      maxShadowOpacity: 0.5,
+      showCover: true,
+      mobileScrollSupport: false,
+      useMouseEvents: true,
+    });
+    pageFlip.loadFromHTML(document.querySelectorAll("#book .page"));
+    if (startIndex) pageFlip.turnToPage(startIndex);
+    pageFlip.on("flip", updateCount);
+    updateCount();
+  }
+  initPageFlip(0);
 
   document.getElementById("prev-btn").addEventListener("click", () => pageFlip.flipPrev());
   document.getElementById("next-btn").addEventListener("click", () => pageFlip.flipNext());
