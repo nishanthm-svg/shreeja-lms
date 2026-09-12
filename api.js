@@ -195,6 +195,34 @@ async function quizAttempt(moduleId, lessonId, scorePercent, passed) {
   return { lessonState: newState };
 }
 
+// The final exam's own attempt record lives at progress/{uid}.finalExam,
+// alongside the per-module keys (moduleIds are always "m1".."m12", so
+// "finalExam" can never collide with one) — same document, same security
+// rule, nothing new to grant access to.
+async function finalExamAttempt(scorePercent, passed) {
+  const fbUser = auth.currentUser;
+  if (!fbUser) throw new Error("Not signed in.");
+  const ref = doc(db, "progress", fbUser.uid);
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : {};
+  const existing = data.finalExam || { passed: false, bestScore: 0, attempts: 0, passedAt: null };
+  const justPassed = !existing.passed && !!passed;
+  const newState = {
+    attempted: true,
+    passed: existing.passed || !!passed,
+    bestScore: Math.max(existing.bestScore || 0, scorePercent),
+    attempts: (existing.attempts || 0) + 1,
+    lastAttemptAt: new Date().toISOString(),
+    passedAt: existing.passedAt || (justPassed ? new Date().toISOString() : null),
+  };
+  if (snap.exists()) {
+    await updateDoc(ref, { finalExam: newState });
+  } else {
+    await setDoc(ref, { finalExam: newState });
+  }
+  return { examState: newState };
+}
+
 // ============================================================================
 // Admin rollup helper — shared by list + detail views.
 // ============================================================================
@@ -221,6 +249,7 @@ function computeRollup(progress) {
     });
     if (m.lessons && m.lessons.length && moduleDone === m.lessons.length) modulesCompleted++;
   });
+  const finalExam = progress.finalExam || null;
   return {
     overallPercent: totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0,
     completedLessons,
@@ -228,6 +257,8 @@ function computeRollup(progress) {
     modulesCompleted,
     totalModules: activeModules.length,
     lastActivityAt,
+    finalExamPassed: !!(finalExam && finalExam.passed),
+    finalExamBestScore: finalExam ? finalExam.bestScore : null,
   };
 }
 
@@ -252,6 +283,8 @@ async function adminListEmployees(search) {
       modulesCompleted: rollup.modulesCompleted,
       totalModules: rollup.totalModules,
       lastActivityAt: rollup.lastActivityAt,
+      finalExamPassed: rollup.finalExamPassed,
+      finalExamBestScore: rollup.finalExamBestScore,
     });
   }
   employees.sort((a, b) => (a.displayName || "").localeCompare(b.displayName || ""));
@@ -337,6 +370,7 @@ export const api = {
 
   myProgress,
   quizAttempt,
+  finalExamAttempt,
 
   adminListEmployees,
   adminGetEmployee,

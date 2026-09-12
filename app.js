@@ -6,11 +6,15 @@ import {
   getModuleProgress,
   getOverallProgress,
   setProgressCache,
+  isCourseComplete,
+  getFinalExamState,
+  recordFinalExamAttempt,
 } from "./progress-client.js";
 import { LANGUAGES, getLang, setLang, tr, ui } from "./i18n.js";
 import { api } from "./api.js";
 import * as admin from "./admin.js";
 import * as certificates from "./certificates.js";
+import { FINAL_EXAM_QUESTIONS, FINAL_EXAM_PASS_PERCENT } from "./exam-data.js";
 
 const root = document.getElementById("app");
 
@@ -395,6 +399,8 @@ function renderDashboard() {
     </div>`
     : "";
 
+  const examBanner = overall.isComplete ? renderExamBanner() : "";
+
   return `
     ${renderTopbar({ showBack: false })}
     <div class="page">
@@ -412,10 +418,38 @@ function renderDashboard() {
         <button type="button" class="btn btn-outline" data-nav="#/certificates">${u("myCertificatesNav")}</button>
       </div>
       ${courseCertBanner}
+      ${examBanner}
       <div class="module-grid">${cards}</div>
       <div class="progress-note">${u("progressNote")}</div>
     </div>
   `;
+}
+
+// Shown once every module is complete — either an invitation to take the
+// final exam, or (once passed) a link to its certificate. Reused on the
+// dashboard and the module-completion page.
+function renderExamBanner() {
+  const examState = getFinalExamState();
+  if (examState.passed) {
+    return `
+    <div class="course-cert-banner" data-nav="#/certificate/exam">
+      <div class="icon">🏅</div>
+      <div class="text">
+        <h3>${u("examCertCardTitle")}</h3>
+        <p>${u("examCertCardEarnedText", { score: examState.bestScore })}</p>
+      </div>
+      <button type="button" class="btn btn-success" data-nav="#/certificate/exam">${u("certViewButton")}</button>
+    </div>`;
+  }
+  return `
+    <div class="course-cert-banner" data-nav="#/final-exam">
+      <div class="icon">📝</div>
+      <div class="text">
+        <h3>${u("examIntroTitle")}</h3>
+        <p>${u("examCertCardReadyText")}</p>
+      </div>
+      <button type="button" class="btn btn-primary" data-nav="#/final-exam">${u("examTakeButton")}</button>
+    </div>`;
 }
 
 // ============================================================================
@@ -946,8 +980,93 @@ function renderCompletionPage(moduleId) {
       </div>`
           : ""
       }
+      ${overall.isComplete ? renderExamBanner() : ""}
     </div>
   `;
+}
+
+// ============================================================================
+// Final Exam — one comprehensive exam covering all 12 modules, unlocked once
+// every module is complete. Separate from each lesson's own quiz: harder,
+// application-based questions (see exam-data.js), with its own pass/fail
+// result and its own certificate. Unlimited retakes, each with the question
+// order reshuffled.
+// ============================================================================
+function shuffledExamQuestions() {
+  const arr = FINAL_EXAM_QUESTIONS.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function renderFinalExamPage() {
+  return `
+    ${renderTopbar({ showBack: true, backHash: "#/dashboard", title: u("examIntroTitle") })}
+    <div class="page page-narrow">
+      <div id="exam-flow"></div>
+    </div>
+  `;
+}
+
+function afterFinalExamRender() {
+  const page = document.querySelector(".page-narrow");
+  if (page) animateBarsIn(page);
+  runFinalExamFlow();
+}
+
+function runFinalExamFlow() {
+  const flowEl = document.getElementById("exam-flow");
+
+  function showIntro() {
+    flowEl.innerHTML = `
+      <div class="quiz-section">
+        <h2>${u("examIntroTitle")}</h2>
+        <p>${u("examIntroText", { pass: FINAL_EXAM_PASS_PERCENT })}</p>
+        <div class="btn-row"><button class="btn btn-primary" id="exam-start-btn">${u("examStartButton")}</button></div>
+      </div>
+    `;
+    document.getElementById("exam-start-btn").addEventListener("click", showQuestions);
+  }
+
+  function showQuestions() {
+    flowEl.innerHTML = `<div class="quiz-section" id="exam-questions-section"></div>`;
+    const body = document.getElementById("exam-questions-section");
+    renderQuestionSet(body, shuffledExamQuestions(), {
+      submitLabel: u("examSubmitButton"),
+      onSubmit: (results) => {
+        const correctCount = results.filter((r) => r.isCorrect).length;
+        const scorePercent = Math.round((correctCount / results.length) * 100);
+        const passed = scorePercent >= FINAL_EXAM_PASS_PERCENT;
+        recordFinalExamAttempt(scorePercent, passed);
+        showResult(scorePercent, passed, results);
+      },
+    });
+  }
+
+  function showResult(scorePercent, passed, results) {
+    const actionsHtml = passed
+      ? `<button class="btn btn-success" data-nav="#/certificate/exam">${u("examViewCertificateButton")}</button><button class="btn btn-outline" data-nav="#/dashboard">${u("backToDashboard")}</button>`
+      : `<button class="btn btn-primary" id="exam-retake-btn">${u("examRetakeButton")}</button><button class="btn btn-outline" data-nav="#/dashboard">${u("backToDashboard")}</button>`;
+
+    flowEl.innerHTML = `
+      <div class="quiz-section">
+        <div class="quiz-result ${passed ? "pass" : "fail"}">
+          ${passed ? `<div class="confetti-row">🎉 🎊 ✨ 🎉 🎊</div>` : ""}
+          <div class="score-circle"><div class="pct">${scorePercent}%</div></div>
+          <h3>${passed ? u("examPassTitle") : u("examFailTitle")}</h3>
+          <p>${passed ? u("examPassText") : u("examFailText")}</p>
+          <div class="btn-row" style="justify-content:center;">${actionsHtml}</div>
+          <div class="quiz-review">${renderQuestionReview(results)}</div>
+        </div>
+      </div>
+    `;
+    const retakeBtn = document.getElementById("exam-retake-btn");
+    if (retakeBtn) retakeBtn.addEventListener("click", showQuestions);
+  }
+
+  showIntro();
 }
 
 // ============================================================================
@@ -969,9 +1088,11 @@ function parseHash() {
   if (parts[0] === "certificates") return { route: "certificates" };
   if (parts[0] === "certificate") {
     if (parts[1] === "course") return { route: "certificate-course" };
+    if (parts[1] === "exam") return { route: "certificate-exam" };
     if (parts[1] && parts[2]) return { route: "certificate-lesson", moduleId: parts[1], lessonId: parts[2] };
     return { route: "certificates" };
   }
+  if (parts[0] === "final-exam") return { route: "final-exam" };
   if (parts[0] === "admin") {
     if (parts[1] === "employee" && parts[2]) return { route: "admin-employee", employeeId: parts[2] };
     if (parts[1] === "new-employee") return { route: "admin-new-employee" };
@@ -1033,9 +1154,22 @@ function render() {
     return;
   }
 
-  // Certificate routes are employee-only (admins have no lesson progress of their own).
-  if ((parsed.route === "certificates" || parsed.route === "certificate-lesson" || parsed.route === "certificate-course") && currentUser.role === "admin") {
+  // Certificate/exam routes are employee-only (admins have no lesson progress of their own).
+  if (
+    (parsed.route === "certificates" ||
+      parsed.route === "certificate-lesson" ||
+      parsed.route === "certificate-course" ||
+      parsed.route === "certificate-exam" ||
+      parsed.route === "final-exam") &&
+    currentUser.role === "admin"
+  ) {
     navigate("#/admin");
+    return;
+  }
+
+  // The final exam only unlocks once every module is complete.
+  if (parsed.route === "final-exam" && !isCourseComplete(MODULES)) {
+    navigate("#/dashboard");
     return;
   }
 
@@ -1083,6 +1217,14 @@ function render() {
     case "certificate-course":
       html = certificates.renderCertificateCourse({ t, u, lang, escapeHtml, renderTopbar, navigate, currentUser });
       afterRender = () => certificates.wireCertificateCourse();
+      break;
+    case "certificate-exam":
+      html = certificates.renderCertificateExam({ t, u, lang, escapeHtml, renderTopbar, navigate, currentUser });
+      afterRender = () => certificates.wireCertificateExam();
+      break;
+    case "final-exam":
+      html = renderFinalExamPage();
+      afterRender = () => afterFinalExamRender();
       break;
     case "admin":
       html = admin.renderAdminDashboard({ t, u, lang, escapeHtml, renderTopbar });

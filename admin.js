@@ -72,6 +72,13 @@ function renderRosterTable(employees, ctx) {
           </div>
         </td>
         <td>${emp.modulesCompleted}/${emp.totalModules}</td>
+        <td>
+          ${
+            emp.finalExamPassed
+              ? `<span class="status-pill active">${escapeHtml(u("adminExamPassedBadge", { score: emp.finalExamBestScore }))}</span>`
+              : `<span class="status-pill inactive">${escapeHtml(u("adminExamNotPassedBadge"))}</span>`
+          }
+        </td>
         <td>${escapeHtml(lastActive)}</td>
         <td><span class="status-pill ${emp.active ? "active" : "inactive"}">${escapeHtml(emp.active ? u("adminStatusActive") : u("adminStatusInactive"))}</span></td>
       </tr>`;
@@ -85,6 +92,7 @@ function renderRosterTable(employees, ctx) {
           <th>${escapeHtml(u("adminTableLoginId"))}</th>
           <th>${escapeHtml(u("adminTableProgress"))}</th>
           <th>${escapeHtml(u("adminTableModules"))}</th>
+          <th>${escapeHtml(u("adminExamColumnLabel"))}</th>
           <th>${escapeHtml(u("adminTableLastActive"))}</th>
           <th>${escapeHtml(u("adminTableStatus"))}</th>
         </tr>
@@ -95,13 +103,14 @@ function renderRosterTable(employees, ctx) {
 }
 
 function downloadCsv(employees) {
-  const header = ["Name", "Login ID", "Overall %", "Modules Completed", "Total Modules", "Last Active", "Status"];
+  const header = ["Name", "Login ID", "Overall %", "Modules Completed", "Total Modules", "Final Exam", "Last Active", "Status"];
   const rows = employees.map((emp) => [
     emp.displayName,
     emp.loginId,
     emp.overallPercent,
     emp.modulesCompleted,
     emp.totalModules,
+    emp.finalExamPassed ? `Passed (${emp.finalExamBestScore}%)` : "Not yet",
     emp.lastActivityAt || "",
     emp.active ? "Active" : "Inactive",
   ]);
@@ -231,6 +240,15 @@ function renderDetailContent(data, ctx) {
       <div class="admin-detail-overall">
         <div class="ring" style="--pct:${employee.overallPercent}" data-label="${employee.overallPercent}%"></div>
         <div style="font-weight:700;">${escapeHtml(u("adminOverallLabel"))}: ${employee.completedLessons}/${employee.totalLessons}</div>
+        <div class="spacer"></div>
+        <div>
+          <div style="font-size:12px; color:var(--gray-500); margin-bottom:4px;">${escapeHtml(u("adminExamColumnLabel"))}</div>
+          ${
+            employee.finalExamPassed
+              ? `<span class="status-pill active">${escapeHtml(u("adminExamPassedBadge", { score: employee.finalExamBestScore }))}</span>`
+              : `<span class="status-pill inactive">${escapeHtml(u("adminExamNotPassedBadge"))}</span>`
+          }
+        </div>
       </div>
       <div class="admin-expand-hint">${escapeHtml(u("adminExpandModuleHint"))}</div>
       ${moduleRows}

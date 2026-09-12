@@ -7,7 +7,7 @@
 // browser (data.js content + the progress cache) — nothing new to fetch.
 // ============================================================================
 import { MODULES, getModule, getLesson } from "./data.js";
-import { getLessonState, getModuleProgress, getOverallProgress } from "./progress-client.js";
+import { getLessonState, getModuleProgress, getOverallProgress, getFinalExamState } from "./progress-client.js";
 
 const DATE_LOCALES = { en: "en-IN", te: "te-IN", ta: "ta-IN", kn: "kn-IN" };
 
@@ -171,6 +171,39 @@ export function wireCertificateCourse() {
 }
 
 // ============================================================================
+// Final Exam certificate — separate from the course-completion certificate;
+// earned only once the final exam (unlocked after the course is complete)
+// has been passed.
+// ============================================================================
+export function renderCertificateExam(ctx) {
+  const { u, lang, renderTopbar, currentUser } = ctx;
+  const examState = getFinalExamState();
+  const topbar = renderTopbar({ showBack: true, backHash: "#/dashboard", title: u("examCertCardTitle") });
+
+  if (!examState.passed) {
+    return `${topbar}${renderNotEarned(u("certNotEarnedExamText"), "#/dashboard", u("backToDashboard"), ctx)}`;
+  }
+
+  const card = renderCertCard({
+    title: u("certTitleExam"),
+    program: u("certCourseProgram"),
+    name: currentUser.displayName,
+    bodyLines: [u("certExamBody")],
+    score: examState.bestScore,
+    date: formatDate(examState.passedAt, lang),
+    id: certId("EXM", [currentUser.id, "exam"]),
+    ctx,
+  });
+
+  return `${topbar}${certificateShell(card, ctx)}`;
+}
+
+export function wireCertificateExam() {
+  const btn = document.getElementById("cert-print-btn");
+  if (btn) btn.addEventListener("click", () => window.print());
+}
+
+// ============================================================================
 // "My Certificates" listing — every module's lessons plus the course card.
 // ============================================================================
 export function renderCertificatesList(ctx) {
@@ -190,6 +223,31 @@ export function renderCertificatesList(ctx) {
       ${
         overall.isComplete
           ? `<button type="button" class="btn btn-success" data-nav="#/certificate/course">${escapeHtml(u("certViewButton"))}</button>`
+          : `<span class="status-pill inactive">${escapeHtml(u("certLessonLockedBadge"))}</span>`
+      }
+    </div>
+  `;
+
+  const examState = getFinalExamState();
+  const examCardClass = examState.passed ? "cert-list-course earned" : "cert-list-course locked";
+  const examCard = `
+    <div class="${examCardClass}">
+      <div class="cert-list-course-icon">${examState.passed ? "🏅" : "🔒"}</div>
+      <div class="cert-list-course-info">
+        <h3>${escapeHtml(u("examCertCardTitle"))}</h3>
+        <p>${escapeHtml(
+          examState.passed
+            ? u("examCertCardEarnedText", { score: examState.bestScore })
+            : overall.isComplete
+            ? u("examCertCardReadyText")
+            : u("examCertCardLockedText")
+        )}</p>
+      </div>
+      ${
+        examState.passed
+          ? `<button type="button" class="btn btn-success" data-nav="#/certificate/exam">${escapeHtml(u("certViewButton"))}</button>`
+          : overall.isComplete
+          ? `<button type="button" class="btn btn-primary" data-nav="#/final-exam">${escapeHtml(u("examTakeButton"))}</button>`
           : `<span class="status-pill inactive">${escapeHtml(u("certLessonLockedBadge"))}</span>`
       }
     </div>
@@ -232,6 +290,7 @@ export function renderCertificatesList(ctx) {
         <p>${escapeHtml(u("certificatesPageTagline"))}</p>
       </div>
       ${courseCard}
+      ${examCard}
       <div class="cert-list-modules">${moduleSections}</div>
     </div>
   `;

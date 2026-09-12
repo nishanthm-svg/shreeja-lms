@@ -91,3 +91,36 @@ export function getOverallProgress(modules) {
 export function isCourseComplete(modules) {
   return getOverallProgress(modules).isComplete;
 }
+
+// The final exam's attempt record lives at cache.finalExam — a sibling to
+// the moduleId keys (never "m1".."m12", so it can't collide) in the same
+// progress blob, following the exact optimistic-update-then-reconcile
+// pattern as recordQuizAttempt above.
+export function getFinalExamState() {
+  return cache.finalExam || { attempted: false, bestScore: 0, attempts: 0, passed: false, lastAttemptAt: null };
+}
+
+export function recordFinalExamAttempt(scorePercent, passed) {
+  const existing = getFinalExamState();
+  const justPassed = !existing.passed && !!passed;
+  const optimistic = {
+    attempted: true,
+    passed: existing.passed || !!passed,
+    bestScore: Math.max(existing.bestScore || 0, scorePercent),
+    attempts: (existing.attempts || 0) + 1,
+    lastAttemptAt: new Date().toISOString(),
+    passedAt: existing.passedAt || (justPassed ? new Date().toISOString() : null),
+  };
+  cache.finalExam = optimistic;
+
+  api
+    .finalExamAttempt(scorePercent, passed)
+    .then((res) => {
+      if (res && res.examState) cache.finalExam = res.examState;
+    })
+    .catch((e) => {
+      console.error("Failed to save final exam attempt to the server:", e);
+    });
+
+  return optimistic;
+}
