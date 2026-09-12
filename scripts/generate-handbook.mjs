@@ -8,171 +8,29 @@
 // Output: handbook-en.html, handbook-te.html  (in the project root)
 // Then convert each to PDF separately (see scripts/html-to-pdf.mjs).
 // ============================================================================
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { MODULES } from "../data.js";
-import { FINAL_EXAM_QUESTIONS } from "../exam-data.js";
+import {
+  LABELS,
+  COVER_PHOTO,
+  MODULE_PHOTOS,
+  esc,
+  pick,
+  makeAssetLoaders,
+  renderBlocks,
+  collectGlossary,
+  renderExerciseQuestion,
+  renderAnswerEntry,
+} from "./handbook-shared.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
 const LANGS = ["en", "te"];
 
-const LABELS = {
-  en: {
-    bookTitle: "Shreeja Learning Academy",
-    bookSubtitle: "Training Handbook",
-    edition: "English Edition",
-    tagline: "A reference guide for Shreeja Sahayaks and field staff",
-    orgName: "Shreeja Mahila Milk Producer Company",
-    toc: "Table of Contents",
-    module: "Module",
-    practiceQuestions: "Practice Questions",
-    practiceQuestionsHint: "Try these on your own, then check your answers in the Answer Key at the back of this book.",
-    answerKeyTitle: "Answer Key",
-    answerKeyHint: "Answers and explanations for every practice question, organized by module and lesson.",
-    glossaryTitle: "Glossary",
-    glossaryHint: "Key terms used throughout this handbook, in one place for quick reference.",
-    trueLabel: "True",
-    falseLabel: "False",
-    answerWord: "Answer",
-    explanationWord: "Explanation",
-    generatedNote: "Generated from the Shreeja Learning Academy course content.",
-    photoCaptionFeeding: "A Shreeja farmer feeding her buffalo — good daily care is where quality milk starts.",
-    photoCaptionMPP: "A Shreeja Milk Pooling Point — where farmers bring their milk every day, and where this course begins.",
-  },
-  te: {
-    bookTitle: "శ్రీజ లెర్నింగ్ అకాడమీ",
-    bookSubtitle: "శిక్షణ చేతిపుస్తకం",
-    edition: "తెలుగు ఎడిషన్",
-    tagline: "శ్రీజ సహాయక్‌లు మరియు ఫీల్డ్ సిబ్బంది కోసం ఒక సూచన గైడ్",
-    orgName: "శ్రీజ మహిళా మిల్క్ ప్రొడ్యూసర్ కంపెనీ",
-    toc: "విషయ సూచిక",
-    module: "మాడ్యూల్",
-    practiceQuestions: "అభ్యాస ప్రశ్నలు",
-    practiceQuestionsHint: "వీటిని మీరే ప్రయత్నించండి, తర్వాత ఈ పుస్తకం చివరిలో ఉన్న సమాధాన కీలో మీ సమాధానాలను తనిఖీ చేసుకోండి.",
-    answerKeyTitle: "సమాధాన కీ",
-    answerKeyHint: "మాడ్యూల్, పాఠం వారీగా ప్రతి అభ్యాస ప్రశ్నకు సమాధానాలు, వివరణలు.",
-    glossaryTitle: "పదకోశం",
-    glossaryHint: "త్వరిత సూచన కోసం ఈ చేతిపుస్తకం అంతటా ఉపయోగించిన కీలక పదాలు, ఒకే చోట.",
-    trueLabel: "నిజం",
-    falseLabel: "అబద్ధం",
-    answerWord: "సమాధానం",
-    explanationWord: "వివరణ",
-    generatedNote: "శ్రీజ లెర్నింగ్ అకాడమీ కోర్సు కంటెంట్ నుండి రూపొందించబడింది.",
-    photoCaptionFeeding: "తన గేదెకు మేత పెడుతున్న శ్రీజ రైతు — నాణ్యమైన పాలు మంచి రోజువారీ సంరక్షణ నుండే మొదలవుతాయి.",
-    photoCaptionMPP: "ఒక శ్రీజ పాల సేకరణ కేంద్రం — ప్రతిరోజూ రైతులు తమ పాలను తీసుకువచ్చే చోటు, ఈ కోర్సు ప్రారంభమయ్యే చోటు కూడా.",
-  },
-};
-
-function esc(s) {
-  return String(s ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function pick(field, lang) {
-  if (!field) return "";
-  return field[lang] ?? field.en ?? "";
-}
-
-function logoDataUri() {
-  const buf = readFileSync(join(ROOT, "assets/shreeja-logo.png"));
-  return `data:image/png;base64,${buf.toString("base64")}`;
-}
-
-function photoDataUri(filename) {
-  const buf = readFileSync(join(ROOT, "assets/handbook-photos", filename));
-  return `data:image/jpeg;base64,${buf.toString("base64")}`;
-}
-
-// Real Shreeja field photos, placed where their subject matches the module.
-const COVER_PHOTO = "cover-farmers-hillside.jpg";
-const MODULE_PHOTOS = {
-  m1: { file: "feeding-buffalo.jpg", captionKey: "photoCaptionFeeding" },
-  m8: { file: "milk-pooling-point.jpg", captionKey: "photoCaptionMPP" },
-};
-
-const CALLOUT_EMOJI = { info: "💡", tip: "✅", warning: "⚠️" };
-
-function renderBlock(block, lang) {
-  const p = (f) => esc(pick(f, lang));
-  const raw = (f) => pick(f, lang);
-  switch (block.type) {
-    case "hero":
-      return `<div class="blk hero"><h3>${p(block.heading)}</h3><p>${p(block.text)}</p></div>`;
-    case "text":
-      return `<div class="blk text"><h4>${p(block.heading)}</h4><div class="body">${raw(block.html)}</div></div>`;
-    case "callout": {
-      const emoji = CALLOUT_EMOJI[block.style] || "💡";
-      return `<div class="blk callout ${esc(block.style || "")}"><h5>${emoji} ${p(block.heading)}</h5><p>${p(block.text)}</p></div>`;
-    }
-    case "example":
-      return `<div class="blk example"><h5>🌟 ${p(block.heading)}</h5><p>${p(block.text)}</p></div>`;
-    case "glossary":
-      return `<div class="blk glossary"><h5>📖 ${p(block.term)}</h5><p>${p(block.meaning)}</p></div>`;
-    case "ledger": {
-      const rows = block.rows.map((r) => `<tr><td>${p(r.label)}</td><td class="amt">${esc(r.amount)}</td></tr>`).join("");
-      return `<div class="blk ledger"><h5>💰 ${p(block.heading)}</h5><table class="ledger-table">${rows}<tr class="total"><td>${p(
-        block.total.label
-      )}</td><td class="amt">${esc(block.total.amount)}</td></tr></table></div>`;
-    }
-    case "barchart": {
-      const rows = block.data
-        .map((d) => `<tr><td>${d.flag ? d.flag + " " : ""}${p(d.label)}</td><td class="amt">${esc(d.value)} ${p(block.unit)}</td></tr>`)
-        .join("");
-      return `<div class="blk chart"><h5>📊 ${p(block.heading)}</h5><div class="src">${p(block.source)}</div><table class="chart-table">${rows}</table></div>`;
-    }
-    case "timeline": {
-      const items = block.items.map((it) => `<div class="tl-item"><span class="tl-year">${esc(it.year)}</span><span class="tl-text">${p(it.text)}</span></div>`).join("");
-      return `<div class="blk timeline"><h5>🕰️ ${p(block.heading)}</h5>${items}${block.result ? `<div class="tl-result">🏁 ${p(block.result)}</div>` : ""}</div>`;
-    }
-    case "poll": {
-      const qs = block.questions
-        .map((q, qi) => {
-          const opts = q.options.map((o, i) => `<li${i === q.answer ? ' class="correct"' : ""}>${p(o)}</li>`).join("");
-          return `<div class="poll-q"><div class="q">${qi + 1}. ${p(q.q)}</div><ul class="opts">${opts}</ul><div class="reveal">${p(q.reveal)}</div></div>`;
-        })
-        .join("");
-      return `<div class="blk poll"><h5>🤔 ${p(block.heading)}</h5>${qs}</div>`;
-    }
-    default:
-      return "";
-  }
-}
-
-function renderBlocks(blocks, lang) {
-  return (blocks || []).map((b) => renderBlock(b, lang)).join("");
-}
-
-// Collect glossary terms as we walk the content, for the consolidated
-// glossary appendix at the back of the book.
-function collectGlossary(blocks, lang, out) {
-  (blocks || []).forEach((b) => {
-    if (b.type === "glossary") {
-      const term = pick(b.term, lang);
-      if (!out.has(term.toLowerCase())) {
-        out.set(term.toLowerCase(), { term, meaning: pick(b.meaning, lang) });
-      }
-    }
-  });
-}
-
-function renderExerciseQuestion(q, idx, lang, L) {
-  const isTF = q.type === "truefalse";
-  const optionsHtml = isTF
-    ? `<ol type="A"><li>${esc(L.trueLabel)}</li><li>${esc(L.falseLabel)}</li></ol>`
-    : `<ol type="A">${q.options.map((o) => `<li>${esc(pick(o, lang))}</li>`).join("")}</ol>`;
-  return `<div class="exercise"><div class="eq"><span class="qnum">${idx}.</span> ${esc(pick(q.q, lang))}</div>${optionsHtml}</div>`;
-}
-
-function renderAnswerEntry(q, idx, lang, L) {
-  const isTF = q.type === "truefalse";
-  const answerText = isTF ? (q.answer ? L.trueLabel : L.falseLabel) : esc(pick(q.options[q.answer], lang));
-  return `<div class="answer-entry"><span class="qnum">${idx}.</span> <strong>${esc(L.answerWord)}: ${answerText}.</strong> <span class="exp">${esc(pick(q.explain, lang))}</span></div>`;
-}
+const { logoDataUri, photoDataUri } = makeAssetLoaders(ROOT);
 
 function buildBook(lang) {
   const L = LABELS[lang];
@@ -234,7 +92,7 @@ function buildBook(lang) {
     const photoHtml = photo
       ? `
       <div class="chapter-photo">
-        <img src="${photoDataUri(photo.file)}" alt="" />
+        <div class="chapter-photo-frame"><img src="${photoDataUri(photo.file)}" alt="" /></div>
         <div class="chapter-photo-caption">${esc(L[photo.captionKey])}</div>
       </div>`
       : "";
@@ -284,6 +142,7 @@ function buildBook(lang) {
 <title>${esc(L.bookTitle)} — ${esc(L.bookSubtitle)}</title>
 <style>
   @page { size: A4; margin: 22mm 18mm; }
+  @page :first { margin: 0; }
   * { box-sizing: border-box; }
   body {
     font-family: "Noto Serif", "Noto Sans Telugu", Georgia, "Times New Roman", serif;
@@ -295,14 +154,14 @@ function buildBook(lang) {
   h1, h2, h3, h4, h5 { font-family: "Noto Sans", "Noto Sans Telugu", Arial, sans-serif; color: #0f2d63; }
 
   /* ---- Cover: full-bleed photo + colour-block title plate ---- */
-  .cover { position: relative; margin: -22mm -18mm 0; padding: 0; page-break-after: always; height: 297mm; overflow: hidden; }
+  .cover { position: relative; margin: 0; padding: 0; page-break-after: always; width: 210mm; height: 297mm; overflow: hidden; }
   .cover-photo { position: absolute; inset: 0; }
-  .cover-photo img { width: 100%; height: 62%; object-fit: cover; display: block; }
+  .cover-photo img { width: 100%; height: 65%; object-fit: cover; object-position: center 30%; display: block; }
   .cover-photo::after {
-    content: ""; position: absolute; left: 0; right: 0; top: 46%; height: 20%;
+    content: ""; position: absolute; left: 0; right: 0; top: 48%; height: 20%;
     background: linear-gradient(to bottom, rgba(15,45,99,0) 0%, #0f2d63 100%);
   }
-  .cover-plate { position: absolute; left: 0; right: 0; top: 62%; bottom: 0; background: #0f2d63; text-align: center; padding: 26px 30px 0; }
+  .cover-plate { position: absolute; left: 0; right: 0; top: 65%; bottom: 0; background: #0f2d63; text-align: center; padding: 26px 30px 0; }
   .cover-logo-badge { position: absolute; top: -46px; left: 50%; transform: translateX(-50%); width: 92px; height: 92px; border-radius: 50%; background: white; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; }
   .cover-logo-badge img { width: 72px; }
   h1.cover-title { color: white; font-size: 30px; margin: 46px 0 4px; }
@@ -326,7 +185,8 @@ function buildBook(lang) {
   .chapter h1 { font-size: 26px; margin: 8px 0 6px; border-bottom: 3px solid #16a34a; display: inline-block; padding-bottom: 4px; }
   .chapter-subtitle { color: #1e40af; font-style: italic; font-size: 13px; margin-bottom: 16px; }
   .chapter-photo { margin: 6px 0 22px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(15,45,99,0.15); }
-  .chapter-photo img { width: 100%; display: block; max-height: 260px; object-fit: cover; }
+  .chapter-photo-frame { position: relative; width: 100%; aspect-ratio: 16 / 7; overflow: hidden; }
+  .chapter-photo-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
   .chapter-photo-caption { background: #0f2d63; color: #dbeafe; font-size: 10.5px; padding: 6px 12px; font-family: "Noto Sans", "Noto Sans Telugu", Arial, sans-serif; }
 
   .lesson { margin-top: 26px; }
