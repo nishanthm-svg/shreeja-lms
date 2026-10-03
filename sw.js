@@ -4,7 +4,7 @@
 // no signal once a device has loaded it at least once. Firestore/Auth network
 // calls are deliberately left alone here — the Firebase SDK has its own
 // IndexedDB-backed offline queue for those (see firebase-config.js).
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_NAME = `shreeja-lms-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
@@ -16,6 +16,7 @@ const PRECACHE_URLS = [
   "./admin.js",
   "./api.js",
   "./certificates.js",
+  "./calculator.js",
   "./progress-client.js",
   "./i18n.js",
   "./data.js",

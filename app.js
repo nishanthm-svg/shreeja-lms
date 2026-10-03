@@ -14,6 +14,7 @@ import { LANGUAGES, getLang, setLang, tr, ui } from "./i18n.js";
 import { api } from "./api.js";
 import * as admin from "./admin.js";
 import * as certificates from "./certificates.js";
+import * as calculator from "./calculator.js";
 import { FINAL_EXAM_QUESTIONS, FINAL_EXAM_PASS_PERCENT } from "./exam-data.js";
 
 const root = document.getElementById("app");
@@ -312,6 +313,8 @@ function renderTopbar(context) {
     currentUser && currentUser.role === "admin"
       ? `<button class="admin-nav-btn" data-nav="#/admin">🧑‍💼 ${escapeHtml(u("adminNavLink"))}</button>`
       : "";
+  const calcLabel = calculator.calculatorNavLabel(lang);
+  const calcLink = `<button class="admin-nav-btn" data-nav="#/calculator" title="${escapeHtml(calcLabel)}" aria-label="${escapeHtml(calcLabel)}">🧮<span class="calc-nav-text"> ${escapeHtml(calcLabel.replace(/^🧮\s*/, ""))}</span></button>`;
   const certLink =
     currentUser && currentUser.role !== "admin"
       ? `<button class="admin-nav-btn" data-nav="#/certificates">${escapeHtml(u("myCertificatesNav"))}</button>`
@@ -325,6 +328,7 @@ function renderTopbar(context) {
       }
       ${showBack ? `<div class="brand" data-nav="#/dashboard" style="margin-left:4px;"><span class="brand-icon"><img src="assets/shreeja-logo.png" alt="Shreeja" class="brand-logo-img" /></span> ${escapeHtml(title || u("brandName"))}</div>` : ""}
       <div class="spacer"></div>
+      ${calcLink}
       ${certLink}
       ${adminLink}
       <button class="lang-switch-btn" data-nav="#/language">🌐 ${escapeHtml((LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]).native)}</button>
@@ -415,6 +419,7 @@ function renderDashboard() {
           <div style="font-size:13px; color:var(--gray-500);">${u("progressHint")}</div>
         </div>
         <div class="spacer"></div>
+        <button type="button" class="btn btn-outline" data-nav="#/calculator">${escapeHtml(calculator.calculatorNavLabel(lang))}</button>
         <button type="button" class="btn btn-outline" data-nav="#/certificates">${u("myCertificatesNav")}</button>
       </div>
       ${courseCertBanner}
@@ -1093,6 +1098,7 @@ function parseHash() {
     return { route: "certificates" };
   }
   if (parts[0] === "final-exam") return { route: "final-exam" };
+  if (parts[0] === "calculator") return { route: "calculator", toolId: parts[1] || null };
   if (parts[0] === "admin") {
     if (parts[1] === "employee" && parts[2]) return { route: "admin-employee", employeeId: parts[2] };
     if (parts[1] === "new-employee") return { route: "admin-new-employee" };
@@ -1221,6 +1227,10 @@ function render() {
     case "certificate-exam":
       html = certificates.renderCertificateExam({ t, u, lang, escapeHtml, renderTopbar, navigate, currentUser });
       afterRender = () => certificates.wireCertificateExam();
+      break;
+    case "calculator":
+      html = calculator.renderCalculator(parsed.toolId, { lang, renderTopbar });
+      afterRender = () => calculator.wireCalculator(parsed.toolId, { lang });
       break;
     case "final-exam":
       html = renderFinalExamPage();
