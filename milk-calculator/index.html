@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Milk Calc" />
+<title>Shreeja Milk Calculator</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="assets/icon-192.png" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<style>
+  /* ---------- tokens (iOS system palette) ---------- */
+  :root {
+    --bg: #f2f2f7;
+    --card: #ffffff;
+    --label: #000000;
+    --label-2: #6c6c70;
+    --label-3: #aeaeb2;
+    --sep: rgba(60, 60, 67, 0.18);
+    --fill: rgba(120, 120, 128, 0.12);
+    --fill-focus: rgba(0, 122, 255, 0.07);
+    --blue: #007aff;
+    --green: #248a3d;
+    --green-bg: rgba(52, 199, 89, 0.14);
+    --red: #d70015;
+    --red-bg: rgba(255, 59, 48, 0.12);
+    --orange: #c93400;
+    --glass: rgba(242, 242, 247, 0.72);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
+    --radius: 20px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --card: #1c1c1e;
+      --label: #ffffff;
+      --label-2: #98989f;
+      --label-3: #636366;
+      --sep: rgba(84, 84, 88, 0.55);
+      --fill: rgba(120, 120, 128, 0.24);
+      --fill-focus: rgba(10, 132, 255, 0.16);
+      --blue: #0a84ff;
+      --green: #30d158;
+      --green-bg: rgba(48, 209, 88, 0.18);
+      --red: #ff453a;
+      --red-bg: rgba(255, 69, 58, 0.18);
+      --orange: #ff9f0a;
+      --glass: rgba(0, 0, 0, 0.62);
+      --shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.06);
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--label);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: calc(96px + var(--safe-b));
+  }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 8px; }
+
+  /* ---------- frosted navigation bar ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding-top: var(--safe-t);
+    background: var(--glass);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    backdrop-filter: saturate(180%) blur(22px);
+    border-bottom: 0.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .nav.scrolled { border-bottom-color: var(--sep); }
+  .nav-in {
+    max-width: 700px;
+    margin: 0 auto;
+    height: 46px;
+    padding: 0 8px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .back {
+    grid-column: 1;
+    justify-self: start;
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-size: 17px;
+    padding: 0 8px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+  .back[hidden] { display: none; }
+  .back svg { width: 12px; height: 20px; }
+  .back:active { opacity: 0.4; }
+  .nav-title {
+    grid-column: 2;
+    font-weight: 600;
+    font-size: 17px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    max-width: 60vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav.scrolled .nav-title { opacity: 1; }
+  .net {
+    grid-column: 3;
+    justify-self: end;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    background: var(--green-bg);
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .net.off { color: var(--orange); background: rgba(255, 149, 0, 0.16); }
+
+  main { max-width: 700px; margin: 0 auto; padding: 0 16px; }
+  .screen { animation: enter 0.38s cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- large titles ---------- */
+  .large { margin: 6px 0 4px; font-size: 34px; line-height: 1.1; font-weight: 700; letter-spacing: -0.03em; }
+  .lead { margin: 0 0 18px; color: var(--label-2); font-size: 17px; }
+  .brand { display: flex; align-items: center; gap: 12px; margin: 6px 0 14px; }
+  .brand img { width: 48px; height: 48px; border-radius: 12px; background: #fff; padding: 4px; box-shadow: var(--shadow); }
+  .brand b { display: block; font-size: 15px; }
+  .brand span { color: var(--label-2); font-size: 13px; }
+
+  /* ---------- home: app-icon tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+  @media (min-width: 640px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+  .tile {
+    border: 0;
+    text-align: left;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 150px;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s;
+  }
+  .tile:hover { transform: translateY(-2px); }
+  .tile:active { transform: scale(0.96); }
+  .icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+    color: #fff;
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.35), 0 4px 10px rgba(0, 0, 0, 0.12);
+  }
+  .tile b { font-size: 17px; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+  .tile small { color: var(--label-2); font-size: 13px; line-height: 1.3; }
+  .foot { text-align: center; color: var(--label-3); font-size: 12.5px; padding: 8px 12px 0; }
+
+  /* ---------- calculator screen ---------- */
+  .formula {
+    display: inline-block;
+    margin: 2px 0 16px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: var(--fill);
+    color: var(--label-2);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .sect {
+    margin: 22px 16px 7px;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--label-2);
+  }
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+
+  .frow {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 46%);
+    align-items: center;
+    column-gap: 12px;
+    padding: 6px 16px;
+    min-height: 56px;
+    transition: background 0.15s;
+  }
+  .frow + .frow::before {
+    content: "";
+    position: absolute;
+    left: 16px; right: 0; top: 0;
+    border-top: 0.5px solid var(--sep);
+  }
+  .frow:focus-within { background: var(--fill-focus); }
+  .flabel { font-size: 17px; line-height: 1.25; padding: 8px 0; }
+  .badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    vertical-align: 1px;
+    background: var(--fill);
+    color: var(--label-2);
+  }
+  .badge.auto { background: var(--green-bg); color: var(--green); }
+  .fval { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; }
+  .fval input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    text-align: right;
+    font: inherit;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--label);
+    padding: 8px 0;
+    font-variant-numeric: tabular-nums;
+    caret-color: var(--blue);
+  }
+  .fval input::placeholder { color: var(--label-3); font-weight: 500; }
+  .fval input[readonly] { color: var(--green); }
+  .fval input[readonly]::placeholder { font-size: 15px; font-weight: 500; }
+  .unit { color: var(--label-2); font-size: 15px; font-weight: 500; white-space: nowrap; }
+  .xbtn {
+    flex: none;
+    width: 22px; height: 22px;
+    border: 0; border-radius: 50%;
+    background: var(--label-3);
+    color: var(--card);
+    font-size: 15px; line-height: 22px;
+    padding: 0;
+    cursor: pointer;
+    display: none;
+  }
+  .frow.has-value .xbtn { display: block; }
+  .frow.is-auto .xbtn { display: none !important; }
+  .frow.is-target { background: var(--green-bg); }
+  .frow.is-target input::placeholder { color: var(--green); font-weight: 600; }
+  .frow.is-bad { background: var(--red-bg); }
+  .frow.is-bad input { color: var(--red); }
+  .cap { grid-column: 1 / -1; padding: 0 0 10px; color: var(--label-2); font-size: 13px; line-height: 1.35; }
+  .warn { grid-column: 1 / -1; padding: 0 0 10px; color: var(--red); font-size: 13px; font-weight: 600; }
+  .grp-foot { margin: 8px 16px 0; color: var(--label-2); font-size: 13px; }
+
+  .actions { display: flex; gap: 10px; margin: 18px 0 4px; }
+  .btn {
+    flex: 1;
+    min-height: 50px;
+    border: 0;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--fill);
+    color: var(--blue);
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn:active { transform: scale(0.97); opacity: 0.7; }
+  .btn.primary { background: var(--blue); color: #fff; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ---------- results ---------- */
+  .empty { margin-top: 22px; padding: 26px 20px; text-align: center; color: var(--label-2); background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); font-size: 15px; }
+  .empty b { display: block; margin-bottom: 4px; color: var(--label); font-size: 17px; }
+  .hero {
+    margin-top: 22px;
+    padding: 22px 20px 20px;
+    border-radius: 24px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    text-align: center;
+    animation: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes pop { from { transform: scale(0.97); opacity: 0.6; } to { transform: none; opacity: 1; } }
+  .hero .hl { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--label-2); }
+  .hero .hv { margin-top: 6px; font-size: 46px; line-height: 1.05; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; word-break: break-word; }
+  .hero .pill { display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; }
+  .hero.good .hv { color: var(--green); } .hero.good .pill { background: var(--green-bg); color: var(--green); }
+  .hero.bad .hv { color: var(--red); } .hero.bad .pill { background: var(--red-bg); color: var(--red); }
+  .hero.solved .hv { color: var(--green); }
+  .lrow { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 13px 16px; }
+  .lrow + .lrow::before { content: ""; position: absolute; left: 16px; right: 0; top: 0; border-top: 0.5px solid var(--sep); }
+  .lrow .k { color: var(--label); font-size: 16px; }
+  .lrow .v { font-weight: 600; font-size: 16px; text-align: right; font-variant-numeric: tabular-nums; }
+  .lrow.big .v { font-size: 19px; }
+  .lrow.good .v { color: var(--green); } .lrow.bad .v { color: var(--red); } .lrow.solved .v { color: var(--green); }
+
+  details.work { margin-top: 22px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  details.work summary { list-style: none; cursor: pointer; padding: 15px 16px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+  details.work summary::-webkit-details-marker { display: none; }
+  details.work summary::after { content: "›"; font-size: 24px; color: var(--label-3); transition: transform 0.25s; line-height: 1; }
+  details.work[open] summary::after { transform: rotate(90deg); }
+  details.work ol { margin: 0; padding: 4px 16px 16px 38px; color: var(--label-2); font-size: 15px; line-height: 1.65; font-variant-numeric: tabular-nums; }
+  details.work li { padding-left: 4px; }
+
+  /* floating result bar (mobile) */
+  .bar {
+    position: fixed;
+    left: 12px; right: 12px;
+    bottom: calc(12px + var(--safe-b));
+    z-index: 30;
+    max-width: 676px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 20px;
+    background: var(--glass);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    backdrop-filter: saturate(180%) blur(22px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18), 0 0 0 0.5px var(--sep);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    cursor: pointer;
+    transform: translateY(140%);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .bar.show { transform: none; }
+  .bar small { display: block; color: var(--label-2); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+  .bar b { font-size: 21px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .bar.good b { color: var(--green); } .bar.bad b { color: var(--red); }
+  .bar i { font-style: normal; color: var(--blue); font-weight: 600; font-size: 15px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(86px + var(--safe-b)); transform: translate(-50%, 20px);
+    background: rgba(40, 40, 42, 0.92); color: #fff; font-size: 15px; font-weight: 500;
+    padding: 10px 18px; border-radius: 999px; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s; z-index: 40; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 380px) {
+    .large { font-size: 29px; }
+    .hero .hv { font-size: 38px; }
+    .frow { grid-template-columns: 1fr minmax(0, 50%); padding: 4px 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+  @media print { .nav, .bar, .actions, .toast { display: none !important; } }
+</style>
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <button class="back" id="back" hidden aria-label="Back to all calculators">
+      <svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 2 10l8 8"/></svg><span>Calculators</span>
+    </button>
+    <div class="nav-title" id="navtitle"></div>
+    <span class="net" id="net">Works offline</span>
+  </div>
+</header>
+<main id="app"></main>
+<button class="bar" id="bar" aria-hidden="true" tabindex="-1"><span><small id="bar-l"></small><b id="bar-v"></b></span><i>View ›</i></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+// ---------- number helpers ----------
+const fmt = (n, dp) =>
+  isFinite(n) ? new Intl.NumberFormat("en-IN", { minimumFractionDigits: dp ?? 0, maximumFractionDigits: dp ?? 2 }).format(n) : "—";
+const inr = (n, dp) => (n < 0 ? "−₹" : "₹") + fmt(Math.abs(n), dp);
+const r2 = (n) => Math.round(n * 100) / 100;
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+// ---------- calculators ----------
+const TOOLS = [
+  {
+    id: "axis", icon: "🥛", tab: "Total Solids Rate / Kg of Milk", solve: true,
+    title: "Total Solids Rate / Kg of Milk",
+    blurb: "Price depends on the FAT % and SNF % added together. Fill in any three boxes and the fourth is worked out for you.",
+    formula: "Total Solids Rate / Kg = Rate per litre ÷ (FAT % + SNF %) × 100   |   Rate per litre = (FAT % + SNF %) × Total Solids Rate / Kg ÷ 100",
+    hint: "Fill in any three of FAT %, SNF %, Total Solids Rate / Kg and Rate per litre to see the fourth.",
+    fields: [
+      { id: "fat", label: "FAT %", ph: "4.5", min: 0.01, max: 15, linked: true },
+      { id: "snf", label: "SNF %", ph: "8.5", min: 0.01, max: 15, linked: true },
+      { id: "rate", label: "Total Solids Rate / Kg of Milk (₹)", ph: "280", min: 0.01, linked: true },
+      { id: "price", label: "Rate per litre (₹)", ph: "36.40", min: 0.01, linked: true },
+      { id: "litres", label: "Milk quantity (litres)", ph: "2000", req: false },
+    ],
+    note: "FAT % + SNF % are added to give the Total Solids %, and the Total Solids Rate / Kg is applied to it.",
+    target(filled) {
+      const empty = ["fat", "snf", "rate", "price"].filter((k) => !filled[k]);
+      return empty.length === 1 ? empty[0] : null;
+    },
+    ready(filled) {
+      return ["fat", "snf", "rate", "price"].filter((k) => filled[k]).length >= 3;
+    },
+    compute(v, filled) {
+      const target = this.target(filled);
+      const results = [];
+      const steps = [];
+      let price = v.price;
+      const solids = v.fat + v.snf;
+      let useRate = v.rate;
+      if (target === "price") {
+        price = (solids * v.rate) / 100;
+        results.push({ k: "Rate per litre", v: inr(price, 2), big: true, tone: "solved" });
+        steps.push("FAT % + SNF % = " + fmt(v.fat) + " + " + fmt(v.snf) + " = " + fmt(r2(solids), 2));
+        steps.push("Rate per litre = " + fmt(r2(solids), 2) + " × " + fmt(v.rate) + " ÷ 100 = " + inr(price, 2));
+      } else if (target === "rate") {
+        const rate = (v.price / solids) * 100;
+        useRate = rate;
+        results.push({ k: "Total Solids Rate / Kg of Milk", v: inr(rate, 2), big: true, tone: "solved" });
+        steps.push("FAT % + SNF % = " + fmt(v.fat) + " + " + fmt(v.snf) + " = " + fmt(r2(solids), 2));
+        steps.push("Total Solids Rate / Kg = " + fmt(v.price, 2) + " ÷ " + fmt(r2(solids), 2) + " × 100 = " + inr(rate, 2));
+      } else if (target === "fat" || target === "snf") {
+        const other = target === "fat" ? v.snf : v.fat;
+        const otherName = target === "fat" ? "SNF" : "FAT";
+        const name = target === "fat" ? "FAT" : "SNF";
+        const total = (v.price / v.rate) * 100;
+        const val = total - other;
+        results.push({ k: name + " %", v: fmt(r2(val), 2) + " %", big: true, tone: "solved" });
+        steps.push("FAT % + SNF % = Rate per litre ÷ Total Solids Rate / Kg × 100 = " + fmt(v.price, 2) + " ÷ " + fmt(v.rate) + " × 100 = " + fmt(r2(total), 2));
+        steps.push(name + " % = " + fmt(r2(total), 2) + " − " + otherName + " % (" + fmt(other) + ") = " + fmt(r2(val), 2) + " %");
+        if (val <= 0 || val > 15) results.push({ k: "Check", v: "These values do not give a sensible " + name + " % — please re-check", tone: "bad" });
+      } else {
+        const expect = (solids * v.rate) / 100;
+        const ok = Math.abs(expect - v.price) <= 0.01;
+        results.push({ k: "Rate per litre from FAT, SNF and rate", v: inr(expect, 2), big: true });
+        results.push({ k: "Check", v: ok ? "All values agree ✔" : "Rate per litre entered (" + inr(v.price, 2) + ") does not match", tone: ok ? "good" : "bad" });
+        steps.push("(" + fmt(v.fat) + " + " + fmt(v.snf) + ") × " + fmt(v.rate) + " ÷ 100 = " + inr(expect, 2));
+        price = expect;
+      }
+      if (v.litres > 0 && isFinite(price)) {
+        const total = v.litres * price;
+        results.push({ k: "Total amount", v: inr(total, 0), big: true });
+        steps.push(fmt(v.litres) + " litres × " + inr(price, 2) + " = " + inr(total, 0));
+      }
+      return { results, steps, useRate };
+    },
+  },
+  {
+    id: "clr", icon: "🔬", tab: "SNF from CLR", solve: true,
+    title: "SNF from CLR (Gerber test at BMCU)",
+    blurb: "Find SNF % from the lactometer (CLR) reading and the Gerber FAT %. Fill in any two boxes and the third is worked out.",
+    formula: "SNF % = CLR ÷ 4 + (0.21 × FAT %) + 0.36",
+    hint: "Fill in any two of CLR, FAT % and SNF % to see the third.",
+    fields: [
+      { id: "clr", label: "CLR (corrected lactometer reading)", ph: "28", min: 1, max: 45, linked: true },
+      { id: "fat", label: "FAT % (Gerber test)", ph: "4.5", min: 0.01, max: 15, linked: true },
+      { id: "snf", label: "SNF %", ph: "8.5", min: 0.01, max: 15, linked: true },
+    ],
+    note: "Uses SNF = CLR ÷ 4 + 0.21 × FAT + 0.36.",
+    target(filled) {
+      const empty = ["clr", "fat", "snf"].filter((k) => !filled[k]);
+      return empty.length === 1 ? empty[0] : null;
+    },
+    ready(filled) {
+      return ["clr", "fat", "snf"].filter((k) => filled[k]).length >= 2;
+    },
+    compute(v, filled) {
+      const target = this.target(filled);
+      const results = [];
+      const steps = [];
+      if (target === "snf") {
+        const snf = v.clr / 4 + 0.21 * v.fat + 0.36;
+        results.push({ k: "SNF %", v: fmt(r2(snf), 2) + " %", big: true, tone: "solved" });
+        steps.push(`CLR ÷ 4 = ${fmt(v.clr)} ÷ 4 = ${fmt(v.clr / 4, 3)}`);
+        steps.push(`0.21 × FAT % = 0.21 × ${fmt(v.fat)} = ${fmt(0.21 * v.fat, 3)}`);
+        steps.push(`SNF % = ${fmt(v.clr / 4, 3)} + ${fmt(0.21 * v.fat, 3)} + 0.36 = ${fmt(r2(snf), 2)} %`);
+      } else if (target === "clr") {
+        const clr = (v.snf - 0.21 * v.fat - 0.36) * 4;
+        results.push({ k: "CLR", v: fmt(r2(clr), 2), big: true, tone: "solved" });
+        steps.push(`CLR = (SNF % − 0.21 × FAT % − 0.36) × 4`);
+        steps.push(`CLR = (${fmt(v.snf)} − ${fmt(0.21 * v.fat, 3)} − 0.36) × 4 = ${fmt(r2(clr), 2)}`);
+        if (clr <= 0) results.push({ k: "Check", v: "These values do not give a sensible CLR — please re-check", tone: "bad" });
+      } else if (target === "fat") {
+        const fat = (v.snf - v.clr / 4 - 0.36) / 0.21;
+        results.push({ k: "FAT %", v: fmt(r2(fat), 2) + " %", big: true, tone: "solved" });
+        steps.push(`FAT % = (SNF % − CLR ÷ 4 − 0.36) ÷ 0.21`);
+        steps.push(`FAT % = (${fmt(v.snf)} − ${fmt(v.clr / 4, 3)} − 0.36) ÷ 0.21 = ${fmt(r2(fat), 2)} %`);
+        if (fat <= 0 || fat > 15) results.push({ k: "Check", v: "These values do not give a sensible FAT % — please re-check", tone: "bad" });
+      } else {
+        const snf = v.clr / 4 + 0.21 * v.fat + 0.36;
+        const ok = Math.abs(snf - v.snf) <= 0.05;
+        results.push({ k: "SNF % from CLR and FAT", v: fmt(r2(snf), 2) + " %", big: true });
+        results.push({ k: "Check", v: ok ? "All three values agree ✔" : `SNF entered (${fmt(v.snf, 2)} %) does not match`, tone: ok ? "good" : "bad" });
+        steps.push(`SNF % = ${fmt(v.clr)} ÷ 4 + 0.21 × ${fmt(v.fat)} + 0.36 = ${fmt(r2(snf), 2)} %`);
+      }
+      return { results, steps };
+    },
+  },
+  {
+    id: "kg", icon: "🔄", tab: "Litres ⇄ Kg", solve: true,
+    title: "Litres ⇄ Kg Conversion",
+    blurb: "Convert milk quantity between litres and kilograms. Fill in either box.",
+    formula: "Kg = Litres × 1.03   |   Litres = Kg ÷ 1.03",
+    hint: "Fill in Litres to get Kg, or fill in Kg to get Litres.",
+    fields: [
+      { id: "litres", label: "Quantity in litres", ph: "1000", min: 0.01, linked: true },
+      { id: "kg", label: "Quantity in kg", ph: "1030", min: 0.01, linked: true },
+    ],
+    target(filled) {
+      const empty = ["litres", "kg"].filter((k) => !filled[k]);
+      return empty.length === 1 ? empty[0] : null;
+    },
+    ready(filled) {
+      return filled.litres || filled.kg;
+    },
+    compute(v, filled) {
+      const target = this.target(filled);
+      const results = [];
+      const steps = [];
+      if (target === "kg") {
+        const kg = v.litres * 1.03;
+        results.push({ k: "Quantity in kg", v: fmt(r2(kg), 2) + " kg", big: true, tone: "solved" });
+        steps.push(`Kg = ${fmt(v.litres)} × 1.03 = ${fmt(r2(kg), 2)} kg`);
+      } else if (target === "litres") {
+        const l = v.kg / 1.03;
+        results.push({ k: "Quantity in litres", v: fmt(r2(l), 2) + " L", big: true, tone: "solved" });
+        steps.push(`Litres = ${fmt(v.kg)} ÷ 1.03 = ${fmt(r2(l), 2)} L`);
+      } else {
+        const kg = v.litres * 1.03;
+        const ok = Math.abs(kg - v.kg) <= 0.05;
+        results.push({ k: "Kg from litres", v: fmt(r2(kg), 2) + " kg", big: true });
+        results.push({ k: "Check", v: ok ? "Both values agree ✔" : `Kg entered (${fmt(v.kg, 2)}) does not match`, tone: ok ? "good" : "bad" });
+        steps.push(`Kg = ${fmt(v.litres)} × 1.03 = ${fmt(r2(kg), 2)} kg`);
+      }
+      return { results, steps };
+    },
+  },
+  {
+    id: "income", icon: "💰", tab: "Income & Profit", title: "Milk Income & Profit",
+    blurb: "Work out income from litres per day, number of days and rate. Add costs to see net profit.",
+    formula: "Income = litres per day × days × rate   |   Net profit = Income − Costs",
+    fields: [
+      { id: "lpd", label: "Litres per day", ph: "11", req: true, min: 0.1 },
+      { id: "days", label: "Number of days", ph: "180", req: true, min: 1 },
+      { id: "rate", label: "Rate per litre (₹)", ph: "42", req: true, min: 0.1 },
+      { id: "cost", label: "Total costs (₹)", ph: "96000", req: false },
+    ],
+    compute(v) {
+      const litres = v.lpd * v.days;
+      const income = litres * v.rate;
+      const results = [{ k: "Total litres", v: fmt(litres) }, { k: "Income", v: inr(income, 0), big: true }];
+      const steps = [`${fmt(v.lpd)} × ${fmt(v.days)} days = ${fmt(litres)} litres`, `${fmt(litres)} × ${inr(v.rate, 2)} = ${inr(income, 0)}`];
+      if (v.cost > 0) {
+        const profit = income - v.cost;
+        results.push({ k: "Net profit", v: inr(profit, 0), big: true, tone: profit < 0 ? "bad" : "good" });
+        steps.push(`${inr(income, 0)} − ${inr(v.cost, 0)} = ${inr(profit, 0)}`);
+      }
+      return { results, steps };
+    },
+  },
+  {
+    id: "cda", icon: "⚖️", tab: "CDA Loss", title: "CDA Loss Calculator (Actual vs Composite)",
+    blurb: "Step 1, the Actual: its Amount and Quantity give the rate per litre, and that gives the Total Solids Rate / Kg of Milk. Step 2, the Composite: enter its Quantity, FAT %, SNF % and the Composite Amount from the CDA report. Difference = Actual − Composite.",
+    formula: "Rate per litre = Amount ÷ Quantity   |   Total Solids Rate / Kg = Rate per litre ÷ (FAT % + SNF %) × 100   |   Composite rate per litre = (FAT % + SNF %) × Total Solids Rate / Kg ÷ 100",
+    hint: "Enter the Actual quantity, amount, FAT % and SNF %, then the Composite quantity, FAT %, SNF % and amount.",
+    fields: [
+      { id: "aq", label: "Actual quantity (litres)", ph: "26.3", req: true, min: 0.01, group: "Step 1 · Actual (what was received at the BMC)" },
+      { id: "aamt", label: "Actual amount (₹)", ph: "1041.48", req: true, min: 0.01 },
+      { id: "afat", label: "Actual FAT %", ph: "4.0", req: true, min: 0.01, max: 15 },
+      { id: "asnf", label: "Actual SNF %", ph: "8.0", req: true, min: 0.01, max: 15 },
+      { id: "aprice", label: "Actual rate per litre (₹) — auto", auto: true },
+      { id: "rate", label: "Total Solids Rate / Kg of Milk (₹) — auto, from the Actual", auto: true },
+      { id: "cq", label: "Composite quantity (litres)", ph: "25.7", req: true, min: 0.01, group: "Step 2 · Composite (what was collected at the MPP)" },
+      { id: "cfat", label: "Composite FAT %", ph: "5.75", req: true, min: 0.01, max: 15 },
+      { id: "csnf", label: "Composite SNF %", ph: "9.42", req: true, min: 0.01, max: 15 },
+      { id: "camt", label: "Composite amount (₹)", ph: "1158.42", req: true, min: 0.01, hintText: "Take it from the Composite Amount column of the CDA report. It is the total paid to the farmers, so the loss matches the system." },
+      { id: "cprice", label: "Composite rate per litre (₹) — auto", auto: true },
+    ],
+    note: "The Composite amount is the total the farmers were paid (each at their own rate), so it is used exactly as entered. For comparison, the results also show what the Composite would be worth at the Actual's Total Solids Rate / Kg.",
+    // values shown in the auto boxes while typing
+    live(v, f) {
+      const out = {};
+      if (f.aq && f.aamt) out.aprice = (v.aamt / v.aq).toFixed(2);
+      if (f.aq && f.aamt && f.afat && f.asnf) {
+        const ts = (v.aamt / v.aq / (v.afat + v.asnf)) * 100;
+        out.rate = ts.toFixed(2);
+      }
+      if (f.cq && f.camt) out.cprice = (v.camt / v.cq).toFixed(2);
+      return out;
+    },
+    compute(v) {
+      const aPrice = v.aamt / v.aq;
+      const ts = (aPrice / (v.afat + v.asnf)) * 100; // Total Solids Rate / Kg of Milk, from the Actual
+      const given = v.camt > 0; // the Composite amount from the CDA report is used as it is
+      const estPrice = r2(((v.cfat + v.csnf) * ts) / 100); // the Composite valued at the Actual's Total Solids Rate / Kg
+      const estAmt = v.cq * estPrice;
+      const cPrice = given ? v.camt / v.cq : r2(((v.cfat + v.csnf) * ts) / 100); // rate per litre shown to 2 decimals, as in the system
+      const cAmt = given ? v.camt : v.cq * cPrice;
+      const aKgF = (v.aq * v.afat) / 100, aKgS = (v.aq * v.asnf) / 100;
+      const cKgF = (v.cq * v.cfat) / 100, cKgS = (v.cq * v.csnf) / 100;
+
+      const dq = v.aq - v.cq;
+      const dKgF = aKgF - cKgF, dKgS = aKgS - cKgS;
+      const dAmt = v.aamt - cAmt;
+      const dPrice = aPrice - cPrice;
+
+      const sg = (n) => (n > 0 ? "+" : n < 0 ? "−" : "");
+      const dn = (n, dp, unit) => sg(n) + fmt(Math.abs(n), dp) + (unit || "");
+      const money = (n) => (n < 0 ? "−" : n > 0 ? "+" : "") + "₹" + fmt(Math.abs(n), 2);
+      const tone = (n) => (Math.abs(n) < 0.005 ? "" : n > 0 ? "good" : "bad");
+
+      // The difference in amount split into quantity, FAT and SNF. When the Composite amount was typed in, its own
+      // effective rate per kg of solids (Rc) is used, and what is left is the rate difference between Actual and Composite.
+      const Rc = given ? cAmt / (cKgF + cKgS) : ts;
+      const qtyEffect = dq * cPrice;
+      const fatEffect = (v.aq * (v.afat - v.cfat) * Rc) / 100;
+      const rateEffect = given ? (v.aq * (v.afat + v.asnf) * (ts - Rc)) / 100 : 0;
+      const snfEffect = dAmt - qtyEffect - fatEffect - rateEffect;
+
+      const results = [
+        { head: "Step 1 · Actual" },
+        { k: "Rate per litre", v: inr(aPrice, 2) },
+        { k: "Total Solids Rate / Kg of Milk", v: inr(ts, 2), big: true },
+        { k: "Actual amount", v: inr(v.aamt, 2) },
+        { k: "Kg FAT / Kg SNF", v: fmt(aKgF, 3) + " / " + fmt(aKgS, 3) },
+        { head: given ? "Step 2 · Composite (amount as entered)" : "Step 2 · Composite (at the same Total Solids Rate / Kg)" },
+        { k: given ? "Rate per litre (amount ÷ quantity)" : "Rate per litre", v: inr(cPrice, 2) },
+        { k: "Composite amount", v: inr(cAmt, 2), big: true },
+        { k: "Kg FAT / Kg SNF", v: fmt(cKgF, 3) + " / " + fmt(cKgS, 3) },
+        { k: "For comparison: Composite at the Actual's Total Solids Rate / Kg", v: inr(estAmt, 2) + "  (" + fmt(v.cq) + " × " + inr(estPrice, 2) + ")" },
+        { head: "Difference (Actual − Composite)" },
+        { k: "Difference in amount", v: money(dAmt) + (Math.abs(dAmt) < 0.005 ? "" : dAmt < 0 ? " · Loss" : " · Gain"), big: true, tone: tone(dAmt) },
+        { k: "Difference in quantity", v: dn(dq, 2, " L"), tone: tone(dq) },
+        { k: "Difference in Kg FAT", v: dn(dKgF, 3, " kg"), tone: tone(dKgF) },
+        { k: "Difference in Kg SNF", v: dn(dKgS, 3, " kg"), tone: tone(dKgS) },
+        { k: "Difference in rate per litre", v: money(dPrice), tone: tone(dPrice) },
+        { head: "Difference in amount is made up of" },
+        { k: "Quantity difference", v: money(qtyEffect), tone: tone(qtyEffect) },
+        { k: "FAT difference", v: money(fatEffect), tone: tone(fatEffect) },
+        { k: "SNF difference", v: money(snfEffect), tone: tone(snfEffect) },
+      ];
+      if (given) results.push({ k: "Rate difference (Actual rate vs Composite rate)", v: money(rateEffect), tone: tone(rateEffect) });
+      const steps = [
+        "Actual rate per litre = " + inr(v.aamt, 2) + " ÷ " + fmt(v.aq) + " = " + inr(aPrice, 2),
+        "Total Solids Rate / Kg = " + inr(aPrice, 2) + " ÷ (" + fmt(v.afat) + " + " + fmt(v.asnf) + ") × 100 = " + inr(ts, 2),
+        "Actual amount = " + fmt(v.aq) + " × " + inr(aPrice, 2) + " = " + inr(v.aamt, 2),
+        given
+          ? "Composite amount (as entered) = " + inr(cAmt, 2) + "  (rate per litre = " + inr(cAmt, 2) + " ÷ " + fmt(v.cq) + " = " + inr(cPrice, 2) + ")"
+          : "Composite rate per litre = (" + fmt(v.cfat) + " + " + fmt(v.csnf) + ") × " + inr(ts, 2) + " ÷ 100 = " + inr(cPrice, 2),
+        given ? "Composite amount is the one you entered" : "Composite amount = " + fmt(v.cq) + " × " + inr(cPrice, 2) + " = " + inr(cAmt, 2),
+        "Difference in amount = Actual − Composite = " + inr(v.aamt, 2) + " − " + inr(cAmt, 2) + " = " + money(dAmt),
+        "Quantity difference = (" + fmt(v.aq) + " − " + fmt(v.cq) + ") × " + inr(cPrice, 2) + " = " + money(qtyEffect),
+        "FAT difference = " + fmt(v.aq) + " × (" + fmt(v.afat) + " − " + fmt(v.cfat) + ") × " + inr(Rc, 2) + " ÷ 100 = " + money(fatEffect),
+        "SNF difference = " + fmt(v.aq) + " × (" + fmt(v.asnf) + " − " + fmt(v.csnf) + ") × " + inr(Rc, 2) + " ÷ 100 = " + money(snfEffect) + (given ? "  (the rate difference is shown separately)" : ""),
+      ];
+      return { results, steps };
+    },
+  },
+  {
+    id: "transport", icon: "🚚", tab: "Transport Cost", title: "Transport Cost per Litre",
+    blurb: "Find a route's cost per litre, and how it compares with the company average.",
+    formula: "Cost per litre = Total cost ÷ Litres   |   Extra cost = Actual − (Litres × Average cost)",
+    fields: [
+      { id: "cost", label: "Total transport cost (₹)", ph: "3150", req: true, min: 0.1 },
+      { id: "litres", label: "Milk carried (litres)", ph: "900", req: true, min: 1 },
+      { id: "avg", label: "Company average cost (₹ per litre)", ph: "2.28", req: false },
+    ],
+    compute(v) {
+      const perL = v.cost / v.litres;
+      const results = [{ k: "Cost per litre", v: inr(perL, 2), big: true }];
+      const steps = [`${inr(v.cost, 0)} ÷ ${fmt(v.litres)} litres = ${inr(perL, 2)}`];
+      if (v.avg > 0) {
+        const expected = v.litres * v.avg;
+        const extra = v.cost - expected;
+        results.push({ k: "Expected cost", v: inr(expected, 0) });
+        results.push(extra >= 0
+          ? { k: "Extra cost", v: inr(extra, 0), big: true, tone: extra > 0 ? "bad" : "" }
+          : { k: "Saving vs average", v: inr(-extra, 0), big: true, tone: "good" });
+        steps.push(`Expected: ${fmt(v.litres)} × ${inr(v.avg, 2)} = ${inr(expected, 0)}`);
+        steps.push(`Actual − expected: ${inr(v.cost, 0)} − ${inr(expected, 0)} = ${inr(extra, 0)}`);
+      }
+      return { results, steps };
+    },
+  },
+];
+
+// =====================================================================================
+// Interface — iOS-style home screen, grouped forms, live results. The calculators above are unchanged.
+// =====================================================================================
+const META = {
+  axis: { name: "Total Solids Rate / Kg", sub: "Rate per kg from FAT %, SNF % and the rate per litre", g: ["#5ac8fa", "#007aff"], emoji: "🥛" },
+  clr: { name: "SNF from CLR", sub: "Gerber test at the BMCU", g: ["#bf5af2", "#5e5ce6"], emoji: "🔬" },
+  kg: { name: "Litres ⇄ Kg", sub: "Convert milk between litres and kilograms", g: ["#64d2ff", "#30b0c7"], emoji: "🔄" },
+  income: { name: "Income & Profit", sub: "Earnings from litres, days and rate", g: ["#30d158", "#248a3d"], emoji: "💰" },
+  cda: { name: "CDA Loss", sub: "Actual against Composite, in amount", g: ["#ffb340", "#ff6a00"], emoji: "⚖️" },
+  transport: { name: "Transport Cost", sub: "Cost per litre of a route", g: ["#7d7aff", "#3634a3"], emoji: "🚚" },
+};
+const EXAMPLES = {
+  axis: { fat: "4.5", snf: "8.5", rate: "280" },
+  clr: { clr: "28", fat: "4.5" },
+  kg: { litres: "1000" },
+  income: { lpd: "11", days: "180", rate: "42", cost: "96000" },
+  cda: { aq: "26.3", aamt: "1041.48", afat: "4", asnf: "8", cq: "25.7", cfat: "5.75", csnf: "9.42", camt: "1158.42" },
+  transport: { cost: "3150", litres: "900", avg: "2.28" },
+};
+
+const $ = (s, r) => (r || document).querySelector(s);
+const app = $("#app");
+const navEl = $("#nav");
+const barEl = $("#bar");
+let lastSummary = "";
+let heroObserver = null;
+
+function haptic() {
+  try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(8); } catch (e) { /* not supported */ }
+}
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+function parseNum(raw) {
+  const s = String(raw ?? "").replace(/[,₹\s]/g, "");
+  if (s === "") return null;
+  const n = Number(s);
+  return isFinite(n) ? n : NaN;
+}
+
+// "Composite rate per litre (₹) — auto"  ->  label "Composite rate per litre", unit "₹"
+function splitLabel(label) {
+  let text = String(label).replace(/\s+—\s+.*$/, "").trim();
+  let unit = "";
+  const m = text.match(/\s*\(([^)]*)\)\s*$/);
+  if (m) {
+    const inner = m[1].trim();
+    let u = null;
+    if (/^₹\s*per\s*litre$/i.test(inner)) u = "₹/L";
+    else if (/^₹\s*per\s*kg/i.test(inner)) u = "₹/kg";
+    else if (inner === "₹") u = "₹";
+    else if (/^litres$/i.test(inner)) u = "L";
+    if (u) { unit = u; text = text.slice(0, m.index).trim(); }
+  }
+  if (!unit && /%\s*$/.test(text)) { unit = "%"; text = text.replace(/\s*%\s*$/, "").trim(); }
+  if (!unit && /\bkg\b/i.test(text)) unit = "kg";
+  if (!unit && /\blitres\b/i.test(text)) unit = "L";
+  return { text, unit };
+}
+
+// ---------- number count-up for the headline result ----------
+function splitNum(s) {
+  const m = String(s).match(/^(\D*?)(\d[\d,]*(?:\.\d+)?)(.*)$/);
+  if (!m) return null;
+  return { pre: m[1], val: parseFloat(m[2].replace(/,/g, "")), dp: (m[2].split(".")[1] || "").length, post: m[3] };
+}
+function countUp(el, from, to) {
+  const a = splitNum(from), b = splitNum(to);
+  if (!a || !b || a.pre !== b.pre || a.post !== b.post || matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = to; return; }
+  const t0 = performance.now(), dur = 320;
+  const f = (n) => new Intl.NumberFormat("en-IN", { minimumFractionDigits: b.dp, maximumFractionDigits: b.dp }).format(n);
+  (function tick(now) {
+    const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = k >= 1 ? to : b.pre + f(a.val + (b.val - a.val) * e) + b.post;
+    if (k < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+
+// ---------- navigation ----------
+function setNav(title, back) {
+  $("#back").hidden = !back;
+  $("#navtitle").textContent = title;
+  barEl.classList.remove("show");
+  barEl.setAttribute("aria-hidden", "true");
+  if (heroObserver) { heroObserver.disconnect(); heroObserver = null; }
+}
+function route() {
+  const id = location.hash.replace(/^#\/?/, "");
+  const tool = TOOLS.find((t) => t.id === id);
+  if (tool) renderTool(tool);
+  else renderHome();
+  window.scrollTo(0, 0);
+  navEl.classList.remove("scrolled");
+}
+$("#back").addEventListener("click", () => {
+  haptic();
+  location.hash = "";
+});
+addEventListener("hashchange", route);
+addEventListener("scroll", () => navEl.classList.toggle("scrolled", scrollY > 36), { passive: true });
+
+// ---------- home ----------
+function renderHome() {
+  setNav("Milk Calculator", false);
+  lastSummary = "";
+  app.innerHTML = `
+    <div class="screen">
+      <div class="brand"><img src="assets/shreeja-logo.png" alt="" /><div><b>Shreeja Mahila Milk Producer Company</b><span>For Sahayaks and field staff</span></div></div>
+      <h1 class="large">Milk Calculator</h1>
+      <p class="lead">Pick a calculator, enter your numbers and see the answer with the working.</p>
+      <div class="tiles">
+        ${TOOLS.map((t) => {
+          const m = META[t.id];
+          return `<button class="tile" data-go="${t.id}"><span class="icon" style="background:linear-gradient(160deg,${m.g[0]},${m.g[1]})">${m.emoji}</span><b>${esc(m.name)}</b><small>${esc(m.sub)}</small></button>`;
+        }).join("")}
+      </div>
+      <p class="foot">Formulas follow the Shreeja Learning Academy course.<br />Everything is calculated on your device, so it works without internet.</p>
+    </div>`;
+  app.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => { haptic(); location.hash = "#" + b.dataset.go; }));
+}
+
+// ---------- a calculator ----------
+function rowHtml(f) {
+  const { text, unit } = splitLabel(f.label);
+  const id = "f_" + f.id;
+  const badge = f.auto ? `<span class="badge auto">Auto</span>` : !f.req && !f.linked ? `<span class="badge">Optional</span>` : "";
+  const input = f.auto
+    ? `<input id="${id}" data-f="${f.id}" readonly tabindex="-1" placeholder="—" aria-label="${esc(text)}" />`
+    : `<input id="${id}" data-f="${f.id}" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${esc(f.ph)}" />`;
+  return `<div class="frow${f.auto ? " is-auto" : ""}" data-row="${f.id}">
+      <label class="flabel" for="${id}">${esc(text)}${badge}</label>
+      <div class="fval">${input}${unit ? `<span class="unit">${esc(unit)}</span>` : ""}${f.auto ? "" : `<button type="button" class="xbtn" aria-label="Clear ${esc(text)}" tabindex="-1">×</button>`}</div>
+      ${f.hintText ? `<div class="cap">${esc(f.hintText)}</div>` : ""}
+      <div class="warn" hidden>Please check this value</div>
+    </div>`;
+}
+
+function renderTool(tool) {
+  const meta = META[tool.id];
+  setNav(meta.name, true);
+  let html = `<div class="screen"><h1 class="large">${esc(tool.title)}</h1><p class="lead" style="font-size:15px;margin-bottom:10px">${esc(tool.blurb)}</p><span class="formula">${esc(tool.formula)}</span>`;
+  let open = false;
+  tool.fields.forEach((f, i) => {
+    if (f.group || i === 0) {
+      if (open) html += "</div></section>";
+      html += `<section>${f.group ? `<h3 class="sect">${esc(f.group)}</h3>` : ""}<div class="card">`;
+      open = true;
+    }
+    html += rowHtml(f);
+  });
+  html += "</div></section>";
+  if (tool.note) html += `<p class="grp-foot">${esc(tool.note)}</p>`;
+  html += `<div class="actions"><button class="btn" id="ex">Try an example</button><button class="btn" id="clr">Clear</button></div><div id="out"></div></div>`;
+  app.innerHTML = html;
+
+  const rowEl = (id) => $(`[data-row="${id}"]`, app);
+  const inputEl = (id) => $(`[data-f="${id}"]`, app);
+  const inputs = [...app.querySelectorAll("input[data-f]")];
+  const out = $("#out");
+  let prevHero = null;
+  let workOpen = false;
+
+  function update() {
+    const values = {};
+    const filled = {};
+    let ready = true;
+    let anyBad = false;
+    tool.fields.forEach((f) => {
+      const row = rowEl(f.id), el = inputEl(f.id), w = $(".warn", row);
+      row.classList.toggle("has-value", el.value !== "" && !f.auto);
+      if (f.auto) { values[f.id] = 0; filled[f.id] = false; return; }
+      const n = parseNum(el.value);
+      const checkMin = f.req || tool.solve;
+      let bad = false;
+      if (n === null) {
+        values[f.id] = 0;
+        filled[f.id] = false;
+        if (f.req) ready = false;
+      } else if (Number.isNaN(n) || n < 0 || (checkMin && f.min != null && n < f.min) || (f.max != null && n > f.max)) {
+        bad = true; anyBad = true; filled[f.id] = false;
+      } else { values[f.id] = n; filled[f.id] = true; }
+      w.hidden = !bad;
+      row.classList.toggle("is-bad", bad);
+    });
+    // boxes that fill themselves in while you type
+    if (tool.live) {
+      const fill = anyBad ? {} : tool.live(values, filled);
+      tool.fields.filter((f) => f.auto).forEach((f) => {
+        inputEl(f.id).value = fill[f.id] != null ? fmt(parseFloat(fill[f.id]), 2) : "";
+      });
+    }
+    if (tool.solve) ready = !anyBad && tool.ready(filled);
+    else if (anyBad) ready = false;
+    // "any two of three" calculators: highlight the box being calculated
+    if (tool.solve) {
+      const targets = ready ? (tool.targets ? tool.targets(filled) : [tool.target(filled)]) : [];
+      tool.fields.forEach((f) => {
+        if (f.auto) return;
+        rowEl(f.id).classList.toggle("is-target", targets.includes(f.id));
+        inputEl(f.id).placeholder = targets.includes(f.id) ? "Calculated" : f.ph;
+      });
+    }
+    if (!ready) {
+      lastSummary = "";
+      prevHero = null;
+      setBar(null);
+      out.innerHTML = `<div class="empty"><b>Ready when you are</b>${esc(tool.hint || "Fill in the boxes above to see the answer.")}</div>`;
+      return;
+    }
+    paint(tool.compute(values, filled));
+  }
+
+  function paint(res) {
+    const items = res.results;
+    let hi = items.findIndex((r) => !r.head && r.big && r.tone);
+    if (hi < 0) hi = items.findIndex((r) => !r.head && r.big);
+    if (hi < 0) hi = items.findIndex((r) => !r.head);
+    const hero = items[hi];
+    const [main, tag] = String(hero.v).split(" · ");
+
+    const secs = [];
+    let cur = { title: "", rows: [] };
+    items.forEach((r, i) => {
+      if (i === hi) return;
+      if (r.head) { if (cur.rows.length) secs.push(cur); cur = { title: r.head, rows: [] }; }
+      else cur.rows.push(r);
+    });
+    if (cur.rows.length) secs.push(cur);
+
+    out.innerHTML = `
+      <div class="hero ${hero.tone || ""}" id="hero">
+        <div class="hl">${esc(hero.k)}</div>
+        <div class="hv" id="hv">${esc(main)}</div>
+        ${tag ? `<div class="pill">${esc(tag)}</div>` : ""}
+      </div>
+      ${secs.map((s) => `<h3 class="sect">${esc(s.title)}</h3><div class="card">${s.rows.map((r) => `<div class="lrow${r.big ? " big" : ""}${r.tone ? " " + r.tone : ""}"><span class="k">${esc(r.k)}</span><span class="v">${esc(r.v)}</span></div>`).join("")}</div>`).join("")}
+      <details class="work"${workOpen ? " open" : ""}><summary>How it is worked out</summary><ol>${res.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol></details>
+      <div class="actions"><button class="btn primary" id="share">Share result</button></div>`;
+
+    const hv = $("#hv");
+    if (prevHero && prevHero.k === hero.k && prevHero.main !== main) countUp(hv, prevHero.main, main);
+    prevHero = { k: hero.k, main };
+    $("details.work", out).addEventListener("toggle", (e) => (workOpen = e.target.open));
+    $("#share").addEventListener("click", () => { haptic(); share(); });
+
+    lastSummary = `Shreeja Milk Calculator — ${tool.title}\n` + items.map((r) => (r.head ? `\n${r.head}` : `${r.k}: ${r.v}`)).join("\n") + "\n\nWorking:\n" + res.steps.join("\n");
+    setBar({ k: hero.k, main, tone: hero.tone }, $("#hero"));
+  }
+
+  // ----- wiring -----
+  inputs.forEach((el) => {
+    if (el.readOnly) return;
+    el.addEventListener("input", update);
+    el.addEventListener("focus", () => {
+      if (matchMedia("(max-width: 700px)").matches) setTimeout(() => el.scrollIntoView({ block: "center", behavior: "smooth" }), 280);
+    });
+    el.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      const list = inputs.filter((i) => !i.readOnly);
+      const next = list[list.indexOf(el) + 1];
+      if (next) next.focus();
+      else el.blur();
+    });
+  });
+  app.querySelectorAll(".xbtn").forEach((b) =>
+    b.addEventListener("click", () => {
+      const el = $("input", b.closest(".frow"));
+      el.value = "";
+      el.focus();
+      haptic();
+      update();
+    })
+  );
+  $("#ex").addEventListener("click", () => {
+    haptic();
+    inputs.forEach((el) => { if (!el.readOnly) el.value = ""; });
+    Object.entries(EXAMPLES[tool.id] || {}).forEach(([k, v]) => { inputEl(k).value = v; });
+    update();
+    const hero = $("#hero");
+    if (hero) hero.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast("Example filled in");
+  });
+  $("#clr").addEventListener("click", () => {
+    haptic();
+    inputs.forEach((el) => { if (!el.readOnly) el.value = ""; });
+    prevHero = null;
+    update();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  update();
+}
+
+// floating result bar: shows the headline answer once the main result scrolls out of view
+function setBar(info, heroEl) {
+  if (heroObserver) { heroObserver.disconnect(); heroObserver = null; }
+  if (!info || !heroEl) {
+    barEl.classList.remove("show");
+    barEl.setAttribute("aria-hidden", "true");
+    return;
+  }
+  $("#bar-l").textContent = info.k;
+  $("#bar-v").textContent = info.main;
+  barEl.className = "bar" + (info.tone ? " " + info.tone : "");
+  heroObserver = new IntersectionObserver(
+    ([e]) => {
+      const show = !e.isIntersecting;
+      barEl.classList.toggle("show", show);
+      barEl.setAttribute("aria-hidden", show ? "false" : "true");
+      barEl.tabIndex = show ? 0 : -1;
+    },
+    { threshold: 0.2 }
+  );
+  heroObserver.observe(heroEl);
+}
+barEl.addEventListener("click", () => {
+  const h = $("#hero");
+  if (h) h.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+async function share() {
+  if (!lastSummary) return;
+  try {
+    if (navigator.share) await navigator.share({ title: "Shreeja Milk Calculator", text: lastSummary });
+    else {
+      await navigator.clipboard.writeText(lastSummary);
+      toast("Result copied");
+    }
+  } catch (e) {
+    if (e && e.name === "AbortError") return;
+    try {
+      await navigator.clipboard.writeText(lastSummary);
+      toast("Result copied");
+    } catch (_) {
+      toast("Could not copy on this device");
+    }
+  }
+}
+
+// ---------- online/offline chip + service worker ----------
+const net = $("#net");
+function paintNet() {
+  net.textContent = navigator.onLine ? "Works offline" : "Offline · still working";
+  net.classList.toggle("off", !navigator.onLine);
+}
+addEventListener("online", paintNet);
+addEventListener("offline", paintNet);
+paintNet();
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+
+route();
+</script>
+</body>
+</html>
