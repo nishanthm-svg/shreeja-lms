@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="description" content="Shreeja Mahila Milk Producer Company — Diary 2027 flipbook. Roots · Rise · Renew.">
 <meta property="og:title" content="Shreeja Diary 2027">
-<meta property="og:image" content="pages/p01.jpg">
+<meta property="og:image" content="pages/p01-2k.jpg">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shreeja Diary 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,10 +25,12 @@ header{width:100%;max-width:1240px;padding:16px max(4vw,14px) 6px;display:flex;a
 h1{margin:0;font:800 clamp(22px,3vw,32px)/1.05 "Playfair Display",Georgia,serif;letter-spacing:.5px}
 h1 span{color:var(--gold)}
 .sub{color:var(--muted);font-size:13px}
-.stage{flex:1;width:100%;max-width:1240px;display:flex;align-items:center;justify-content:center;padding:8px max(3vw,10px)}
+.stage{flex:1;width:100%;max-width:3200px;display:flex;align-items:center;justify-content:center;padding:8px max(3vw,10px)}
 #book{margin:0 auto;transition:transform .5s ease}
 .stf__parent{background:transparent!important}
 .stf__block{background:transparent}
+.page{background:#fbf6ea;overflow:hidden}
+.page img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
 .loading{color:var(--muted);font-size:14px;padding:40px 0;text-align:center}
 .bar{display:flex;align-items:center;gap:10px;padding:10px 14px 18px;flex-wrap:wrap;justify-content:center}
 button{font:600 14px Poppins,sans-serif;color:#0b1640;background:var(--gold);border:0;border-radius:999px;min-height:44px;padding:0 20px;cursor:pointer}
@@ -47,7 +49,7 @@ button:focus-visible,a.dl:focus-visible{outline:3px solid #fff;outline-offset:2p
 <h1>Shreeja <span>Diary 2027</span></h1>
 <div class="sub">Roots · Rise · Renew</div>
 </header>
-<div class="stage"><div id="book"><div class="loading" id="loading">Opening the diary…</div></div></div>
+<div class="stage"><div id="book"></div></div>
 <div class="bar">
 <button class="ghost" id="first" type="button" aria-label="Go to front cover">Cover</button>
 <button id="prev" type="button" aria-label="Previous page">‹ Prev</button>
@@ -61,8 +63,10 @@ button:focus-visible,a.dl:focus-visible{outline:3px solid #fff;outline-offset:2p
 <script>
 {
 const N=24;
-const pages=Array.from({length:N},(_,i)=>'pages/p'+String(i+1).padStart(2,'0')+'.jpg');
 const el=document.getElementById('book');
+const ids=Array.from({length:N},(_,i)=>String(i+1).padStart(2,'0'));
+// build real <img> pages so the browser draws them at full screen sharpness (4K source, 2K for small screens)
+el.innerHTML=ids.map((n,i)=>'<div class="page"'+((i===0||i===N-1)?' data-density="hard"':'')+'><img src="pages/p'+n+'-2k.jpg" srcset="pages/p'+n+'-2k.jpg 1422w, pages/p'+n+'-4k.jpg 2844w" sizes="(max-width:760px) 100vw, 50vw" alt="Diary page '+(i+1)+'" decoding="async"'+(i>3?' loading="eager"':'')+'></div>').join('');
 const count=document.getElementById('count');
 const prev=document.getElementById('prev'),next=document.getElementById('next');
 let flip=null;
@@ -76,10 +80,10 @@ function update(i){count.textContent=label(i);prev.disabled=i<=0;next.disabled=i
   const land=flip&&flip.getOrientation()==='landscape';const q=el.offsetWidth/4;
   el.style.transform=land?(i===0?'translateX(-'+q+'px)':(i>=N-1?'translateX('+q+'px)':'none')):'none';}
 function start(){
-  document.getElementById('loading').remove();
-  flip=new St.PageFlip(el,{width:711,height:915,size:'stretch',minWidth:260,maxWidth:1000,minHeight:335,maxHeight:1287,
+  
+  flip=new St.PageFlip(el,{width:711,height:915,size:'stretch',minWidth:260,maxWidth:1600,minHeight:335,maxHeight:2060,
     showCover:true,maxShadowOpacity:.55,mobileScrollSupport:false,usePortrait:true,autoSize:true,flippingTime:900,drawShadow:true});
-  flip.loadFromImages(pages);
+  flip.loadFromHTML(el.querySelectorAll('.page'));
   flip.on('flip',e=>update(e.data));
   flip.on('changeState',e=>{if(e.data==='flipping'){const i=flip.getCurrentPageIndex();if(i===0||i>=N-2)el.style.transform='none';}});
   flip.on('changeOrientation',()=>update(flip.getCurrentPageIndex()));
@@ -87,16 +91,16 @@ function start(){
 }
 // size the book to the viewport before starting
 function fit(){
-  const h=window.innerHeight-175, w=Math.min(window.innerWidth-24,1240);
+  const h=window.innerHeight-175, w=Math.min(window.innerWidth-24,3200);
   const single=w<760;
-  const ph=Math.max(335,Math.min(h,1287));
+  const ph=Math.max(335,Math.min(h,2060));
   let pw=ph*711/915;
   if(single){pw=Math.min(pw,w);}else{pw=Math.min(pw,w/2);}
   el.style.width=(single?pw:pw*2)+'px';
 }
 fit();
 let started=false;
-const imgs=pages.slice(0,4).map(s=>{const im=new Image();im.src=s;return im;});
+const imgs=[...el.querySelectorAll('img')].slice(0,3);
 Promise.all(imgs.map(im=>im.decode().catch(()=>{}))).then(()=>{if(!started){started=true;start();}});
 setTimeout(()=>{if(!started){started=true;start();}},4000);
 prev.addEventListener('click',()=>flip&&flip.flipPrev());
