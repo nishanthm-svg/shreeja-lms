@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Shreeja Mahila Milk Producer Company — Diary 2027 flipbook. Roots · Rise · Renew.">
+<meta property="og:title" content="Shreeja Diary 2027">
+<meta property="og:image" content="pages/p01.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shreeja Diary 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE: warm, proud, ceremonial — a printed company diary handed to members
+IDEA: the diary lying open on a dark desk, pages you turn by hand
+PICTURE: the book itself, as large as the screen allows
+COLOUR and TYPE: deep Kalamkari indigo ground, gold accent; Playfair Display + Poppins
+LAYOUT: slim title row, book centred, controls under it; single page on phones
+*/
+:root{color-scheme:dark;--bg:#0b1640;--bg2:#08102f;--ink:#f3ead6;--muted:#b9b39f;--gold:#e9b949}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(ellipse at 50% 35%,#16245e 0%,var(--bg) 45%,var(--bg2) 100%);color:var(--ink);font:15px/1.5 Poppins,system-ui,sans-serif;overflow-x:clip;display:flex;flex-direction:column;align-items:center}
+header{width:100%;max-width:1240px;padding:16px max(4vw,14px) 6px;display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{margin:0;font:800 clamp(22px,3vw,32px)/1.05 "Playfair Display",Georgia,serif;letter-spacing:.5px}
+h1 span{color:var(--gold)}
+.sub{color:var(--muted);font-size:13px}
+.stage{flex:1;width:100%;max-width:1240px;display:flex;align-items:center;justify-content:center;padding:8px max(3vw,10px)}
+#book{margin:0 auto;transition:transform .5s ease}
+.stf__parent{background:transparent!important}
+.stf__block{background:transparent}
+.loading{color:var(--muted);font-size:14px;padding:40px 0;text-align:center}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 14px 18px;flex-wrap:wrap;justify-content:center}
+button{font:600 14px Poppins,sans-serif;color:#0b1640;background:var(--gold);border:0;border-radius:999px;min-height:44px;padding:0 20px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid rgba(243,234,214,.45)}
+button:disabled{opacity:.4;cursor:default}
+a.dl{font:600 14px Poppins,sans-serif;color:var(--ink);border:1.5px solid rgba(243,234,214,.45);border-radius:999px;min-height:44px;padding:0 20px;display:inline-flex;align-items:center;text-decoration:none}
+a.dl:hover{border-color:var(--gold);color:var(--gold)}
+button:focus-visible,a.dl:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.count{min-width:120px;text-align:center;color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.hint{color:var(--muted);font-size:12.5px;padding-bottom:14px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>Shreeja <span>Diary 2027</span></h1>
+<div class="sub">Roots · Rise · Renew</div>
+</header>
+<div class="stage"><div id="book"><div class="loading" id="loading">Opening the diary…</div></div></div>
+<div class="bar">
+<button class="ghost" id="first" type="button" aria-label="Go to front cover">Cover</button>
+<button id="prev" type="button" aria-label="Previous page">‹ Prev</button>
+<div class="count" id="count" aria-live="polite">Cover</div>
+<button id="next" type="button" aria-label="Next page">Next ›</button>
+<button class="ghost" id="last" type="button" aria-label="Go to back cover">Back</button>
+<a class="dl" href="Shreeja-Diary-2027.pdf" download>Download PDF</a>
+</div>
+<div class="hint">Drag a page corner, click a page, or use the ← → keys to turn pages.</div>
+<script src="pageflip.js"></script>
+<script>
+{
+const N=24;
+const pages=Array.from({length:N},(_,i)=>'pages/p'+String(i+1).padStart(2,'0')+'.jpg');
+const el=document.getElementById('book');
+const count=document.getElementById('count');
+const prev=document.getElementById('prev'),next=document.getElementById('next');
+let flip=null;
+function label(i){
+  if(i===0) return 'Cover';
+  if(i>=N-1) return 'Back cover';
+  if(flip&&flip.getOrientation()==='landscape'){const a=i%2===1?i:i-1;return 'Pages '+(a+1)+'–'+Math.min(a+2,N);}
+  return 'Page '+(i+1)+' of '+N;
+}
+function update(i){count.textContent=label(i);prev.disabled=i<=0;next.disabled=i>=N-1;
+  const land=flip&&flip.getOrientation()==='landscape';const q=el.offsetWidth/4;
+  el.style.transform=land?(i===0?'translateX(-'+q+'px)':(i>=N-1?'translateX('+q+'px)':'none')):'none';}
+function start(){
+  document.getElementById('loading').remove();
+  flip=new St.PageFlip(el,{width:711,height:915,size:'stretch',minWidth:260,maxWidth:1000,minHeight:335,maxHeight:1287,
+    showCover:true,maxShadowOpacity:.55,mobileScrollSupport:false,usePortrait:true,autoSize:true,flippingTime:900,drawShadow:true});
+  flip.loadFromImages(pages);
+  flip.on('flip',e=>update(e.data));
+  flip.on('changeState',e=>{if(e.data==='flipping'){const i=flip.getCurrentPageIndex();if(i===0||i>=N-2)el.style.transform='none';}});
+  flip.on('changeOrientation',()=>update(flip.getCurrentPageIndex()));
+  update(0);
+}
+// size the book to the viewport before starting
+function fit(){
+  const h=window.innerHeight-175, w=Math.min(window.innerWidth-24,1240);
+  const single=w<760;
+  const ph=Math.max(335,Math.min(h,1287));
+  let pw=ph*711/915;
+  if(single){pw=Math.min(pw,w);}else{pw=Math.min(pw,w/2);}
+  el.style.width=(single?pw:pw*2)+'px';
+}
+fit();
+let started=false;
+const imgs=pages.slice(0,4).map(s=>{const im=new Image();im.src=s;return im;});
+Promise.all(imgs.map(im=>im.decode().catch(()=>{}))).then(()=>{if(!started){started=true;start();}});
+setTimeout(()=>{if(!started){started=true;start();}},4000);
+prev.addEventListener('click',()=>flip&&flip.flipPrev());
+next.addEventListener('click',()=>flip&&flip.flipNext());
+document.getElementById('first').addEventListener('click',()=>flip&&flip.flip(0));
+document.getElementById('last').addEventListener('click',()=>flip&&flip.flip(N-1));
+document.addEventListener('keydown',e=>{if(!flip)return;if(e.key==='ArrowRight')flip.flipNext();if(e.key==='ArrowLeft')flip.flipPrev();});
+}
+</script>
+</body>
+</html>
